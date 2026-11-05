@@ -112,6 +112,33 @@
         .med-3d-canvas:active {
             cursor: grabbing;
         }
+        /* Сравнительная таблица: на мобильных — карточки вместо горизонтальной прокрутки */
+        @media (max-width: 767px) {
+            .cmp-table { min-width: 0 !important; }
+            .cmp-table thead { display: none; }
+            .cmp-table, .cmp-table tbody, .cmp-table tr, .cmp-table td { display: block; width: 100%; }
+            .cmp-table tr { padding: 1.25rem 1rem; }
+            .cmp-table td { padding: 0 !important; border: 0 !important; background: transparent !important; }
+            .cmp-table td + td { margin-top: 0.75rem; }
+            .cmp-table td:nth-child(2) {
+                background: rgba(240, 253, 250, 0.9) !important;
+                border: 1px solid #ccfbf1 !important;
+                border-radius: 0.75rem;
+                padding: 0.75rem !important;
+            }
+            .cmp-table td:nth-child(3) { padding: 0 0.75rem !important; }
+            .cmp-table td[data-label]::before {
+                content: attr(data-label);
+                display: block;
+                margin-bottom: 0.25rem;
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                color: #0f766e;
+            }
+            .cmp-table td:nth-child(3)[data-label]::before { color: #94a3b8; }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-teal-600 selection:text-white">
@@ -141,9 +168,9 @@
 
     <!-- Навигация (Sticky Header) -->
     <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
             <!-- Логотип -->
-            <a href="#" class="flex items-center gap-3 group">
+            <a href="#" class="flex items-center gap-3 group min-w-0 md:shrink-0">
                 <div class="w-11 h-11 rounded-xl bg-slate-900 flex items-center justify-center text-teal-400 font-bold text-lg shadow-md group-hover:bg-teal-600 group-hover:text-white transition-colors">
                     <i data-lucide="activity" class="w-6 h-6"></i>
                 </div>
@@ -157,7 +184,7 @@
             </a>
 
             <!-- Десктопное меню -->
-            <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
+            <nav class="hidden 2xl:flex items-center gap-5 whitespace-nowrap text-sm font-medium text-slate-600">
                 <a href="#ecosystem" class="hover:text-teal-600 transition-colors">Золотой треугольник</a>
                 <a href="#doctor" class="hover:text-teal-600 transition-colors">Врачи и консилиум</a>
                 <a href="#comparison" class="hover:text-teal-600 transition-colors">Матрица выгод</a>
@@ -166,37 +193,51 @@
                 <a href="#faq" class="hover:text-teal-600 transition-colors">FAQ</a>
             </nav>
             <!-- Переключатель языков (RU / EN / HE / AR) + Переключатель валют + CTA -->
-            <div class="flex items-center gap-3">
-                <!-- Переключатель языков RU / EN / HE / AR -->
-                <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center text-xs font-bold" role="group" aria-label="Выбор языка">
+            <div class="flex items-center gap-3 shrink-0">
+                <!-- Переключатель языков RU / EN / HE / AR (на мобильных — в выпадающем меню) -->
+                <div class="hidden md:flex bg-slate-100 p-1 rounded-xl border border-slate-200 items-center text-xs font-bold" role="group" aria-label="Выбор языка">
                     <button onclick="setLanguage('RU')" id="lang-RU" class="lang-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all">RU</button>
                     <button onclick="setLanguage('EN')" id="lang-EN" class="lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">EN</button>
                     <button onclick="setLanguage('HE')" id="lang-HE" class="lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">HE</button>
                     <button onclick="setLanguage('AR')" id="lang-AR" class="lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">AR</button>
                 </div>
 
-                <!-- Переключатель валют USD / EUR / GEL -->
-                <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center text-xs font-bold" role="group" aria-label="Выбор валюты">
+                <!-- Переключатель валют USD / EUR / GEL (на мобильных — в выпадающем меню) -->
+                <div class="hidden md:flex bg-slate-100 p-1 rounded-xl border border-slate-200 items-center text-xs font-bold" role="group" aria-label="Выбор валюты">
                     <button onclick="setCurrency('USD')" id="curr-USD" class="curr-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all">$ USD</button>
                     <button onclick="setCurrency('EUR')" id="curr-EUR" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">€ EUR</button>
                     <button onclick="setCurrency('GEL')" id="curr-GEL" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">₾ GEL</button>
                 </div>
 
-                <a href="#lead-form" class="hidden sm:inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-glow transition-all">
+                <a href="#lead-form" class="hidden lg:inline-flex 2xl:hidden items-center gap-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-glow transition-all">
                     <i data-lucide="file-Spreadsheet" class="w-4 h-4"></i>
                     <span>Расчет сметы</span>
                 </a>
 
                 <!-- Кнопка мобильного меню -->
-                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" aria-label="Открыть меню">
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="2xl:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" aria-label="Открыть меню">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
 
         <!-- Мобильное выпадающее меню -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3">
-            <div class="grid grid-cols-2 gap-2 text-sm font-medium text-slate-700">
+        <div id="mobile-menu" class="hidden 2xl:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 max-h-[calc(100vh-5rem)] overflow-y-auto">
+            <!-- Языки и валюты для мобильных (в шапке скрыты до md) -->
+            <div class="md:hidden flex flex-wrap items-center gap-2">
+                <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center text-xs font-bold" role="group" aria-label="Выбор языка">
+                    <button onclick="setLanguage('RU')" data-lang="RU" class="lang-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all">RU</button>
+                    <button onclick="setLanguage('EN')" data-lang="EN" class="lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">EN</button>
+                    <button onclick="setLanguage('HE')" data-lang="HE" class="lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">HE</button>
+                    <button onclick="setLanguage('AR')" data-lang="AR" class="lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">AR</button>
+                </div>
+                <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center text-xs font-bold" role="group" aria-label="Выбор валюты">
+                    <button onclick="setCurrency('USD')" data-curr="USD" class="curr-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all">$ USD</button>
+                    <button onclick="setCurrency('EUR')" data-curr="EUR" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">€ EUR</button>
+                    <button onclick="setCurrency('GEL')" data-curr="GEL" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">₾ GEL</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm font-medium text-slate-700">
                 <a href="#ecosystem" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Клиники CITO & PINEO</a>
                 <a href="#doctor" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Врачи и консилиум</a>
                 <a href="#comparison" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Матрица стандартов</a>
@@ -363,12 +404,12 @@
                             <p id="tr-desc" class="text-xs text-slate-300 leading-relaxed">
                                 Забор крови в отеле 24/7, панель ANAB ISO 15189 (bioMérieux Vidac PC), ТРУЗИ с ИИ Samsung HS60, УЗДГ сосудов, урофлоуметрия и личная консультация д-ра А. Бочоришвили.
                             </p>
-                            <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+                            <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
                                 <div>
                                     <div class="text-[11px] text-slate-400">Ориентир «Под ключ»:</div>
-                                    <div id="tr-price" class="text-xl font-extrabold text-teal-400">$850 – $1 200</div>
+                                    <div id="tr-price" class="text-xl font-extrabold text-teal-400 whitespace-nowrap">$850 – $1 200</div>
                                 </div>
-                                <a href="#lead-form" onclick="prefillCaseFromTriage()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors">
+                                <a href="#lead-form" onclick="prefillCaseFromTriage()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors text-center grow sm:grow-0">
                                     Забронировать слот →
                                 </a>
                             </div>
@@ -563,14 +604,14 @@
                             </div>
                         </div>
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-1.5 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
-                                <span>Этап:</span>
-                                <input type="range" id="surg-phase-slider" min="0" max="100" value="45" oninput="updateSurgPhase(this.value)" class="w-20 sm:w-28 accent-teal-400 cursor-pointer h-1.5">
-                                <span id="surg-phase-label" class="font-mono text-teal-300 font-bold">Лазерная резекция</span>
+                            <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
+                                <span class="shrink-0">Этап:</span>
+                                <input type="range" id="surg-phase-slider" min="0" max="100" value="45" oninput="updateSurgPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
+                                <span id="surg-phase-label" class="font-mono text-teal-300 font-bold truncate">Лазерная резекция</span>
                             </div>
-                            <button type="button" onclick="open3DModal(surg3DMode === 'rirs' ? 'rirs' : (surg3DMode === 'onco' ? 'onco' : 'bph'))" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1 rounded-lg flex items-center gap-1 shrink-0">
+                            <button type="button" onclick="open3DModal(surg3DMode === 'rirs' ? 'rirs' : (surg3DMode === 'onco' ? 'onco' : 'bph'))" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1.5 sm:py-1 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
                                 <i data-lucide="maximize-2" class="w-3 h-3 text-teal-400"></i>
-                                <span>На весь экран</span>
+                                <span class="hidden sm:inline">На весь экран</span>
                             </button>
                         </div>
                     </div>
@@ -628,14 +669,14 @@
                             </div>
                         </div>
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-1.5 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
-                                <span>Сосуды:</span>
-                                <input type="range" id="ed-phase-slider" min="0" max="100" value="80" oninput="updateEdPhase(this.value)" class="w-20 sm:w-28 accent-teal-400 cursor-pointer h-1.5">
-                                <span id="ed-phase-label" class="font-mono text-teal-300 font-bold">Рост микрососудов</span>
+                            <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
+                                <span class="shrink-0">Сосуды:</span>
+                                <input type="range" id="ed-phase-slider" min="0" max="100" value="80" oninput="updateEdPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
+                                <span id="ed-phase-label" class="font-mono text-teal-300 font-bold truncate">Рост микрососудов</span>
                             </div>
-                            <button type="button" onclick="open3DModal('ed')" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1 rounded-lg flex items-center gap-1 shrink-0">
+                            <button type="button" onclick="open3DModal('ed')" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1.5 sm:py-1 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
                                 <i data-lucide="maximize-2" class="w-3 h-3 text-teal-400"></i>
-                                <span>На весь экран</span>
+                                <span class="hidden sm:inline">На весь экран</span>
                             </button>
                         </div>
                     </div>
@@ -857,7 +898,7 @@
 
         <div class="bg-white rounded-3xl shadow-premium border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse min-w-[740px]">
+                <table class="cmp-table w-full text-left border-collapse min-w-[740px]">
                     <thead>
                         <tr class="bg-slate-900 text-white text-xs uppercase tracking-wider">
                             <th class="py-4 px-6 font-bold w-1/4">Критерий оценки</th>
@@ -1032,7 +1073,7 @@
 
                 <!-- ПАКЕТ 2: THERAPY & ANDROLOGY -->
                 <div class="bg-white rounded-3xl border-2 border-teal-600 shadow-2xl p-6 sm:p-8 flex flex-col justify-between relative transform lg:-translate-y-2">
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-teal-600 text-white text-[11px] font-extrabold uppercase tracking-widest px-4 py-1 rounded-full shadow-md whitespace-nowrap">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-2rem)] text-center leading-tight bg-teal-600 text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide sm:tracking-widest px-4 py-1 rounded-2xl sm:rounded-full shadow-md sm:whitespace-nowrap">
                         Органосохраняющий протокол EAU • Без операции
                     </div>
 
@@ -1551,6 +1592,7 @@
     <script>
         // Инициализация иконок Lucide
         lucide.createIcons();
+        syncComparisonLabels();
 
         // Текущая выбранная валюта и язык
         let currentCurrency = 'USD';
@@ -3328,13 +3370,13 @@
             document.title = PAGE_TITLES[lang] || PAGE_TITLES.RU;
 
             ['RU', 'EN', 'HE', 'AR'].forEach(l => {
-                const btn = document.getElementById('lang-' + l);
-                if (!btn) return;
-                if (l === lang) {
-                    btn.className = 'lang-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all';
-                } else {
-                    btn.className = 'lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
-                }
+                document.querySelectorAll('#lang-' + l + ', [data-lang="' + l + '"]').forEach(btn => {
+                    if (l === lang) {
+                        btn.className = 'lang-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all';
+                    } else {
+                        btn.className = 'lang-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+                    }
+                });
             });
 
             // Обновление составных HTML-блоков
@@ -3365,19 +3407,21 @@
             if (modalEl && !modalEl.classList.contains('hidden')) {
                 open3DModal(modal3DKey);
             }
+
+            syncComparisonLabels();
         }
 
         // Переключение валют USD / EUR / GEL
         function setCurrency(curr) {
             currentCurrency = curr;
             ['USD', 'EUR', 'GEL'].forEach(c => {
-                const btn = document.getElementById('curr-' + c);
-                if (!btn) return;
-                if (c === curr) {
-                    btn.className = 'curr-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all';
-                } else {
-                    btn.className = 'curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
-                }
+                document.querySelectorAll('#curr-' + c + ', [data-curr="' + c + '"]').forEach(btn => {
+                    if (c === curr) {
+                        btn.className = 'curr-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all';
+                    } else {
+                        btn.className = 'curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+                    }
+                });
             });
 
             const attrName = 'data-price-' + curr.toLowerCase();
@@ -3396,6 +3440,18 @@
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             if (menu) menu.classList.toggle('hidden');
+        }
+
+        // Подписи колонок сравнительной таблицы для карточного вида на мобильных (берутся из шапки, поэтому переводятся вместе с ней)
+        function syncComparisonLabels() {
+            document.querySelectorAll('.cmp-table').forEach(table => {
+                const heads = [...table.querySelectorAll('thead th')].map(th => th.textContent.trim());
+                table.querySelectorAll('tbody tr').forEach(tr => {
+                    [...tr.children].forEach((td, i) => {
+                        if (i > 0 && heads[i]) td.setAttribute('data-label', heads[i]);
+                    });
+                });
+            });
         }
 
         // Интерактивный триаж на первом экране
