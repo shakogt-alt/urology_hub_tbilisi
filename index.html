@@ -4,44 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UroHub Tbilisi | Передовая европейская урология на базе CITO и PINEO</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter, Heebo & Noto Sans Arabic -->
+    <meta name="description" content="Урология и хирургия простаты в Тбилиси за 24–48 часов: диагностика в CITO, лазерные операции HoLEP, ТУР и RIRS в госпитале PINEO. Д-р Александр Бочоришвили (EAU), фиксированная смета «под ключ».">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="canonical" href="https://urologyhubtbilisi.vercel.app/">
+    <!-- Языковые версии (язык выбирается параметром ?lang=) -->
+    <link rel="alternate" hreflang="ru" href="https://urologyhubtbilisi.vercel.app/">
+    <link rel="alternate" hreflang="en" href="https://urologyhubtbilisi.vercel.app/?lang=en">
+    <link rel="alternate" hreflang="he" href="https://urologyhubtbilisi.vercel.app/?lang=he">
+    <link rel="alternate" hreflang="ar" href="https://urologyhubtbilisi.vercel.app/?lang=ar">
+    <link rel="alternate" hreflang="x-default" href="https://urologyhubtbilisi.vercel.app/">
+    <!-- Иконки -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Превью ссылки в мессенджерах и соцсетях -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CITO × PINEO UroHub Tbilisi">
+    <meta property="og:title" content="Европейская урология и хирургия простаты в Тбилиси за 24–48 часов">
+    <meta property="og:description" content="Диагностика в CITO, лазерная хирургия в PINEO, д-р Александр Бочоришвили (EAU). Фиксированная смета «под ключ» и бесплатный разбор медкарты.">
+    <meta property="og:url" content="https://urologyhubtbilisi.vercel.app/">
+    <meta property="og:image" content="https://urologyhubtbilisi.vercel.app/img/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Структурированные данные для поисковиков -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "MedicalOrganization",
+                "@id": "https://urologyhubtbilisi.vercel.app/#org",
+                "name": "CITO × PINEO International UroHub",
+                "url": "https://urologyhubtbilisi.vercel.app/",
+                "image": "https://urologyhubtbilisi.vercel.app/img/og-image.jpg",
+                "logo": "https://urologyhubtbilisi.vercel.app/apple-touch-icon.png",
+                "medicalSpecialty": "Urologic",
+                "areaServed": "Worldwide",
+                "availableLanguage": ["ru", "en", "ka"],
+                "subOrganization": [
+                    { "@id": "https://urologyhubtbilisi.vercel.app/#cito" },
+                    { "@id": "https://urologyhubtbilisi.vercel.app/#pineo" }
+                ]
+            },
+            {
+                "@type": "MedicalClinic",
+                "@id": "https://urologyhubtbilisi.vercel.app/#cito",
+                "name": "CITO Medical Center",
+                "medicalSpecialty": "Urologic",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "ул. З. Палиашвили, 40",
+                    "addressLocality": "Тбилиси",
+                    "addressRegion": "Ваке",
+                    "addressCountry": "GE"
+                },
+                "openingHoursSpecification": [
+                    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "15:00", "closes": "18:00" },
+                    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "10:00", "closes": "14:00" },
+                    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "15:00", "closes": "18:00" }
+                ]
+            },
+            {
+                "@type": "Hospital",
+                "@id": "https://urologyhubtbilisi.vercel.app/#pineo",
+                "name": "PINEO Medical Ecosystem",
+                "medicalSpecialty": "Urologic",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "ул. В. Горгасали, 93",
+                    "addressLocality": "Тбилиси",
+                    "addressRegion": "Ортачала",
+                    "addressCountry": "GE"
+                },
+                "openingHours": "Mo-Su 00:00-23:59"
+            },
+            {
+                "@type": "Physician",
+                "name": "Д-р Александр Бочоришвили",
+                "medicalSpecialty": "Urologic",
+                "image": "https://urologyhubtbilisi.vercel.app/img/dr-bochorishvili-480.jpg",
+                "worksFor": [
+                    { "@id": "https://urologyhubtbilisi.vercel.app/#cito" },
+                    { "@id": "https://urologyhubtbilisi.vercel.app/#pineo" }
+                ]
+            },
+            {
+                "@type": "Physician",
+                "name": "Д-р Андро Дзнеладзе",
+                "medicalSpecialty": "Radiography",
+                "image": "https://urologyhubtbilisi.vercel.app/img/dr-dzneladze-480.jpg",
+                "worksFor": { "@id": "https://urologyhubtbilisi.vercel.app/#pineo" }
+            }
+        ]
+    }
+    </script>
+    <!-- Tailwind CSS: заранее собранный файл (исходники: tailwind.config.js, src/input.css) -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts: Inter (Heebo и Noto Sans Arabic подгружаются только при выборе HE / AR — см. ensureLangFont) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (версия закреплена, чтобы обновления библиотеки не ломали иконки) -->
+    <script src="https://unpkg.com/lucide@1.61.0/dist/umd/lucide.min.js"></script>
     <!-- Three.js WebGL Engine для детальной 3D-анатомии органов -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'Heebo', 'Noto Sans Arabic', 'system-ui', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                        }
-                    },
-                    boxShadow: {
-                        'premium': '0 20px 50px -12px rgba(15, 23, 42, 0.08)',
-                        'glow': '0 0 35px -5px rgba(13, 148, 136, 0.35)',
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         body {
@@ -209,13 +277,13 @@
                     <button onclick="setCurrency('GEL')" id="curr-GEL" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">₾ GEL</button>
                 </div>
 
-                <a href="#lead-form" class="hidden lg:inline-flex 2xl:hidden items-center gap-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-glow transition-all">
+                <a href="#lead-form" class="hidden lg:inline-flex 2xl:hidden items-center gap-2 bg-teal-700 hover:bg-teal-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-glow transition-all">
                     <i data-lucide="file-Spreadsheet" class="w-4 h-4"></i>
                     <span>Расчет сметы</span>
                 </a>
 
                 <!-- Кнопка мобильного меню -->
-                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="2xl:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" aria-label="Открыть меню">
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="2xl:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -245,7 +313,7 @@
                 <a href="#roadmap" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Этапы поездки</a>
                 <a href="#faq" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Ответы на вопросы</a>
             </div>
-            <a href="#lead-form" onclick="toggleMobileMenu()" class="w-full flex items-center justify-center gap-2 bg-teal-600 text-white font-semibold py-3 rounded-xl shadow-md">
+            <a href="#lead-form" onclick="toggleMobileMenu()" class="w-full flex items-center justify-center gap-2 bg-teal-700 text-white font-semibold py-3 rounded-xl shadow-md">
                 <i data-lucide="send" class="w-4 h-4"></i>
                 Бесплатный разбор медкарты в WhatsApp / Telegram
             </a>
@@ -332,7 +400,7 @@
                     <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                             <div>
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full">Интерактивный триаж 2026</span>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Интерактивный триаж 2026</span>
                                 <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1.5">Подберите клинический маршрут</h2>
                             </div>
                             <div class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 flex items-center justify-center shrink-0">
@@ -606,7 +674,7 @@
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
                             <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
                                 <span class="shrink-0">Этап:</span>
-                                <input type="range" id="surg-phase-slider" min="0" max="100" value="45" oninput="updateSurgPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
+                                <input type="range" id="surg-phase-slider" aria-label="Этап операции" min="0" max="100" value="45" oninput="updateSurgPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
                                 <span id="surg-phase-label" class="font-mono text-teal-300 font-bold truncate">Лазерная резекция</span>
                             </div>
                             <button type="button" onclick="open3DModal(surg3DMode === 'rirs' ? 'rirs' : (surg3DMode === 'onco' ? 'onco' : 'bph'))" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1.5 sm:py-1 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
@@ -635,7 +703,7 @@
 
             <!-- Карточка 4: Сосудистая ЭД и Превентивная Андрология 40+ (6 колонок) -->
             <div class="md:col-span-6 bento-card bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-premium">
-                <div class="flex items-center gap-2 text-teal-600 text-xs font-bold uppercase tracking-wider mb-3">
+                <div class="flex items-center gap-2 text-teal-700 text-xs font-bold uppercase tracking-wider mb-3">
                     <i data-lucide="heart-pulse" class="w-4 h-4"></i>
                     Кардио-урологический маркер & Anti-Age 40+
                 </div>
@@ -671,7 +739,7 @@
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
                             <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
                                 <span class="shrink-0">Сосуды:</span>
-                                <input type="range" id="ed-phase-slider" min="0" max="100" value="80" oninput="updateEdPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
+                                <input type="range" id="ed-phase-slider" aria-label="Восстановление сосудов" min="0" max="100" value="80" oninput="updateEdPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
                                 <span id="ed-phase-label" class="font-mono text-teal-300 font-bold truncate">Рост микрососудов</span>
                             </div>
                             <button type="button" onclick="open3DModal('ed')" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1.5 sm:py-1 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
@@ -727,16 +795,11 @@
                 <div class="bg-slate-800/80 border border-slate-700/90 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-center sm:items-stretch shadow-xl">
                     <!-- Портрет 2:3 без обрезки -->
                     <div class="relative w-44 sm:w-48 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden border border-teal-500/30 bg-slate-950 shadow-lg group">
-                        <img src="sandro_bochorishvili.jpg" alt="Д-р Александр Бочоришвили" onload="const btn=document.getElementById('dr-photo-upload-label'); if(btn && !this.src.includes('placehold.co')) btn.classList.add('hidden');" onerror="this.onerror=null; this.src='https://placehold.co/480x720/0f172a/2dd4bf?text=Dr.+A.+Bochorishvili'; const btn=document.getElementById('dr-photo-upload-label'); if(btn) btn.classList.remove('hidden');" class="dr-bochorishvili-photo w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
+                        <img src="img/dr-bochorishvili-480.jpg" alt="Д-р Александр Бочоришвили" width="480" height="720" loading="lazy" decoding="async" onerror="this.onerror=null; this.style.visibility='hidden';" class="dr-bochorishvili-photo w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent p-2.5 flex items-center justify-between">
                             <span class="text-[10px] font-bold text-teal-300 uppercase tracking-wider">PINEO × CITO</span>
                             <span class="text-[10px] font-semibold text-slate-200 bg-slate-900/85 px-2 py-0.5 rounded">EAU • 19 лет</span>
                         </div>
-                        <label id="dr-photo-upload-label" class="hidden absolute top-2 right-2 cursor-pointer bg-slate-900/90 hover:bg-teal-600 text-teal-300 hover:text-white border border-teal-500/40 text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-lg backdrop-blur-md transition-all flex items-center gap-1" title="Выберите файл sandro_bochorishvili.jpg">
-                            <i data-lucide="image-plus" class="w-3 h-3"></i>
-                            <span>Фото</span>
-                            <input type="file" accept="image/*" class="hidden" onchange="if(this.files && this.files[0]){ const url = URL.createObjectURL(this.files[0]); document.querySelectorAll('.dr-bochorishvili-photo').forEach(img => img.src = url); this.parentElement.classList.add('hidden'); }">
-                        </label>
                     </div>
 
                     <!-- Описание позиции в PINEO и компетенций -->
@@ -778,16 +841,11 @@
                 <div class="bg-slate-800/80 border border-slate-700/90 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-center sm:items-stretch shadow-xl">
                     <!-- Портрет 2:3 без обрезки -->
                     <div class="relative w-44 sm:w-48 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden border border-teal-500/30 bg-slate-950 shadow-lg group">
-                        <img src="175915295488.jpg" alt="Д-р Андро Дзнеладзе" onload="const btn=document.getElementById('dr-dzneladze-upload-label'); if(btn && !this.src.includes('placehold.co')) btn.classList.add('hidden');" onerror="this.onerror=null; this.src='https://placehold.co/480x720/0f172a/2dd4bf?text=Dr.+A.+Dzneladze'; const btn=document.getElementById('dr-dzneladze-upload-label'); if(btn) btn.classList.remove('hidden');" class="dr-dzneladze-photo w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
+                        <img src="img/dr-dzneladze-480.jpg" alt="Д-р Андро Дзнеладзе" width="480" height="720" loading="lazy" decoding="async" onerror="this.onerror=null; this.style.visibility='hidden';" class="dr-dzneladze-photo w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent p-2.5 flex items-center justify-between">
                             <span class="text-[10px] font-bold text-teal-300 uppercase tracking-wider">PINEO Ecosystem</span>
                             <span class="text-[10px] font-semibold text-amber-300 bg-slate-900/85 px-2 py-0.5 rounded">★ 4.9 • 35+ лет</span>
                         </div>
-                        <label id="dr-dzneladze-upload-label" class="hidden absolute top-2 right-2 cursor-pointer bg-slate-900/90 hover:bg-teal-600 text-teal-300 hover:text-white border border-teal-500/40 text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-lg backdrop-blur-md transition-all flex items-center gap-1" title="Выберите файл 175915295488.jpg">
-                            <i data-lucide="image-plus" class="w-3 h-3"></i>
-                            <span>Фото</span>
-                            <input type="file" accept="image/*" class="hidden" onchange="if(this.files && this.files[0]){ const url = URL.createObjectURL(this.files[0]); document.querySelectorAll('.dr-dzneladze-photo').forEach(img => img.src = url); this.parentElement.classList.add('hidden'); }">
-                        </label>
                     </div>
 
                     <!-- Описание позиции в PINEO и компетенций -->
@@ -1064,7 +1122,7 @@
                     </div>
 
                     <div class="mt-8 pt-4 border-t border-slate-100">
-                        <button onclick="selectPackageForForm('BASE: Диагностика 40+ & Второе мнение ($850–$1 200)')" class="w-full py-3.5 px-5 rounded-2xl bg-slate-900 hover:bg-teal-600 text-white font-bold text-sm transition-colors flex items-center justify-center gap-2">
+                        <button onclick="selectPackageForForm('BASE: Диагностика 40+ & Второе мнение ($850–$1 200)')" class="w-full py-3.5 px-5 rounded-2xl bg-slate-900 hover:bg-teal-700 text-white font-bold text-sm transition-colors flex items-center justify-center gap-2">
                             <span>Выбрать пакет «BASE»</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
@@ -1073,7 +1131,7 @@
 
                 <!-- ПАКЕТ 2: THERAPY & ANDROLOGY -->
                 <div class="bg-white rounded-3xl border-2 border-teal-600 shadow-2xl p-6 sm:p-8 flex flex-col justify-between relative transform lg:-translate-y-2">
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-2rem)] text-center leading-tight bg-teal-600 text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide sm:tracking-widest px-4 py-1 rounded-2xl sm:rounded-full shadow-md sm:whitespace-nowrap">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-2rem)] text-center leading-tight bg-teal-700 text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide sm:tracking-widest px-4 py-1 rounded-2xl sm:rounded-full shadow-md sm:whitespace-nowrap">
                         Органосохраняющий протокол EAU • Без операции
                     </div>
 
@@ -1149,7 +1207,7 @@
                     </div>
 
                     <div class="mt-8 pt-4 border-t border-slate-100">
-                        <button onclick="selectPackageForForm('THERAPY & ANDROLOGY: Комплексный терапевтический ($1 950–$2 800)')" class="w-full py-3.5 px-5 rounded-2xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-sm shadow-md hover:shadow-glow transition-all flex items-center justify-center gap-2">
+                        <button onclick="selectPackageForForm('THERAPY & ANDROLOGY: Комплексный терапевтический ($1 950–$2 800)')" class="w-full py-3.5 px-5 rounded-2xl bg-teal-700 hover:bg-teal-700 text-white font-bold text-sm shadow-md hover:shadow-glow transition-all flex items-center justify-center gap-2">
                             <span>Выбрать пакет «THERAPY & ANDROLOGY»</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
@@ -1269,7 +1327,7 @@
                         Вы присылаете анализы, ПСА и диски МРТ/КТ в WhatsApp или Telegram. Наш офис переводит документацию и согласует с д-ром Бочоришвили предварительный план (Base, Therapy или VIP) и фиксированную смету.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-400">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
                     Срок: до 24 часов
                 </div>
             </div>
@@ -1286,7 +1344,7 @@
                         Индивидуальный трансфер из аэропорта Тбилиси в отель 4*–5*. Мобильная медсестра CITO приезжает прямо в ваш номер для забора крови и мочи — утром следующего дня результаты по ISO 15189 уже на столе врача.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-teal-600">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-teal-700">
                     Экономия 1 дня ожидания
                 </div>
             </div>
@@ -1312,7 +1370,7 @@
             <div class="bg-white rounded-3xl p-6 border-2 border-teal-600 shadow-md relative flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-4">
-                        <span class="w-10 h-10 rounded-2xl bg-teal-600 text-white font-extrabold text-sm flex items-center justify-center">04</span>
+                        <span class="w-10 h-10 rounded-2xl bg-teal-700 text-white font-extrabold text-sm flex items-center justify-center">04</span>
                         <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">День 2–5 • Ортачала</span>
                     </div>
                     <h3 class="font-bold text-base text-slate-900 mb-2">Хирургия PINEO / Терапия</h3>
@@ -1364,7 +1422,7 @@
                     <div class="space-y-3" id="faq-container">
                         <!-- Вопрос 1 -->
                         <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
-                            <button onclick="toggleFaq(0)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                            <button onclick="toggleFaq(0)" aria-expanded="true" aria-controls="faq-content-0" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
                                 <span>Изменится ли цена операции ТУР или HoLEP, если объем простаты превышает 80–100 см³?</span>
                                 <i data-lucide="chevron-down" id="faq-icon-0" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200 rotate-180"></i>
                             </button>
@@ -1375,7 +1433,7 @@
 
                         <!-- Вопрос 2 -->
                         <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
-                            <button onclick="toggleFaq(1)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                            <button onclick="toggleFaq(1)" aria-expanded="false" aria-controls="faq-content-1" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
                                 <span>Как проводится диагностика и безоперационное лечение сосудистой эректильной дисфункции?</span>
                                 <i data-lucide="chevron-down" id="faq-icon-1" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200"></i>
                             </button>
@@ -1386,7 +1444,7 @@
 
                         <!-- Вопрос 3 -->
                         <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
-                            <button onclick="toggleFaq(2)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                            <button onclick="toggleFaq(2)" aria-expanded="false" aria-controls="faq-content-2" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
                                 <span>Что означает принцип «Защита от коммерческого гиперлечения»?</span>
                                 <i data-lucide="chevron-down" id="faq-icon-2" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200"></i>
                             </button>
@@ -1397,7 +1455,7 @@
 
                         <!-- Вопрос 4 -->
                         <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
-                            <button onclick="toggleFaq(3)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                            <button onclick="toggleFaq(3)" aria-expanded="false" aria-controls="faq-content-3" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
                                 <span>Как происходит оплата и подходят ли выписки для международных страховых компаний?</span>
                                 <i data-lucide="chevron-down" id="faq-icon-3" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200"></i>
                             </button>
@@ -1440,14 +1498,14 @@
                                     <div class="grid grid-cols-2 gap-2">
                                         <label class="cursor-pointer">
                                             <input type="radio" name="messenger" value="WhatsApp" checked class="peer sr-only">
-                                            <div class="py-2.5 px-3 rounded-xl border border-slate-200 peer-checked:border-teal-600 peer-checked:bg-teal-50 peer-checked:text-teal-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                            <div class="py-2.5 px-3 rounded-xl border border-slate-200 peer-checked:border-teal-600 peer-checked:bg-teal-50 peer-checked:text-teal-800 peer-focus-visible:ring-2 peer-focus-visible:ring-teal-600/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
                                                 <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
                                                 WhatsApp
                                             </div>
                                         </label>
                                         <label class="cursor-pointer">
                                             <input type="radio" name="messenger" value="Telegram" class="peer sr-only">
-                                            <div class="py-2.5 px-3 rounded-xl border border-slate-200 peer-checked:border-teal-600 peer-checked:bg-teal-50 peer-checked:text-teal-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                            <div class="py-2.5 px-3 rounded-xl border border-slate-200 peer-checked:border-teal-600 peer-checked:bg-teal-50 peer-checked:text-teal-800 peer-focus-visible:ring-2 peer-focus-visible:ring-teal-600/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
                                                 <i data-lucide="send" class="w-4 h-4 text-sky-600"></i>
                                                 Telegram
                                             </div>
@@ -1475,12 +1533,12 @@
                                 <textarea id="patient-notes" rows="2" placeholder="Например: объем простаты по ТРУЗИ, уровень ПСА, симптомы или имеющийся диагноз..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 outline-none text-sm transition-all"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-base shadow-lg hover:shadow-glow transition-all flex items-center justify-center gap-2">
+                            <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-teal-700 hover:bg-teal-700 text-white font-extrabold text-base shadow-lg hover:shadow-glow transition-all flex items-center justify-center gap-2">
                                 <i data-lucide="file-check-2" class="w-5 h-5"></i>
                                 <span>Получить предварительный план и смету</span>
                             </button>
 
-                            <p class="text-[11px] text-slate-400 text-center">
+                            <p class="text-[11px] text-slate-500 text-center">
                                 Нажимая кнопку, вы соглашаетесь с протоколом врачебной тайны (HIPAA / GDPR). Первичный триаж документов бесплатный и ни к чему вас не обязывает.
                             </p>
                         </form>
@@ -1523,7 +1581,7 @@
                 </div>
             </div>
 
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500">
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400">
                 <div>© 2026 CITO × PINEO International Patient Office (Tbilisi, Georgia). Все права защищены.</div>
                 <div>Информация носит ознакомительный характер. Имеются противопоказания, необходима консультация специалиста.</div>
             </div>
@@ -1543,7 +1601,7 @@
                 <div>1. Результаты крайнего ПСА / общих анализов крови и мочи (если есть).</div>
                 <div>2. Заключение ТРУЗИ или ссылку на архив МРТ/КТ.</div>
             </div>
-            <button onclick="closeSuccessModal()" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-teal-600 text-white font-bold text-sm transition-colors">
+            <button onclick="closeSuccessModal()" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-teal-700 text-white font-bold text-sm transition-colors">
                 Отлично, жду сообщения
             </button>
         </div>
@@ -1565,7 +1623,7 @@
                         <button type="button" onclick="open3DModal('rirs')" id="mbtn-rirs" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Почка: Лазер RIRS</button>
                         <button type="button" onclick="open3DModal('onco')" id="mbtn-onco" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Сбережение нервов</button>
                     </div>
-                    <button type="button" onclick="close3DModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+                    <button type="button" onclick="close3DModal()" aria-label="Закрыть" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
@@ -3362,7 +3420,22 @@
         let currentTriageKey = 'checkup';
 
         // Переключение языка RU / EN / HE / AR в шапке с автоматическим переводом всех блоков и 3D-виджетов
+        // Шрифты для иврита и арабского грузим только когда они реально нужны
+        const LANG_FONTS = {
+            HE: 'https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap',
+            AR: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap'
+        };
+        function ensureLangFont(lang) {
+            const href = LANG_FONTS[lang];
+            if (!href || document.querySelector('link[href="' + href + '"]')) return;
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+        }
+
         function setLanguage(lang) {
+            ensureLangFont(lang);
             initI18nBindings();
             currentLang = lang;
             document.documentElement.lang = lang.toLowerCase();
@@ -3409,6 +3482,27 @@
             }
 
             syncComparisonLabels();
+            rememberLanguage(lang);
+        }
+
+        // Язык хранится в адресе (?lang=en — ссылкой можно поделиться, поисковики индексируют версию) и в браузере
+        const SUPPORTED_LANGS = ['RU', 'EN', 'HE', 'AR'];
+        function rememberLanguage(lang) {
+            try { localStorage.setItem('urohub-lang', lang); } catch (e) {}
+            try {
+                const url = new URL(window.location.href);
+                if (lang === 'RU') url.searchParams.delete('lang');
+                else url.searchParams.set('lang', lang.toLowerCase());
+                history.replaceState(null, '', url.pathname + url.search + url.hash);
+            } catch (e) {}
+        }
+        function getInitialLanguage() {
+            let fromUrl = null;
+            try { fromUrl = (new URLSearchParams(window.location.search).get('lang') || '').toUpperCase(); } catch (e) {}
+            if (SUPPORTED_LANGS.includes(fromUrl)) return fromUrl;
+            let saved = null;
+            try { saved = localStorage.getItem('urohub-lang'); } catch (e) {}
+            return SUPPORTED_LANGS.includes(saved) ? saved : 'RU';
         }
 
         // Переключение валют USD / EUR / GEL
@@ -3439,7 +3533,10 @@
         // Мобильное меню
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
-            if (menu) menu.classList.toggle('hidden');
+            if (!menu) return;
+            const isOpen = !menu.classList.toggle('hidden');
+            const btn = document.getElementById('mobile-menu-btn');
+            if (btn) btn.setAttribute('aria-expanded', String(isOpen));
         }
 
         // Подписи колонок сравнительной таблицы для карточного вида на мобильных (берутся из шапки, поэтому переводятся вместе с ней)
@@ -3508,6 +3605,8 @@
                 content.classList.add('hidden');
                 icon.classList.remove('rotate-180');
             }
+            const btn = document.querySelector('[onclick="toggleFaq(' + index + ')"]');
+            if (btn) btn.setAttribute('aria-expanded', String(isHidden));
         }
 
         // Отправка формы лида
@@ -4582,7 +4681,8 @@
                 // Плашка с названием структуры органа
                 const translatedLabel = trCallout(item.label);
                 const textW = ctx.measureText(translatedLabel).width + 10;
-                const boxX = item.dx >= 0 ? lx : lx - textW;
+                // Плашка не должна выходить за края узкого (мобильного) вьюпорта
+                const boxX = Math.max(4, Math.min(w - textW - 4, item.dx >= 0 ? lx : lx - textW));
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.84)';
                 ctx.strokeStyle = 'rgba(45, 212, 191, 0.35)';
                 ctx.lineWidth = 1;
@@ -4597,7 +4697,21 @@
             ctx.restore();
         }
 
+        // Рисуем только те 3D-холсты, которые сейчас видны на экране (экономия CPU/GPU и батареи на мобильных)
+        const visible3DCanvases = new Set();
+        if ('IntersectionObserver' in window) {
+            const canvasObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) visible3DCanvases.add(entry.target.id);
+                    else visible3DCanvases.delete(entry.target.id);
+                });
+            }, { rootMargin: '150px 0px' });
+            document.querySelectorAll('canvas.med-3d-canvas').forEach(c => canvasObserver.observe(c));
+        }
+        const is3DCanvasVisible = id => !('IntersectionObserver' in window) || visible3DCanvases.has(id);
+
         function renderOrganToCanvas(canvasId, organType, subMode, phase, t) {
+            if (!is3DCanvasVisible(canvasId)) return;
             ensureThreeInitialized();
             if (!sharedRenderer) return;
             const canvas = document.getElementById(canvasId);
@@ -4800,6 +4914,25 @@
         }
 
         requestAnimationFrame(animateAll3D);
+
+        // Стартовый язык: из ?lang= или из прошлого визита
+        const initialLang = getInitialLanguage();
+        if (initialLang !== 'RU') setLanguage(initialLang);
+
+        // Разметка FAQPage для поисковиков строится из самого блока FAQ, поэтому не расходится с текстом на странице
+        (function injectFaqSchema() {
+            const items = [];
+            for (let i = 0; document.getElementById('faq-content-' + i); i++) {
+                const q = document.querySelector('[onclick="toggleFaq(' + i + ')"] span');
+                const a = document.getElementById('faq-content-' + i);
+                if (q && a) items.push({ '@type': 'Question', name: q.textContent.trim(), acceptedAnswer: { '@type': 'Answer', text: a.textContent.trim().replace(/\s+/g, ' ') } });
+            }
+            if (!items.length) return;
+            const s = document.createElement('script');
+            s.type = 'application/ld+json';
+            s.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items });
+            document.head.appendChild(s);
+        })();
     </script>
 </body>
 </html>

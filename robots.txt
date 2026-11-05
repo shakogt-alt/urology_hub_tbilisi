@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://urologyhubtbilisi.vercel.app/sitemap.xml
