@@ -491,6 +491,10 @@
                             <span class="flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5 text-teal-600"></i> Ваши данные видят только врач и координатор</span>
                             <span>Ответим в течение 2 часов</span>
                         </div>
+                        <a href="#symptoms" class="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-600">
+                            <i data-lucide="list-checks" class="w-4 h-4"></i>
+                            <span>Не уверены, что выбрать? Пройдите опрос из 5 вопросов</span>
+                        </a>
                     </div>
                 </div>
 
@@ -772,6 +776,18 @@
                 </div>
             </div>
 
+        </div>
+    </section>
+
+    <!-- ОПРОСНИК ПО СИМПТОМАМ: человек кнопками описывает проблему и отправляет итог координатору (рисует renderSymptomQuiz) -->
+    <section id="symptoms" class="py-16 lg:py-20 bg-white border-y border-slate-200 scroll-mt-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <div id="sq-eyebrow" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider mb-3 border border-teal-200">Опрос за 1 минуту</div>
+                <h2 id="sq-title" class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Разберёмся, что вас беспокоит</h2>
+                <p id="sq-sub" class="text-slate-600 mt-3 text-base">Ответьте на 5 коротких вопросов — покажем, какая программа вам подойдёт, и передадим ответы координатору.</p>
+            </div>
+            <div id="sq-root" class="bg-slate-50 border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-premium" aria-live="polite"></div>
         </div>
     </section>
 
@@ -2060,6 +2076,7 @@
             [`Поверните модель мышью, чтобы рассмотреть со всех сторон`]: { EN: `Drag the model with your mouse to see it from every side`, HE: `סובבו את המודל עם העכבר כדי לראות אותו מכל הצדדים`, AR: `أدر النموذج بالماوس لرؤيته من جميع الجهات` },
             [`Вращайте пальцем`]: { EN: `Drag to rotate`, HE: `סובבו באצבע`, AR: `أدِر بإصبعك` },
             [`3D-модель органа`]: { EN: `3D organ model`, HE: `מודל 3D של האיבר`, AR: `نموذج 3D للعضو` },
+            [`Не уверены, что выбрать? Пройдите опрос из 5 вопросов`]: { EN: `Not sure what to choose? Take a 5-question check`, HE: `לא בטוחים מה לבחור? מלאו שאלון של 5 שאלות`, AR: `لست متأكداً مما تختار؟ أجب عن استبيان من 5 أسئلة` },
             [`Узнать цену и даты →`]: { EN: `Get price and dates →`, HE: `לברר מחיר ותאריכים ←`, AR: `اعرف السعر والمواعيد ←` }
         };
 
@@ -2441,6 +2458,7 @@
 
             syncComparisonLabels();
             rememberLanguage(lang);
+            renderSymptomQuiz();
         }
 
         // Язык хранится в адресе (?lang=en — ссылкой можно поделиться, поисковики индексируют версию) и в браузере
@@ -2486,6 +2504,9 @@
             if (trPrice && triageData[currentTriageKey]) {
                 trPrice.textContent = triageData[currentTriageKey].prices[curr];
             }
+
+            // Цена «от …» в итоге опросника
+            if (typeof renderSymptomQuiz === 'function' && sqState.step === 5) renderSymptomQuiz();
         }
 
         // Мобильное меню
@@ -3887,6 +3908,528 @@
         }
 
         requestAnimationFrame(animateAll3D);
+
+        // =========================================================================
+        // ОПРОСНИК ПО СИМПТОМАМ (блок #symptoms)
+        // Шаги: 0 — жалобы (несколько), 1 — давность, 2 — уточнения по жалобам,
+        // 3 — документы (несколько), 4 — цель, 5 — итог и отправка координатору.
+        // =========================================================================
+
+        // Куда отправлять итог. Пока номер не задан, ответы переносятся в форму заявки внизу страницы.
+        // whatsapp — номер в международном формате только цифрами (например '995555123456'),
+        // telegram — ник без @ (например 'urohub_tbilisi').
+        const COORDINATOR_CONTACT = { whatsapp: '', telegram: '' };
+
+        const SQ_PROBLEMS = [
+            { id: 'ed', icon: 'heart-pulse', follow: ['ed_morning', 'ed_risk'] },
+            { id: 'flow', icon: 'droplet', follow: ['night'] },
+            { id: 'freq', icon: 'moon', follow: ['night'] },
+            { id: 'incont', icon: 'droplets', follow: ['incont'] },
+            { id: 'pain', icon: 'flame', follow: ['fever'] },
+            { id: 'blood', icon: 'triangle-alert', follow: [] },
+            { id: 'stones', icon: 'circle-dot', follow: ['stone_size', 'stone_acute'] },
+            { id: 'psa', icon: 'microscope', follow: ['psa', 'psa_exam'] },
+            { id: 'lowt', icon: 'battery-low', follow: ['t'] },
+            { id: 'checkup', icon: 'clipboard-check', follow: [] }
+        ];
+        const SQ_FOLLOW_OPTIONS = {
+            ed_morning: ['yes', 'rare', 'no'],
+            ed_risk: ['yes', 'no', 'unk'],
+            night: ['n01', 'n23', 'n4'],
+            incont: ['stress', 'urge', 'postop', 'always'],
+            fever: ['yes', 'no'],
+            stone_size: ['s5', 's10', 's10p', 'unk'],
+            stone_acute: ['yes', 'no'],
+            psa: ['p4_10', 'p10', 'unk'],
+            psa_exam: ['mri', 'biopsy', 'both', 'none'],
+            t: ['low', 'ok', 'no']
+        };
+        const SQ_GRID_COLS = { 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3', 4: 'sm:grid-cols-4' };
+        const SQ_DURATIONS = ['lt1', 'm1_6', 'gt6', 'unk'];
+        const SQ_DOCS = ['tests', 'us', 'mri', 'discharge', 'none'];
+        const SQ_GOALS = ['opinion', 'nonsurg', 'surg'];
+        const SQ_PROGRAMS = {
+            checkup: { formValue: 'BASE: Диагностика 40+ & Второе мнение ($850–$1 200)', from: { USD: '$850', EUR: '€765', GEL: '2 180 ₾' }, days: '2–3' },
+            therapy: { formValue: 'THERAPY & ANDROLOGY: Комплексный терапевтический ($1 950–$2 800)', from: { USD: '$1 950', EUR: '€1 750', GEL: '5 005 ₾' }, days: '5–7' },
+            surgery: { formValue: 'VIP SURGERY & CONCIERGE: Хирургия + Реабилитация ($3 200–$6 800)', from: { USD: '$3 200', EUR: '€2 875', GEL: '8 215 ₾' }, days: '4–8' }
+        };
+
+        const SQ_TEXT = {
+            RU: {
+                eyebrow: 'Опрос за 1 минуту',
+                title: 'Разберёмся, что вас беспокоит',
+                sub: 'Ответьте на 5 коротких вопросов — покажем, какая программа вам подойдёт, и передадим ответы координатору.',
+                stepOf: 'Шаг {n} из {total}',
+                back: 'Назад', next: 'Далее', restart: 'Пройти заново', multi: 'Можно выбрать несколько вариантов',
+                q: { problems: 'Что вас беспокоит?', duration: 'Как давно это началось?', follow: 'Уточните несколько деталей', docs: 'Какие документы у вас уже есть?', goal: 'Чего вы хотите?' },
+                problems: {
+                    ed: ['Слабая эрекция', 'Эректильная дисфункция'],
+                    flow: ['Трудно мочиться, слабая струя', 'Затруднённое мочеиспускание'],
+                    freq: ['Часто бегаю в туалет, встаю ночью', 'Учащённое мочеиспускание'],
+                    incont: ['Подтекает моча', 'Недержание мочи'],
+                    pain: ['Боль или жжение при мочеиспускании', 'Простатит, воспаление'],
+                    blood: ['Кровь в моче', 'Гематурия'],
+                    stones: ['Камни в почках, приступы боли в боку', 'Мочекаменная болезнь'],
+                    psa: ['Высокий ПСА, подозрение на рак', 'Онкоурология'],
+                    lowt: ['Нет сил и желания, упал тестостерон', 'Андропауза'],
+                    checkup: ['Ничего не беспокоит, хочу проверить здоровье', 'Обследование 40+']
+                },
+                durations: { lt1: 'Меньше месяца', m1_6: '1–6 месяцев', gt6: 'Больше полугода', unk: 'Не помню' },
+                follow: {
+                    ed_morning: ['Бывают ли утренние эрекции?', { yes: 'Да', rare: 'Редко', no: 'Нет' }],
+                    ed_risk: ['Есть ли диабет, высокое давление или болезни сердца?', { yes: 'Да', no: 'Нет', unk: 'Не знаю' }],
+                    night: ['Сколько раз за ночь встаёте в туалет?', { n01: '0–1', n23: '2–3', n4: '4 и больше' }],
+                    incont: ['Когда подтекает моча?', { stress: 'При кашле или нагрузке', urge: 'Резкий позыв, не успеваю дойти', postop: 'После операции на простате', always: 'Постоянно' }],
+                    fever: ['Есть ли температура?', { yes: 'Да', no: 'Нет' }],
+                    stone_size: ['Знаете размер камня?', { s5: 'До 5 мм', s10: '5–10 мм', s10p: 'Больше 10 мм', unk: 'Не знаю' }],
+                    stone_acute: ['Сейчас есть сильная боль, температура или рвота?', { yes: 'Да', no: 'Нет' }],
+                    psa: ['Какой у вас ПСА?', { p4_10: '4–10', p10: 'Больше 10', unk: 'Не знаю' }],
+                    psa_exam: ['Делали МРТ простаты или биопсию?', { mri: 'МРТ', biopsy: 'Биопсию', both: 'И то и другое', none: 'Нет' }],
+                    t: ['Сдавали анализ на тестостерон?', { low: 'Да, он низкий', ok: 'Да, в норме', no: 'Нет, не сдавал' }]
+                },
+                docs: { tests: 'Анализы крови или ПСА', us: 'Заключение УЗИ', mri: 'МРТ или КТ', discharge: 'Выписка из больницы', none: 'Пока ничего нет' },
+                goals: { opinion: 'Понять, что со мной (второе мнение)', nonsurg: 'Лечиться без операции, если можно', surg: 'Готов к операции, если нужно' },
+                maybe: {
+                    ed: 'Слабая эрекция часто связана с сосудами или гормонами. Это хорошо лечится — сначала нужно найти причину.',
+                    flow: 'Такие симптомы часто бывают при увеличении простаты (аденоме). Насколько она мешает и нужна ли операция, врач скажет после УЗИ.',
+                    freq: 'Частые походы в туалет, особенно ночью, часто связаны с простатой. Причину покажут УЗИ и проверка мочеиспускания.',
+                    incont: 'Причин подтекания несколько — от слабости мышц тазового дна до последствий операции. Лечение подбирают по причине.',
+                    pain: 'Боль и жжение часто бывают при воспалении простаты или мочевых путей. Важно найти причину и не лечиться наугад.',
+                    blood: 'Кровь в моче всегда требует обследования — даже если она была один раз.',
+                    stones: 'Большинство камней удаляют без разрезов — лазером через естественные пути.',
+                    psa: 'Высокий ПСА — не всегда рак: он бывает повышен и при увеличении или воспалении простаты. Нужна точная проверка.',
+                    lowt: 'Усталость и снижение желания после 40 часто связаны с тестостероном. Это проверяется простым анализом.',
+                    checkup: 'После 40 урологу стоит показываться раз в год — даже если ничего не беспокоит.'
+                },
+                programs: { checkup: 'Обследование и второе мнение', therapy: 'Лечение без операции', surgery: 'Операция под ключ' },
+                days: { checkup: '2–3 дня', therapy: '5–7 дней', surgery: '4–8 дней' }, from: 'от {p}',
+                result: 'Ваш результат', request: 'Ваш запрос', maybeTitle: 'Что это может быть',
+                disclaimer: 'Это не диагноз. Точно скажет врач после осмотра и анализов.',
+                fits: 'Вам подойдёт', fitsNote: 'Окончательную программу врач подтвердит после просмотра ваших документов.',
+                prepare: 'Что подготовить',
+                prepNone: 'Ничего страшного — все анализы сделаем в Тбилиси. Если есть возможность, сдайте дома ПСА и общий анализ мочи: так врач даст более точный ответ.',
+                prepSome: 'Сфотографируйте или отсканируйте: {list}. Координатор подскажет, как переслать их врачу.',
+                urgentTitle: 'Не откладывайте визит к врачу',
+                urgentText: 'Некоторые ваши ответы ({list}) требуют осмотра как можно скорее. Обратитесь к врачу у себя в городе, не дожидаясь поездки. Второе мнение наш врач может дать параллельно.',
+                urgent: { blood: 'кровь в моче', fever: 'боль с температурой', stone: 'сильная боль или температура при камнях' },
+                send: 'Отправить результат координатору', sendWa: 'Отправить в WhatsApp', sendTg: 'Написать в Telegram',
+                sendNote: 'Бесплатно и ни к чему не обязывает. Ответим в течение 2 часов.',
+                sendFormNote: 'Мы перенесём ваши ответы в форму ниже — останется указать имя и телефон.',
+                tgNote: 'Текст скопирован — вставьте его в чат.',
+                copy: 'Скопировать текст', copied: 'Скопировано',
+                msg: { hello: 'Здравствуйте! Пишу по итогам опроса на сайте UroHub.', problems: 'Беспокоит', duration: 'Как давно', details: 'Подробности', docs: 'Документы', goal: 'Хочу', program: 'Подходящая программа' }
+            },
+            EN: {
+                eyebrow: '1-minute check',
+                title: "Let's figure out what is bothering you",
+                sub: 'Answer 5 short questions — we will show which programme suits you and pass your answers to a coordinator.',
+                stepOf: 'Step {n} of {total}',
+                back: 'Back', next: 'Next', restart: 'Start again', multi: 'You can choose several options',
+                q: { problems: 'What is bothering you?', duration: 'When did it start?', follow: 'A few more details', docs: 'Which documents do you already have?', goal: 'What would you like?' },
+                problems: {
+                    ed: ['Weak erections', 'Erectile dysfunction'],
+                    flow: ['Hard to urinate, weak stream', 'Difficult urination'],
+                    freq: ['Frequent urination, waking up at night', 'Urinary frequency, nocturia'],
+                    incont: ['Leaking urine', 'Urinary incontinence'],
+                    pain: ['Pain or burning when urinating', 'Prostatitis, inflammation'],
+                    blood: ['Blood in the urine', 'Haematuria'],
+                    stones: ['Kidney stones, attacks of side pain', 'Urolithiasis'],
+                    psa: ['High PSA, suspected cancer', 'Uro-oncology'],
+                    lowt: ['No energy or desire, low testosterone', 'Andropause'],
+                    checkup: ['Nothing wrong, I want a check-up', 'Check-up 40+']
+                },
+                durations: { lt1: 'Less than a month', m1_6: '1–6 months', gt6: 'More than 6 months', unk: "Don't remember" },
+                follow: {
+                    ed_morning: ['Do you have morning erections?', { yes: 'Yes', rare: 'Rarely', no: 'No' }],
+                    ed_risk: ['Do you have diabetes, high blood pressure or heart disease?', { yes: 'Yes', no: 'No', unk: "Don't know" }],
+                    night: ['How many times do you get up at night to urinate?', { n01: '0–1', n23: '2–3', n4: '4 or more' }],
+                    incont: ['When does the leaking happen?', { stress: 'When coughing or straining', urge: "Sudden urge, I can't make it in time", postop: 'After prostate surgery', always: 'All the time' }],
+                    fever: ['Do you have a fever?', { yes: 'Yes', no: 'No' }],
+                    stone_size: ['Do you know the stone size?', { s5: 'Up to 5 mm', s10: '5–10 mm', s10p: 'Over 10 mm', unk: "Don't know" }],
+                    stone_acute: ['Do you have severe pain, fever or vomiting right now?', { yes: 'Yes', no: 'No' }],
+                    psa: ['What is your PSA?', { p4_10: '4–10', p10: 'Over 10', unk: "Don't know" }],
+                    psa_exam: ['Have you had a prostate MRI or biopsy?', { mri: 'MRI', biopsy: 'Biopsy', both: 'Both', none: 'No' }],
+                    t: ['Have you had a testosterone test?', { low: 'Yes, it was low', ok: 'Yes, it was normal', no: 'No' }]
+                },
+                docs: { tests: 'Blood tests or PSA', us: 'Ultrasound report', mri: 'MRI or CT', discharge: 'Hospital discharge summary', none: 'Nothing yet' },
+                goals: { opinion: 'Understand what is wrong (second opinion)', nonsurg: 'Treatment without surgery if possible', surg: 'Ready for surgery if needed' },
+                maybe: {
+                    ed: 'Weak erections are often linked to blood vessels or hormones. This is very treatable — the first step is finding the cause.',
+                    flow: 'These symptoms often come with an enlarged prostate. The doctor will tell you how much it matters and whether surgery is needed after an ultrasound.',
+                    freq: 'Frequent urination, especially at night, is often linked to the prostate. An ultrasound and a urine-flow test will show the cause.',
+                    incont: 'Leaking has several possible causes, from weak pelvic floor muscles to the after-effects of surgery. Treatment depends on the cause.',
+                    pain: 'Pain and burning are often caused by inflammation of the prostate or urinary tract. It is important to find the cause rather than treat blindly.',
+                    blood: 'Blood in the urine always needs to be checked — even if it happened only once.',
+                    stones: 'Most stones are removed without incisions — with a laser through natural pathways.',
+                    psa: 'A high PSA is not always cancer: it can also rise with an enlarged or inflamed prostate. An accurate check is needed.',
+                    lowt: 'Fatigue and low desire after 40 are often linked to testosterone. A simple blood test will show it.',
+                    checkup: 'After 40 it is worth seeing a urologist once a year — even if nothing bothers you.'
+                },
+                programs: { checkup: 'Check-up and second opinion', therapy: 'Treatment without surgery', surgery: 'All-inclusive surgery' },
+                days: { checkup: '2–3 days', therapy: '5–7 days', surgery: '4–8 days' }, from: 'from {p}',
+                result: 'Your result', request: 'Your request', maybeTitle: 'What it might be',
+                disclaimer: 'This is not a diagnosis. The doctor will tell you for sure after an examination and tests.',
+                fits: 'Suggested programme', fitsNote: 'The doctor will confirm the final programme after reviewing your documents.',
+                prepare: 'What to prepare',
+                prepNone: 'No problem — we will do all the tests in Tbilisi. If you can, take a PSA and a urine test at home: it helps the doctor give a more accurate answer.',
+                prepSome: 'Take photos or scans of: {list}. The coordinator will tell you how to send them to the doctor.',
+                urgentTitle: "Don't put off seeing a doctor",
+                urgentText: 'Some of your answers ({list}) need an examination as soon as possible. Please see a doctor where you live without waiting for the trip. Our doctor can give a second opinion in parallel.',
+                urgent: { blood: 'blood in the urine', fever: 'pain with fever', stone: 'severe pain or fever with stones' },
+                send: 'Send my result to a coordinator', sendWa: 'Send on WhatsApp', sendTg: 'Message on Telegram',
+                sendNote: 'Free and with no obligation. We reply within 2 hours.',
+                sendFormNote: 'We will copy your answers into the form below — you only need to add your name and phone.',
+                tgNote: 'The text is copied — paste it into the chat.',
+                copy: 'Copy text', copied: 'Copied',
+                msg: { hello: 'Hello! I completed the check on the UroHub website.', problems: 'Concerns', duration: 'Since', details: 'Details', docs: 'Documents', goal: 'I would like', program: 'Suggested programme' }
+            },
+            HE: {
+                eyebrow: 'שאלון של דקה',
+                title: 'בואו נבין מה מטריד אתכם',
+                sub: 'ענו על 5 שאלות קצרות — נראה איזו תוכנית מתאימה לכם ונעביר את התשובות למתאם.',
+                stepOf: 'שלב {n} מתוך {total}',
+                back: 'חזרה', next: 'הבא', restart: 'להתחיל מחדש', multi: 'אפשר לבחור כמה אפשרויות',
+                q: { problems: 'מה מטריד אתכם?', duration: 'מתי זה התחיל?', follow: 'עוד כמה פרטים', docs: 'אילו מסמכים כבר יש לכם?', goal: 'מה הייתם רוצים?' },
+                problems: {
+                    ed: ['זקפה חלשה', 'הפרעה בזקפה'],
+                    flow: ['קשה להשתין, זרם חלש', 'קושי במתן שתן'],
+                    freq: ['הולך הרבה לשירותים, קם בלילה', 'תכיפות במתן שתן'],
+                    incont: ['דליפת שתן', 'בריחת שתן'],
+                    pain: ['כאב או צריבה במתן שתן', 'דלקת ערמונית'],
+                    blood: ['דם בשתן', 'המטוריה'],
+                    stones: ['אבנים בכליות, התקפי כאב בצד', 'אבנים בדרכי השתן'],
+                    psa: ['PSA גבוה, חשד לסרטן', 'אונקו-אורולוגיה'],
+                    lowt: ['אין כוח וחשק, טסטוסטרון נמוך', 'אנדרופאוזה'],
+                    checkup: ['שום דבר לא מטריד, רוצה בדיקה', 'בדיקה מקיפה 40+']
+                },
+                durations: { lt1: 'פחות מחודש', m1_6: '1–6 חודשים', gt6: 'יותר מחצי שנה', unk: 'לא זוכר' },
+                follow: {
+                    ed_morning: ['יש זקפות בבוקר?', { yes: 'כן', rare: 'לעיתים רחוקות', no: 'לא' }],
+                    ed_risk: ['יש סוכרת, לחץ דם גבוה או מחלת לב?', { yes: 'כן', no: 'לא', unk: 'לא יודע' }],
+                    night: ['כמה פעמים בלילה אתם קמים לשירותים?', { n01: '0–1', n23: '2–3', n4: '4 ויותר' }],
+                    incont: ['מתי השתן דולף?', { stress: 'בשיעול או במאמץ', urge: 'דחיפות פתאומית, לא מספיק להגיע', postop: 'אחרי ניתוח ערמונית', always: 'כל הזמן' }],
+                    fever: ['יש חום?', { yes: 'כן', no: 'לא' }],
+                    stone_size: ['יודעים מה גודל האבן?', { s5: 'עד 5 מ"מ', s10: '5–10 מ"מ', s10p: 'יותר מ-10 מ"מ', unk: 'לא יודע' }],
+                    stone_acute: ['יש עכשיו כאב חזק, חום או הקאות?', { yes: 'כן', no: 'לא' }],
+                    psa: ['מה רמת ה-PSA שלכם?', { p4_10: '4–10', p10: 'יותר מ-10', unk: 'לא יודע' }],
+                    psa_exam: ['עשיתם MRI של הערמונית או ביופסיה?', { mri: 'MRI', biopsy: 'ביופסיה', both: 'גם וגם', none: 'לא' }],
+                    t: ['בדקתם רמת טסטוסטרון?', { low: 'כן, היא נמוכה', ok: 'כן, היא תקינה', no: 'לא' }]
+                },
+                docs: { tests: 'בדיקות דם או PSA', us: 'סיכום אולטרסאונד', mri: 'MRI או CT', discharge: 'סיכום שחרור מבית חולים', none: 'עדיין אין כלום' },
+                goals: { opinion: 'להבין מה יש לי (חוות דעת שנייה)', nonsurg: 'טיפול ללא ניתוח אם אפשר', surg: 'מוכן לניתוח אם צריך' },
+                maybe: {
+                    ed: 'זקפה חלשה קשורה לעיתים קרובות לכלי הדם או להורמונים. זה ניתן לטיפול טוב — קודם צריך למצוא את הסיבה.',
+                    flow: 'תסמינים כאלה מופיעים לעיתים קרובות בערמונית מוגדלת. עד כמה זה מפריע והאם צריך ניתוח, הרופא יגיד אחרי אולטרסאונד.',
+                    freq: 'ביקורים תכופים בשירותים, במיוחד בלילה, קשורים לעיתים קרובות לערמונית. אולטרסאונד ובדיקת זרימת שתן יראו את הסיבה.',
+                    incont: 'לדליפת שתן יש כמה סיבות — מחולשת שרירי רצפת האגן ועד השפעות של ניתוח. הטיפול נקבע לפי הסיבה.',
+                    pain: 'כאב וצריבה נגרמים לעיתים קרובות מדלקת בערמונית או בדרכי השתן. חשוב למצוא את הסיבה ולא לטפל באקראי.',
+                    blood: 'דם בשתן תמיד מחייב בדיקה — גם אם זה קרה פעם אחת.',
+                    stones: 'את רוב האבנים מסירים ללא חתכים — בלייזר דרך הדרכים הטבעיות.',
+                    psa: 'PSA גבוה הוא לא תמיד סרטן: הוא עולה גם בערמונית מוגדלת או מודלקת. צריך בדיקה מדויקת.',
+                    lowt: 'עייפות וירידה בחשק אחרי גיל 40 קשורות לעיתים קרובות לטסטוסטרון. בדיקת דם פשוטה תראה זאת.',
+                    checkup: 'אחרי גיל 40 כדאי להיבדק אצל אורולוג פעם בשנה — גם אם שום דבר לא מטריד.'
+                },
+                programs: { checkup: 'בדיקה מקיפה וחוות דעת שנייה', therapy: 'טיפול ללא ניתוח', surgery: 'ניתוח הכל כלול' },
+                days: { checkup: '2–3 ימים', therapy: '5–7 ימים', surgery: '4–8 ימים' }, from: 'החל מ-{p}',
+                result: 'התוצאה שלכם', request: 'הפנייה שלכם', maybeTitle: 'מה זה יכול להיות',
+                disclaimer: 'זו לא אבחנה. הרופא יגיד בוודאות אחרי בדיקה ובדיקות מעבדה.',
+                fits: 'מתאים לכם', fitsNote: 'הרופא יאשר את התוכנית הסופית אחרי שיעבור על המסמכים שלכם.',
+                prepare: 'מה להכין',
+                prepNone: 'אין בעיה — את כל הבדיקות נעשה בטביליסי. אם אפשר, עשו בבית בדיקת PSA ובדיקת שתן: כך הרופא ייתן תשובה מדויקת יותר.',
+                prepSome: 'צלמו או סרקו: {list}. המתאם יסביר איך להעביר אותם לרופא.',
+                urgentTitle: 'אל תדחו את הביקור אצל הרופא',
+                urgentText: 'חלק מהתשובות שלכם ({list}) מחייבות בדיקה בהקדם האפשרי. פנו לרופא במקום מגוריכם בלי לחכות לנסיעה. הרופא שלנו יכול לתת חוות דעת שנייה במקביל.',
+                urgent: { blood: 'דם בשתן', fever: 'כאב עם חום', stone: 'כאב חזק או חום עם אבנים' },
+                send: 'לשלוח את התוצאה למתאם', sendWa: 'לשלוח ב-WhatsApp', sendTg: 'לכתוב ב-Telegram',
+                sendNote: 'בחינם וללא התחייבות. נענה תוך שעתיים.',
+                sendFormNote: 'נעביר את התשובות לטופס למטה — נשאר רק להוסיף שם וטלפון.',
+                tgNote: 'הטקסט הועתק — הדביקו אותו בצ\'אט.',
+                copy: 'להעתיק את הטקסט', copied: 'הועתק',
+                msg: { hello: 'שלום! מילאתי את השאלון באתר UroHub.', problems: 'מה מטריד', duration: 'ממתי', details: 'פרטים', docs: 'מסמכים', goal: 'אני רוצה', program: 'תוכנית מתאימה' }
+            },
+            AR: {
+                eyebrow: 'استبيان دقيقة واحدة',
+                title: 'لنفهم ما الذي يزعجك',
+                sub: 'أجب عن 5 أسئلة قصيرة — وسنعرض لك البرنامج المناسب وننقل إجاباتك إلى المنسق.',
+                stepOf: 'الخطوة {n} من {total}',
+                back: 'رجوع', next: 'التالي', restart: 'ابدأ من جديد', multi: 'يمكنك اختيار أكثر من خيار',
+                q: { problems: 'ما الذي يزعجك؟', duration: 'منذ متى بدأ ذلك؟', follow: 'بعض التفاصيل الإضافية', docs: 'ما المستندات المتوفرة لديك؟', goal: 'ماذا تريد؟' },
+                problems: {
+                    ed: ['ضعف الانتصاب', 'الضعف الجنسي'],
+                    flow: ['صعوبة في التبول، تدفق ضعيف', 'عسر التبول'],
+                    freq: ['تبول متكرر، أستيقظ ليلاً', 'كثرة التبول'],
+                    incont: ['تسرب البول', 'سلس البول'],
+                    pain: ['ألم أو حرقة عند التبول', 'التهاب البروستاتا'],
+                    blood: ['دم في البول', 'البيلة الدموية'],
+                    stones: ['حصوات الكلى، نوبات ألم في الجنب', 'حصوات المسالك البولية'],
+                    psa: ['PSA مرتفع، اشتباه بالسرطان', 'أورام المسالك البولية'],
+                    lowt: ['لا طاقة ولا رغبة، انخفاض التستوستيرون', 'سن اليأس عند الرجال'],
+                    checkup: ['لا شيء يزعجني، أريد فحصاً', 'فحص شامل بعد الأربعين']
+                },
+                durations: { lt1: 'أقل من شهر', m1_6: '1–6 أشهر', gt6: 'أكثر من 6 أشهر', unk: 'لا أتذكر' },
+                follow: {
+                    ed_morning: ['هل يحدث انتصاب صباحي؟', { yes: 'نعم', rare: 'نادراً', no: 'لا' }],
+                    ed_risk: ['هل لديك سكري أو ضغط مرتفع أو مرض في القلب؟', { yes: 'نعم', no: 'لا', unk: 'لا أعرف' }],
+                    night: ['كم مرة تستيقظ ليلاً للتبول؟', { n01: '0–1', n23: '2–3', n4: '4 أو أكثر' }],
+                    incont: ['متى يحدث التسرب؟', { stress: 'عند السعال أو المجهود', urge: 'رغبة مفاجئة لا أستطيع معها الوصول', postop: 'بعد عملية البروستاتا', always: 'طوال الوقت' }],
+                    fever: ['هل لديك حرارة؟', { yes: 'نعم', no: 'لا' }],
+                    stone_size: ['هل تعرف حجم الحصوة؟', { s5: 'حتى 5 ملم', s10: '5–10 ملم', s10p: 'أكثر من 10 ملم', unk: 'لا أعرف' }],
+                    stone_acute: ['هل لديك الآن ألم شديد أو حرارة أو قيء؟', { yes: 'نعم', no: 'لا' }],
+                    psa: ['كم مستوى PSA لديك؟', { p4_10: '4–10', p10: 'أكثر من 10', unk: 'لا أعرف' }],
+                    psa_exam: ['هل أجريت رنيناً للبروستاتا أو خزعة؟', { mri: 'رنين', biopsy: 'خزعة', both: 'كلاهما', none: 'لا' }],
+                    t: ['هل أجريت تحليل التستوستيرون؟', { low: 'نعم، كان منخفضاً', ok: 'نعم، كان طبيعياً', no: 'لا' }]
+                },
+                docs: { tests: 'تحاليل الدم أو PSA', us: 'تقرير السونار', mri: 'رنين أو أشعة مقطعية', discharge: 'ملخص خروج من المستشفى', none: 'لا شيء بعد' },
+                goals: { opinion: 'أن أفهم ما لدي (رأي ثانٍ)', nonsurg: 'علاج بدون جراحة إن أمكن', surg: 'مستعد للعملية إذا لزم الأمر' },
+                maybe: {
+                    ed: 'ضعف الانتصاب غالباً ما يرتبط بالأوعية الدموية أو الهرمونات. وهو قابل للعلاج — أولاً يجب معرفة السبب.',
+                    flow: 'تظهر هذه الأعراض غالباً مع تضخم البروستاتا. سيحدد الطبيب بعد السونار مدى تأثيرها وما إذا كانت العملية ضرورية.',
+                    freq: 'كثرة التبول، خاصة ليلاً، غالباً ما ترتبط بالبروستاتا. سيكشف السونار وفحص تدفق البول عن السبب.',
+                    incont: 'لتسرب البول أسباب عدة — من ضعف عضلات قاع الحوض إلى آثار العمليات. ويُختار العلاج حسب السبب.',
+                    pain: 'الألم والحرقة غالباً ما يسببهما التهاب البروستاتا أو المسالك البولية. من المهم معرفة السبب وعدم العلاج عشوائياً.',
+                    blood: 'الدم في البول يستدعي الفحص دائماً — حتى لو حدث مرة واحدة.',
+                    stones: 'تُزال معظم الحصوات دون شقوق — بالليزر عبر المسالك الطبيعية.',
+                    psa: 'ارتفاع PSA لا يعني دائماً السرطان: فهو يرتفع أيضاً مع تضخم البروستاتا أو التهابها. يلزم فحص دقيق.',
+                    lowt: 'التعب وانخفاض الرغبة بعد الأربعين غالباً ما يرتبطان بالتستوستيرون. يكشف ذلك تحليل دم بسيط.',
+                    checkup: 'بعد الأربعين يُنصح بزيارة طبيب المسالك البولية مرة في السنة — حتى لو لم يكن هناك ما يزعجك.'
+                },
+                programs: { checkup: 'فحص شامل ورأي ثانٍ', therapy: 'علاج بدون جراحة', surgery: 'عملية شاملة' },
+                days: { checkup: '2–3 أيام', therapy: '5–7 أيام', surgery: '4–8 أيام' }, from: 'من {p}',
+                result: 'نتيجتك', request: 'طلبك', maybeTitle: 'ماذا يمكن أن يكون',
+                disclaimer: 'هذا ليس تشخيصاً. سيحدد الطبيب ذلك بدقة بعد الفحص والتحاليل.',
+                fits: 'البرنامج المناسب لك', fitsNote: 'سيؤكد الطبيب البرنامج النهائي بعد مراجعة مستنداتك.',
+                prepare: 'ما الذي تجهزه',
+                prepNone: 'لا مشكلة — سنجري كل التحاليل في تبليسي. وإن أمكن، أجرِ في بلدك تحليل PSA وتحليل البول: فهذا يساعد الطبيب على إجابة أدق.',
+                prepSome: 'صوّر أو امسح ضوئياً: {list}. وسيخبرك المنسق كيف ترسلها إلى الطبيب.',
+                urgentTitle: 'لا تؤجل زيارة الطبيب',
+                urgentText: 'بعض إجاباتك ({list}) تتطلب فحصاً في أقرب وقت. راجع طبيباً في مدينتك دون انتظار الرحلة. ويمكن لطبيبنا تقديم رأي ثانٍ بالتوازي.',
+                urgent: { blood: 'دم في البول', fever: 'ألم مع حرارة', stone: 'ألم شديد أو حرارة مع الحصوات' },
+                send: 'أرسل النتيجة إلى المنسق', sendWa: 'إرسال عبر WhatsApp', sendTg: 'مراسلة عبر Telegram',
+                sendNote: 'مجاناً ودون أي التزام. نرد خلال ساعتين.',
+                sendFormNote: 'سننقل إجاباتك إلى النموذج أدناه — يبقى فقط إضافة الاسم والهاتف.',
+                tgNote: 'تم نسخ النص — الصقه في المحادثة.',
+                copy: 'نسخ النص', copied: 'تم النسخ',
+                msg: { hello: 'مرحباً! أكملت الاستبيان على موقع UroHub.', problems: 'ما يزعجني', duration: 'منذ', details: 'التفاصيل', docs: 'المستندات', goal: 'أريد', program: 'البرنامج المناسب' }
+            }
+        };
+
+        const sqState = { step: 0, problems: [], duration: null, follow: {}, docs: [], goal: null };
+        const sqT = () => SQ_TEXT[currentLang] || SQ_TEXT.RU;
+
+        function sqFollowIds() {
+            const ids = [];
+            SQ_PROBLEMS.filter(p => sqState.problems.includes(p.id)).forEach(p => p.follow.forEach(f => { if (!ids.includes(f)) ids.push(f); }));
+            return ids;
+        }
+        // Шаги, которые реально показываются (уточнения пропускаем, если для выбранных жалоб их нет)
+        function sqSteps() { return sqFollowIds().length ? [0, 1, 2, 3, 4] : [0, 1, 3, 4]; }
+
+        function sqProgram() {
+            const s = sqState, has = id => s.problems.includes(id);
+            const bigStone = has('stones') && (s.follow.stone_size === 's10' || s.follow.stone_size === 's10p');
+            if (bigStone || (s.goal === 'surg' && (has('flow') || has('freq') || has('stones') || has('psa')))) return 'surgery';
+            if (has('ed') || has('lowt')) return 'therapy';
+            return 'checkup';
+        }
+        function sqUrgent() {
+            const s = sqState, list = [];
+            if (s.problems.includes('blood')) list.push('blood');
+            if (s.problems.includes('pain') && s.follow.fever === 'yes') list.push('fever');
+            if (s.problems.includes('stones') && s.follow.stone_acute === 'yes') list.push('stone');
+            return list;
+        }
+
+        function sqOption(kind, value, label, sub, icon, selected) {
+            const cls = selected
+                ? 'border-teal-600 bg-teal-50 ring-1 ring-teal-600'
+                : 'border-slate-200 bg-white hover:border-teal-400';
+            return `<button type="button" data-sq-kind="${kind}" data-sq-value="${value}" aria-pressed="${selected}" class="sq-opt w-full flex items-start gap-3 text-start p-3.5 rounded-2xl border transition-all ${cls}">`
+                + (icon ? `<span class="w-9 h-9 rounded-xl ${selected ? 'bg-teal-600 text-white' : 'bg-teal-50 text-teal-700'} flex items-center justify-center shrink-0"><i data-lucide="${icon}" class="w-4 h-4"></i></span>` : '')
+                + `<span class="min-w-0"><span class="block text-sm font-bold text-slate-900">${label}</span>`
+                + (sub ? `<span class="block text-[11px] text-slate-500 mt-0.5">${sub}</span>` : '')
+                + `</span></button>`;
+        }
+
+        function sqMessage() {
+            const t = sqT(), s = sqState, lines = [t.msg.hello];
+            lines.push(`${t.msg.problems}: ${s.problems.map(id => t.problems[id][0]).join('; ')}`);
+            if (s.duration) lines.push(`${t.msg.duration}: ${t.durations[s.duration]}`);
+            const det = sqFollowIds().filter(f => s.follow[f]).map(f => `${t.follow[f][0]} — ${t.follow[f][1][s.follow[f]]}`);
+            if (det.length) lines.push(`${t.msg.details}: ${det.join('; ')}`);
+            if (s.docs.length) lines.push(`${t.msg.docs}: ${s.docs.map(d => t.docs[d]).join(', ')}`);
+            if (s.goal) lines.push(`${t.msg.goal}: ${t.goals[s.goal]}`);
+            lines.push(`${t.msg.program}: ${t.programs[sqProgram()]}`);
+            return lines.join('\n');
+        }
+
+        function renderSymptomQuiz() {
+            const root = document.getElementById('sq-root');
+            if (!root) return;
+            const t = sqT(), s = sqState;
+            document.getElementById('sq-eyebrow').textContent = t.eyebrow;
+            document.getElementById('sq-title').textContent = t.title;
+            document.getElementById('sq-sub').textContent = t.sub;
+
+            const steps = sqSteps();
+            let html = '';
+            if (s.step < 5) {
+                const pos = steps.indexOf(s.step) + 1;
+                html += `<div class="flex items-center justify-between gap-3 mb-2 text-xs font-semibold text-slate-500"><span>${t.stepOf.replace('{n}', pos).replace('{total}', steps.length)}</span></div>`
+                    + `<div class="h-1.5 rounded-full bg-slate-200 overflow-hidden mb-6"><div class="h-full bg-teal-600 rounded-full transition-all duration-300" style="width:${Math.round(pos / steps.length * 100)}%"></div></div>`;
+            }
+
+            if (s.step === 0) {
+                html += `<h3 class="text-lg sm:text-xl font-extrabold text-slate-900">${t.q.problems}</h3><p class="text-xs text-slate-500 mt-1 mb-4">${t.multi}</p>`
+                    + `<div class="grid sm:grid-cols-2 gap-2.5">`
+                    + SQ_PROBLEMS.map(p => sqOption('problem', p.id, t.problems[p.id][0], t.problems[p.id][1], p.icon, s.problems.includes(p.id))).join('')
+                    + `</div>`;
+            } else if (s.step === 1) {
+                html += `<h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mb-4">${t.q.duration}</h3><div class="grid sm:grid-cols-2 gap-2.5">`
+                    + SQ_DURATIONS.map(d => sqOption('duration', d, t.durations[d], '', '', s.duration === d)).join('') + `</div>`;
+            } else if (s.step === 2) {
+                html += `<h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mb-4">${t.q.follow}</h3><div class="space-y-5">`
+                    + sqFollowIds().map(f => `<div><div class="text-sm font-semibold text-slate-800 mb-2">${t.follow[f][0]}</div><div class="grid grid-cols-2 ${SQ_GRID_COLS[Math.min(SQ_FOLLOW_OPTIONS[f].length, 4)]} gap-2">`
+                        + SQ_FOLLOW_OPTIONS[f].map(o => sqOption('follow:' + f, o, t.follow[f][1][o], '', '', s.follow[f] === o)).join('') + `</div></div>`).join('')
+                    + `</div>`;
+            } else if (s.step === 3) {
+                html += `<h3 class="text-lg sm:text-xl font-extrabold text-slate-900">${t.q.docs}</h3><p class="text-xs text-slate-500 mt-1 mb-4">${t.multi}</p><div class="grid sm:grid-cols-2 gap-2.5">`
+                    + SQ_DOCS.map(d => sqOption('doc', d, t.docs[d], '', '', s.docs.includes(d))).join('') + `</div>`;
+            } else if (s.step === 4) {
+                html += `<h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mb-4">${t.q.goal}</h3><div class="grid gap-2.5">`
+                    + SQ_GOALS.map(g => sqOption('goal', g, t.goals[g], '', '', s.goal === g)).join('') + `</div>`;
+            } else {
+                html += sqResultHtml();
+            }
+
+            if (s.step < 5) {
+                const canNext = (s.step === 0 && s.problems.length) || (s.step === 1 && s.duration)
+                    || (s.step === 2 && sqFollowIds().every(f => s.follow[f])) || (s.step === 3 && s.docs.length) || (s.step === 4 && s.goal);
+                // На телефоне панель «Назад / Далее» прилипает к низу экрана, чтобы не листать к ней после выбора
+                html += `<div class="mt-6 flex items-center justify-between gap-3 sticky bottom-0 -mx-5 px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-slate-50/95 backdrop-blur border-t border-slate-200 sm:static sm:mx-0 sm:px-0 sm:py-0 sm:bg-transparent sm:border-0 sm:backdrop-blur-none">`
+                    + (s.step > 0 ? `<button type="button" data-sq-nav="back" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent hover:border-slate-200">${t.back}</button>` : '<span></span>')
+                    + `<button type="button" data-sq-nav="next" ${canNext ? '' : 'disabled'} class="px-6 py-3 rounded-xl text-sm font-bold text-white bg-teal-700 hover:bg-teal-600 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors">${t.next}</button>`
+                    + `</div>`;
+            }
+            root.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function sqResultHtml() {
+            const t = sqT(), s = sqState, prog = sqProgram(), p = SQ_PROGRAMS[prog], urgent = sqUrgent();
+            const cur = typeof currentCurrency !== 'undefined' ? currentCurrency : 'USD';
+            const req = [s.problems.map(id => t.problems[id][0]).join('; '), s.duration ? t.durations[s.duration] : '']
+                .filter(Boolean).join(' • ');
+            const docsReal = s.docs.filter(d => d !== 'none');
+            const prep = docsReal.length ? t.prepSome.replace('{list}', docsReal.map(d => t.docs[d].toLowerCase()).join(', ')) : t.prepNone;
+            const hasWa = !!COORDINATOR_CONTACT.whatsapp, hasTg = !!COORDINATOR_CONTACT.telegram;
+            let html = `<div class="flex items-center justify-between gap-3 mb-5"><h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">${t.result}</h3>`
+                + `<button type="button" data-sq-nav="restart" class="text-sm font-semibold text-teal-700 hover:text-teal-600 shrink-0">${t.restart}</button></div>`;
+            if (urgent.length) {
+                html += `<div class="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 flex items-start gap-3"><i data-lucide="triangle-alert" class="w-5 h-5 shrink-0 mt-0.5 text-amber-600"></i>`
+                    + `<div><div class="font-bold text-sm">${t.urgentTitle}</div><p class="text-xs sm:text-sm mt-1">${t.urgentText.replace('{list}', urgent.map(u => t.urgent[u]).join(', '))}</p></div></div>`;
+            }
+            html += `<div class="grid lg:grid-cols-5 gap-5">`
+                + `<div class="lg:col-span-3 space-y-4">`
+                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-1">${t.request}</div><p class="text-sm text-slate-800">${req}</p></div>`
+                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-2">${t.maybeTitle}</div>`
+                + `<ul class="space-y-2 text-sm text-slate-700">` + s.problems.map(id => `<li class="flex items-start gap-2"><i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5"></i><span>${t.maybe[id]}</span></li>`).join('') + `</ul>`
+                + `<p class="text-[11px] text-slate-500 mt-3">${t.disclaimer}</p></div>`
+                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-1">${t.prepare}</div><p class="text-sm text-slate-700">${prep}</p></div>`
+                + `</div>`
+                + `<div class="lg:col-span-2 space-y-4">`
+                + `<div class="bg-slate-900 text-white rounded-2xl p-5"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-400 mb-1">${t.fits}</div>`
+                + `<div class="text-lg font-extrabold">${t.programs[prog]}</div>`
+                + `<div class="text-sm text-slate-300 mt-1">${t.days[prog]} • ${t.from.replace("{p}", p.from[cur] || p.from.USD)}</div>`
+                + `<p class="text-[11px] text-slate-400 mt-3">${t.fitsNote}</p></div>`
+                + `<div class="space-y-2">`
+                + (hasWa
+                    ? `<button type="button" data-sq-send="wa" class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-sm shadow-md transition-colors"><i data-lucide="message-circle" class="w-4 h-4"></i>${t.sendWa}</button>`
+                    : `<button type="button" data-sq-send="form" class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-sm shadow-md transition-colors"><i data-lucide="send" class="w-4 h-4"></i>${t.send}</button>`)
+                + (hasTg ? `<button type="button" data-sq-send="tg" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="send" class="w-4 h-4 text-sky-600"></i>${t.sendTg}</button>` : '')
+                + `<button type="button" data-sq-send="copy" class="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900">${t.copy}</button>`
+                + `<p id="sq-send-note" class="text-[11px] text-slate-500 text-center">${hasWa ? t.sendNote : t.sendFormNote}</p>`
+                + `</div></div></div>`;
+            return html;
+        }
+
+        function sqCopy(text, onDone) {
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); } catch (e) {}
+                ta.remove(); onDone && onDone();
+            };
+            try { navigator.clipboard.writeText(text).then(() => onDone && onDone(), fallback); } catch (e) { fallback(); }
+        }
+
+        function sqSend(kind) {
+            const t = sqT(), text = sqMessage(), note = document.getElementById('sq-send-note');
+            if (kind === 'wa' && COORDINATOR_CONTACT.whatsapp) {
+                window.open('https://wa.me/' + COORDINATOR_CONTACT.whatsapp + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+            } else if (kind === 'tg' && COORDINATOR_CONTACT.telegram) {
+                sqCopy(text, () => { if (note) note.textContent = t.tgNote; });
+                window.open('https://t.me/' + COORDINATOR_CONTACT.telegram, '_blank', 'noopener');
+            } else if (kind === 'copy') {
+                sqCopy(text, () => { const b = document.querySelector('[data-sq-send="copy"]'); if (b) b.textContent = t.copied; });
+            } else {
+                // Номер координатора ещё не задан: переносим итог в форму заявки
+                const notes = document.getElementById('patient-notes');
+                const pkg = document.getElementById('patient-package');
+                if (notes) notes.value = text;
+                if (pkg) pkg.value = SQ_PROGRAMS[sqProgram()].formValue;
+                const form = document.getElementById('lead-form');
+                if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setTimeout(() => { const n = document.getElementById('patient-name'); if (n) n.focus({ preventScroll: true }); }, 600);
+            }
+        }
+
+        document.getElementById('sq-root')?.addEventListener('click', e => {
+            const s = sqState;
+            const opt = e.target.closest('[data-sq-kind]');
+            const nav = e.target.closest('[data-sq-nav]');
+            const send = e.target.closest('[data-sq-send]');
+            if (opt) {
+                const kind = opt.dataset.sqKind, val = opt.dataset.sqValue;
+                if (kind === 'problem') {
+                    s.problems = s.problems.includes(val) ? s.problems.filter(x => x !== val) : [...s.problems, val];
+                } else if (kind === 'doc') {
+                    if (val === 'none') s.docs = s.docs.includes('none') ? [] : ['none'];
+                    else s.docs = (s.docs.includes(val) ? s.docs.filter(x => x !== val) : [...s.docs, val]).filter(x => x !== 'none');
+                } else if (kind === 'duration' || kind === 'goal') {
+                    s[kind] = val;
+                    renderSymptomQuiz();
+                    // одиночный выбор — сразу к следующему шагу
+                    setTimeout(() => sqGo(1), 220);
+                    return;
+                } else if (kind.startsWith('follow:')) {
+                    s.follow[kind.slice(7)] = val;
+                }
+                renderSymptomQuiz();
+            } else if (nav) {
+                if (nav.dataset.sqNav === 'next') sqGo(1);
+                else if (nav.dataset.sqNav === 'back') sqGo(-1);
+                else { Object.assign(s, { step: 0, problems: [], duration: null, follow: {}, docs: [], goal: null }); renderSymptomQuiz(); sqScrollTop(); }
+            } else if (send) {
+                sqSend(send.dataset.sqSend);
+            }
+        });
+
+        function sqScrollTop() {
+            const sec = document.getElementById('sq-root');
+            if (sec && sec.getBoundingClientRect().top < 0) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function sqGo(dir) {
+            const steps = [...sqSteps(), 5];
+            const i = steps.indexOf(sqState.step);
+            const next = steps[Math.max(0, Math.min(steps.length - 1, i + dir))];
+            if (next === sqState.step) return;
+            sqState.step = next;
+            renderSymptomQuiz();
+            sqScrollTop();
+        }
+
+        renderSymptomQuiz();
 
         // Стартовый язык: из ?lang= или из прошлого визита
         const initialLang = getInitialLanguage();
