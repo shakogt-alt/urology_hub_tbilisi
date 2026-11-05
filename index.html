@@ -242,7 +242,7 @@
     <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
         <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
             <!-- Логотип -->
-            <a href="#" class="flex items-center gap-3 group min-w-0 md:shrink-0">
+            <a href="#" class="flex items-center gap-3 group min-w-0 lg:shrink-0">
                 <div class="w-11 h-11 rounded-xl bg-slate-900 flex items-center justify-center text-teal-400 font-bold text-lg shadow-md group-hover:bg-teal-600 group-hover:text-white transition-colors">
                     <i data-lucide="activity" class="w-6 h-6"></i>
                 </div>
@@ -281,7 +281,13 @@
                     <button onclick="setCurrency('GEL')" id="curr-GEL" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">₾ GEL</button>
                 </div>
 
-                <a href="#lead-form" class="hidden lg:inline-flex 2xl:hidden items-center gap-2 bg-teal-700 hover:bg-teal-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-glow transition-all">
+                <!-- Кнопка опросника: с подписью на широких экранах, значком на узких -->
+                <a href="#symptoms" class="inline-flex items-center justify-center gap-2 h-10 min-w-10 px-2.5 xl:px-4 rounded-xl border border-teal-600 bg-white text-teal-700 hover:bg-teal-50 font-semibold text-sm transition-colors" aria-label="Пройти опрос о симптомах" title="Пройти опрос о симптомах">
+                    <i data-lucide="list-checks" class="w-5 h-5 xl:w-4 xl:h-4"></i>
+                    <span class="hidden xl:inline">Пройти опрос</span>
+                </a>
+
+                <a href="#lead-form" class="hidden lg:inline-flex 2xl:hidden items-center gap-2 bg-teal-700 hover:bg-teal-600 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-sm hover:shadow-glow transition-all">
                     <i data-lucide="file-Spreadsheet" class="w-4 h-4"></i>
                     <span>Узнать цену</span>
                 </a>
@@ -310,6 +316,10 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm font-medium text-slate-700">
+                <a href="#symptoms" onclick="toggleMobileMenu()" class="col-span-2 md:col-span-3 p-2.5 rounded-lg bg-teal-50 text-teal-800 font-semibold border border-teal-200 hover:bg-teal-100 flex items-center gap-2">
+                    <i data-lucide="list-checks" class="w-4 h-4"></i>
+                    <span>Пройти опрос: что вас беспокоит?</span>
+                </a>
                 <a href="#ecosystem" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Клиники</a>
                 <a href="#doctor" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Врачи</a>
                 <a href="#comparison" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-slate-50 hover:bg-teal-50 hover:text-teal-700">Почему мы</a>
@@ -2076,6 +2086,8 @@
             [`Поверните модель мышью, чтобы рассмотреть со всех сторон`]: { EN: `Drag the model with your mouse to see it from every side`, HE: `סובבו את המודל עם העכבר כדי לראות אותו מכל הצדדים`, AR: `أدر النموذج بالماوس لرؤيته من جميع الجهات` },
             [`Вращайте пальцем`]: { EN: `Drag to rotate`, HE: `סובבו באצבע`, AR: `أدِر بإصبعك` },
             [`3D-модель органа`]: { EN: `3D organ model`, HE: `מודל 3D של האיבר`, AR: `نموذج 3D للعضو` },
+            [`Пройти опрос`]: { EN: `Take the quiz`, HE: `למלא שאלון`, AR: `ابدأ الاستبيان` },
+            [`Пройти опрос: что вас беспокоит?`]: { EN: `Take the quiz: what is bothering you?`, HE: `למלא שאלון: מה מטריד אתכם?`, AR: `ابدأ الاستبيان: ما الذي يزعجك؟` },
             [`Не уверены, что выбрать? Пройдите опрос из 5 вопросов`]: { EN: `Not sure what to choose? Take a 5-question check`, HE: `לא בטוחים מה לבחור? מלאו שאלון של 5 שאלות`, AR: `لست متأكداً مما تختار؟ أجب عن استبيان من 5 أسئلة` },
             [`Узнать цену и даты →`]: { EN: `Get price and dates →`, HE: `לברר מחיר ותאריכים ←`, AR: `اعرف السعر والمواعيد ←` }
         };
@@ -2098,7 +2110,8 @@
             [`Город`]: { EN: `City`, HE: `עיר`, AR: `المدينة` },
             [`+... или @ник`]: { EN: `+... or @username`, HE: `+972... או @שם_משתמש`, AR: `+971... أو @اسم_المستخدم` },
             [`Например: часто встаю ночью в туалет, ПСА 6,5, предложили операцию`]: { EN: `For example: I wake up at night to urinate, PSA 6.5, I was offered surgery`, HE: `לדוגמה: קם הרבה בלילה לשירותים, PSA 6.5, הציעו לי ניתוח`, AR: `مثال: أستيقظ ليلاً كثيراً للتبول، PSA 6.5، اقتُرحت عليّ عملية` },
-            [`Закрыть`]: { EN: `Close`, HE: `סגירה`, AR: `إغلاق` }
+            [`Закрыть`]: { EN: `Close`, HE: `סגירה`, AR: `إغلاق` },
+            [`Пройти опрос о симптомах`]: { EN: `Take the symptom quiz`, HE: `למלא שאלון תסמינים`, AR: `ابدأ استبيان الأعراض` }
         };
 
         // 3D-выноски на анатомических моделях (Callout Pins)
