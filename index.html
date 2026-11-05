@@ -2608,6 +2608,12 @@
                 summary = `${name}, we have received your request: "${pkgText}". A coordinator will message you on ${messenger} (${phone}) within 2 hours.`;
             }
             document.getElementById('modal-summary-text').textContent = summary;
+            deliverLead({
+                type: 'form',
+                name, city: country, phone, messenger,
+                program: pkgSelect ? pkgSelect.value : '',
+                notes: (document.getElementById('patient-notes') || {}).value || ''
+            });
             const modal = document.getElementById('success-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -3920,6 +3926,30 @@
         // telegram — ник без @ (например 'urohub_tbilisi').
         const COORDINATOR_CONTACT = { whatsapp: '', telegram: '' };
 
+        // Адрес, который принимает заявки (POST JSON): например, функция Vercel /api/lead,
+        // пересылающая их в Telegram или на почту. Пока он пустой, заявки никуда не уходят —
+        // ни из формы внизу страницы, ни из блока «Перезвоните мне».
+        const LEAD_ENDPOINT = '';
+
+        async function deliverLead(payload) {
+            const body = Object.assign({
+                lang: typeof currentLang !== 'undefined' ? currentLang : 'RU',
+                timeZone: (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ''; } })(),
+                page: location.href,
+                sentAt: new Date().toISOString()
+            }, payload);
+            if (!LEAD_ENDPOINT) {
+                console.warn('LEAD_ENDPOINT не задан — заявка не отправлена', body);
+                return true;
+            }
+            try {
+                const res = await fetch(LEAD_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                return res.ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
         const SQ_PROBLEMS = [
             { id: 'ed', icon: 'heart-pulse', follow: ['ed_morning', 'ed_risk'] },
             { id: 'flow', icon: 'droplet', follow: ['night'] },
@@ -4017,6 +4047,22 @@
                 sendFormNote: 'Мы перенесём ваши ответы в форму ниже — останется указать имя и телефон.',
                 tgNote: 'Текст скопирован — вставьте его в чат.',
                 copy: 'Скопировать текст', copied: 'Скопировано',
+                cb: {
+                    title: 'Перезвоним и ответим на вопросы',
+                    text: 'Оставьте номер — координатор позвонит, расскажет про лечение и поездку и назовёт точную цену. Ответы из опроса он уже увидит. Это бесплатно.',
+                    phone: 'Телефон', name: 'Имя (необязательно)', namePh: 'Как к вам обращаться',
+                    timeQ: 'Когда вам удобно поговорить?',
+                    times: { asap: 'Как можно скорее', morning: 'Утром', day: 'Днём', evening: 'Вечером' },
+                    tzNote: 'По вашему местному времени.',
+                    submit: 'Перезвоните мне', sending: 'Отправляем…',
+                    invalid: 'Укажите номер телефона полностью, с кодом страны.',
+                    fail: 'Не получилось отправить. Попробуйте ещё раз через минуту.',
+                    privacy: 'Номер видят только координатор и врач.',
+                    doneTitle: 'Спасибо! Мы перезвоним',
+                    doneText: 'Координатор позвонит на номер {phone} {when}. Ответы из опроса уже у него.',
+                    whenDone: { asap: 'в ближайшее время', morning: 'утром', day: 'днём', evening: 'вечером' },
+                    edit: 'Изменить номер', or: 'или', formLink: 'Оставить подробную заявку'
+                },
                 msg: { hello: 'Здравствуйте! Пишу по итогам опроса на сайте UroHub.', problems: 'Беспокоит', duration: 'Как давно', details: 'Подробности', docs: 'Документы', goal: 'Хочу', program: 'Подходящая программа' }
             },
             EN: {
@@ -4081,6 +4127,22 @@
                 sendFormNote: 'We will copy your answers into the form below — you only need to add your name and phone.',
                 tgNote: 'The text is copied — paste it into the chat.',
                 copy: 'Copy text', copied: 'Copied',
+                cb: {
+                    title: "We'll call you back and answer your questions",
+                    text: 'Leave your number — a coordinator will call, explain the treatment and the trip, and give you an exact price. They will already see your quiz answers. It is free.',
+                    phone: 'Phone', name: 'Name (optional)', namePh: 'How should we address you',
+                    timeQ: 'When is a good time to talk?',
+                    times: { asap: 'As soon as possible', morning: 'Morning', day: 'Afternoon', evening: 'Evening' },
+                    tzNote: 'Your local time.',
+                    submit: 'Call me back', sending: 'Sending…',
+                    invalid: 'Please enter your full phone number, including the country code.',
+                    fail: "Couldn't send. Please try again in a minute.",
+                    privacy: 'Only the coordinator and the doctor see your number.',
+                    doneTitle: "Thank you! We'll call you",
+                    doneText: 'A coordinator will call {phone} {when}. They already have your quiz answers.',
+                    whenDone: { asap: 'shortly', morning: 'in the morning', day: 'in the afternoon', evening: 'in the evening' },
+                    edit: 'Change number', or: 'or', formLink: 'Send a detailed request'
+                },
                 msg: { hello: 'Hello! I completed the check on the UroHub website.', problems: 'Concerns', duration: 'Since', details: 'Details', docs: 'Documents', goal: 'I would like', program: 'Suggested programme' }
             },
             HE: {
@@ -4145,6 +4207,22 @@
                 sendFormNote: 'נעביר את התשובות לטופס למטה — נשאר רק להוסיף שם וטלפון.',
                 tgNote: 'הטקסט הועתק — הדביקו אותו בצ\'אט.',
                 copy: 'להעתיק את הטקסט', copied: 'הועתק',
+                cb: {
+                    title: 'נחזור אליכם ונענה על השאלות',
+                    text: 'השאירו מספר — המתאם יתקשר, יספר על הטיפול והנסיעה ויגיד מחיר מדויק. התשובות מהשאלון כבר יהיו אצלו. זה בחינם.',
+                    phone: 'טלפון', name: 'שם (לא חובה)', namePh: 'איך לפנות אליכם',
+                    timeQ: 'מתי נוח לכם לדבר?',
+                    times: { asap: 'כמה שיותר מהר', morning: 'בבוקר', day: 'בצהריים', evening: 'בערב' },
+                    tzNote: 'לפי השעה המקומית שלכם.',
+                    submit: 'חזרו אליי', sending: 'שולחים…',
+                    invalid: 'הזינו מספר טלפון מלא, כולל קידומת המדינה.',
+                    fail: 'השליחה לא הצליחה. נסו שוב בעוד דקה.',
+                    privacy: 'רק המתאם והרופא רואים את המספר.',
+                    doneTitle: 'תודה! נחזור אליכם',
+                    doneText: 'המתאם יתקשר למספר {phone} {when}. התשובות מהשאלון כבר אצלו.',
+                    whenDone: { asap: 'בהקדם', morning: 'בבוקר', day: 'בצהריים', evening: 'בערב' },
+                    edit: 'לשנות מספר', or: 'או', formLink: 'להשאיר פנייה מפורטת'
+                },
                 msg: { hello: 'שלום! מילאתי את השאלון באתר UroHub.', problems: 'מה מטריד', duration: 'ממתי', details: 'פרטים', docs: 'מסמכים', goal: 'אני רוצה', program: 'תוכנית מתאימה' }
             },
             AR: {
@@ -4209,11 +4287,27 @@
                 sendFormNote: 'سننقل إجاباتك إلى النموذج أدناه — يبقى فقط إضافة الاسم والهاتف.',
                 tgNote: 'تم نسخ النص — الصقه في المحادثة.',
                 copy: 'نسخ النص', copied: 'تم النسخ',
+                cb: {
+                    title: 'سنتصل بك ونجيب عن أسئلتك',
+                    text: 'اترك رقمك — سيتصل بك المنسق، ويشرح لك العلاج والرحلة، ويخبرك بالسعر الدقيق. وستكون إجاباتك في الاستبيان أمامه. الخدمة مجانية.',
+                    phone: 'الهاتف', name: 'الاسم (اختياري)', namePh: 'كيف نخاطبك',
+                    timeQ: 'متى يناسبك التحدث؟',
+                    times: { asap: 'في أقرب وقت', morning: 'صباحاً', day: 'ظهراً', evening: 'مساءً' },
+                    tzNote: 'حسب توقيتك المحلي.',
+                    submit: 'اتصلوا بي', sending: 'جارٍ الإرسال…',
+                    invalid: 'أدخل رقم الهاتف كاملاً مع رمز الدولة.',
+                    fail: 'تعذّر الإرسال. حاول مرة أخرى بعد دقيقة.',
+                    privacy: 'رقمك يطلع عليه المنسق والطبيب فقط.',
+                    doneTitle: 'شكراً! سنتصل بك',
+                    doneText: 'سيتصل المنسق بالرقم {phone} {when}. وإجاباتك في الاستبيان أصبحت لديه.',
+                    whenDone: { asap: 'قريباً', morning: 'صباحاً', day: 'ظهراً', evening: 'مساءً' },
+                    edit: 'تغيير الرقم', or: 'أو', formLink: 'إرسال طلب مفصّل'
+                },
                 msg: { hello: 'مرحباً! أكملت الاستبيان على موقع UroHub.', problems: 'ما يزعجني', duration: 'منذ', details: 'التفاصيل', docs: 'المستندات', goal: 'أريد', program: 'البرنامج المناسب' }
             }
         };
 
-        const sqState = { step: 0, problems: [], duration: null, follow: {}, docs: [], goal: null };
+        const sqState = { step: 0, problems: [], duration: null, follow: {}, docs: [], goal: null, callback: { status: 'idle', phone: '', name: '', time: 'asap' } };
         const sqT = () => SQ_TEXT[currentLang] || SQ_TEXT.RU;
 
         function sqFollowIds() {
@@ -4341,15 +4435,74 @@
                 + `<div class="text-lg font-extrabold">${t.programs[prog]}</div>`
                 + `<div class="text-sm text-slate-300 mt-1">${t.days[prog]} • ${t.from.replace("{p}", p.from[cur] || p.from.USD)}</div>`
                 + `<p class="text-[11px] text-slate-400 mt-3">${t.fitsNote}</p></div>`
+                + sqCallbackHtml()
+                + `<div class="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-px flex-1 bg-slate-200"></span>${t.cb.or}<span class="h-px flex-1 bg-slate-200"></span></div>`
                 + `<div class="space-y-2">`
-                + (hasWa
-                    ? `<button type="button" data-sq-send="wa" class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-sm shadow-md transition-colors"><i data-lucide="message-circle" class="w-4 h-4"></i>${t.sendWa}</button>`
-                    : `<button type="button" data-sq-send="form" class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-sm shadow-md transition-colors"><i data-lucide="send" class="w-4 h-4"></i>${t.send}</button>`)
+                + (hasWa ? `<button type="button" data-sq-send="wa" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>${t.sendWa}</button>` : '')
                 + (hasTg ? `<button type="button" data-sq-send="tg" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="send" class="w-4 h-4 text-sky-600"></i>${t.sendTg}</button>` : '')
-                + `<button type="button" data-sq-send="copy" class="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900">${t.copy}</button>`
-                + `<p id="sq-send-note" class="text-[11px] text-slate-500 text-center">${hasWa ? t.sendNote : t.sendFormNote}</p>`
+                + (hasWa ? '' : `<button type="button" data-sq-send="form" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="file-text" class="w-4 h-4 text-teal-600"></i>${t.cb.formLink}</button>`)
+                + `<button type="button" data-sq-send="copy" class="w-full py-2 px-4 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900">${t.copy}</button>`
+                + `<p id="sq-send-note" class="text-[11px] text-slate-500 text-center"></p>`
                 + `</div></div></div>`;
             return html;
+        }
+
+        // Блок «Перезвоните мне» в итоге опросника
+        function sqCallbackHtml() {
+            const t = sqT(), cb = sqState.callback;
+            const shell = 'bg-white rounded-2xl border-2 border-teal-600 p-5 shadow-md';
+            if (cb.status === 'sent') {
+                const when = t.cb.whenDone[cb.time || 'asap'];
+                return `<div class="${shell}" role="status"><div class="flex items-center gap-2 text-teal-700 font-extrabold"><i data-lucide="phone-call" class="w-5 h-5"></i>${t.cb.doneTitle}</div>`
+                    + `<p class="text-sm text-slate-700 mt-2">${t.cb.doneText.replace('{phone}', `<bdi class="font-semibold whitespace-nowrap">${sqEsc(cb.phone)}</bdi>`).replace('{when}', when)}</p>`
+                    + `<button type="button" data-sq-cb="edit" class="mt-3 text-sm font-semibold text-teal-700 hover:text-teal-600">${t.cb.edit}</button></div>`;
+            }
+            const chip = id => {
+                const on = (cb.time || 'asap') === id;
+                return `<button type="button" data-sq-cbtime="${id}" aria-pressed="${on}" class="px-3 py-2 rounded-xl border text-xs font-semibold transition-colors ${on ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-slate-200 bg-white text-slate-600 hover:border-teal-400'}">${t.cb.times[id]}</button>`;
+            };
+            const field = 'w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all';
+            return `<form id="sq-cb-form" class="${shell} space-y-3" novalidate>`
+                + `<div><div class="flex items-center gap-2 text-slate-900 font-extrabold"><i data-lucide="phone" class="w-5 h-5 text-teal-600"></i>${t.cb.title}</div>`
+                + `<p class="text-xs text-slate-600 mt-1">${t.cb.text}</p></div>`
+                + `<div><label for="sq-cb-phone" class="block text-xs font-bold text-slate-700 mb-1">${t.cb.phone}</label>`
+                + `<input id="sq-cb-phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required value="${sqEsc(cb.phone)}" placeholder="+…" class="${field}"></div>`
+                + `<div><label for="sq-cb-name" class="block text-xs font-bold text-slate-700 mb-1">${t.cb.name}</label>`
+                + `<input id="sq-cb-name" type="text" autocomplete="name" value="${sqEsc(cb.name)}" placeholder="${t.cb.namePh}" class="${field}"></div>`
+                + `<div><div class="text-xs font-bold text-slate-700 mb-1.5">${t.cb.timeQ}</div><div class="flex flex-wrap gap-1.5">${['asap', 'morning', 'day', 'evening'].map(chip).join('')}</div>`
+                + `<p class="text-[11px] text-slate-500 mt-1.5">${t.cb.tzNote}</p></div>`
+                + `<p id="sq-cb-error" class="text-xs font-semibold text-red-600 ${cb.status === 'invalid' || cb.status === 'error' ? '' : 'hidden'}">${cb.status === 'error' ? t.cb.fail : t.cb.invalid}</p>`
+                + `<button type="submit" ${cb.status === 'sending' ? 'disabled' : ''} class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-teal-700 hover:bg-teal-600 disabled:bg-slate-400 text-white font-bold text-sm shadow-md transition-colors"><i data-lucide="phone-call" class="w-4 h-4"></i>${cb.status === 'sending' ? t.cb.sending : t.cb.submit}</button>`
+                + `<p class="text-[11px] text-slate-500 text-center">${t.cb.privacy}</p>`
+                + `</form>`;
+        }
+
+        function sqEsc(v) {
+            return String(v || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        async function sqSubmitCallback() {
+            const cb = sqState.callback, t = sqT();
+            cb.phone = (document.getElementById('sq-cb-phone')?.value || '').trim();
+            cb.name = (document.getElementById('sq-cb-name')?.value || '').trim();
+            if ((cb.phone.match(/\d/g) || []).length < 7) {
+                cb.status = 'invalid';
+                renderSymptomQuiz();
+                document.getElementById('sq-cb-phone')?.focus();
+                return;
+            }
+            cb.status = 'sending';
+            renderSymptomQuiz();
+            const ok = await deliverLead({
+                type: 'callback',
+                name: cb.name,
+                phone: cb.phone,
+                callTime: t.cb.times[cb.time || 'asap'],
+                quiz: sqMessage(),
+                program: SQ_PROGRAMS[sqProgram()].formValue
+            });
+            cb.status = ok ? 'sent' : 'error';
+            renderSymptomQuiz();
         }
 
         function sqCopy(text, onDone) {
@@ -4389,6 +4542,19 @@
             const opt = e.target.closest('[data-sq-kind]');
             const nav = e.target.closest('[data-sq-nav]');
             const send = e.target.closest('[data-sq-send]');
+            const cbTime = e.target.closest('[data-sq-cbtime]');
+            const cbEdit = e.target.closest('[data-sq-cb="edit"]');
+            if (cbTime) {
+                s.callback.time = cbTime.dataset.sqCbtime;
+                renderSymptomQuiz();
+                return;
+            }
+            if (cbEdit) {
+                s.callback.status = 'idle';
+                renderSymptomQuiz();
+                document.getElementById('sq-cb-phone')?.focus();
+                return;
+            }
             if (opt) {
                 const kind = opt.dataset.sqKind, val = opt.dataset.sqValue;
                 if (kind === 'problem') {
@@ -4409,10 +4575,21 @@
             } else if (nav) {
                 if (nav.dataset.sqNav === 'next') sqGo(1);
                 else if (nav.dataset.sqNav === 'back') sqGo(-1);
-                else { Object.assign(s, { step: 0, problems: [], duration: null, follow: {}, docs: [], goal: null }); renderSymptomQuiz(); sqScrollTop(); }
+                else { Object.assign(s, { step: 0, problems: [], duration: null, follow: {}, docs: [], goal: null }); s.callback.status = 'idle'; renderSymptomQuiz(); sqScrollTop(); }
             } else if (send) {
                 sqSend(send.dataset.sqSend);
             }
+        });
+
+        // Ввод в форме обратного звонка сохраняем в состоянии, чтобы он не терялся при перерисовке (смена языка, выбор времени)
+        document.getElementById('sq-root')?.addEventListener('input', e => {
+            if (e.target.id === 'sq-cb-phone') sqState.callback.phone = e.target.value;
+            if (e.target.id === 'sq-cb-name') sqState.callback.name = e.target.value;
+        });
+        document.getElementById('sq-root')?.addEventListener('submit', e => {
+            if (e.target.id !== 'sq-cb-form') return;
+            e.preventDefault();
+            sqSubmitCallback();
         });
 
         function sqScrollTop() {
