@@ -1,3 +1,6 @@
 src/
 tailwind.config.js
 .gitignore
+# исходные фото больше не используются на странице — не публикуем их
+sandro_bochorishvili.jpg
+175915295488.jpg

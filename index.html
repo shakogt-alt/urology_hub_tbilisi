@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UroHub Tbilisi | Лечение простаты и мужского здоровья в Тбилиси</title>
-    <meta name="description" content="Лечение простаты, камней в почках и проблем с эрекцией в Тбилиси за одну поездку. Один врач от обследования до операции — уролог Александр Бочоришвили. Цена фиксируется в договоре, без доплат.">
+    <title>Уролог в Тбилиси: лечение аденомы простаты и камней | UroHub</title>
+    <meta name="description" content="Удаление аденомы простаты лазером (HoLEP, ТУР), дробление камней в почках и лечение эректильной дисфункции в Тбилиси. Один врач, цена в договоре.">
     <meta name="theme-color" content="#0f172a">
-    <link rel="canonical" href="https://urologyhubtbilisi.vercel.app/">
+    <!-- Канонический адрес ставится по языку из ?lang=, чтобы EN/HE/AR не считались копией русской версии -->
+    <script>
+        (function () {
+            var lang = '';
+            try { lang = (new URLSearchParams(location.search).get('lang') || '').toLowerCase(); } catch (e) {}
+            if (['en', 'he', 'ar'].indexOf(lang) < 0) lang = '';
+            var link = document.createElement('link');
+            link.rel = 'canonical';
+            link.href = 'https://urologyhubtbilisi.vercel.app/' + (lang ? '?lang=' + lang : '');
+            document.head.appendChild(link);
+            if (lang) {
+                document.documentElement.lang = lang;
+                if (lang !== 'en') document.documentElement.dir = 'rtl';
+            }
+        })();
+    </script>
     <!-- Языковые версии (язык выбирается параметром ?lang=) -->
     <link rel="alternate" hreflang="ru" href="https://urologyhubtbilisi.vercel.app/">
     <link rel="alternate" hreflang="en" href="https://urologyhubtbilisi.vercel.app/?lang=en">
@@ -20,14 +35,21 @@
     <!-- Превью ссылки в мессенджерах и соцсетях -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="CITO × PINEO UroHub Tbilisi">
-    <meta property="og:title" content="Лечение простаты и мужского здоровья в Тбилиси — за одну поездку">
+    <meta property="og:title" content="Уролог в Тбилиси: лечение простаты за одну поездку">
     <meta property="og:description" content="Один врач от обследования до операции, цена в договоре без доплат. Пришлите анализы — врач оценит их бесплатно.">
     <meta property="og:url" content="https://urologyhubtbilisi.vercel.app/">
     <meta property="og:image" content="https://urologyhubtbilisi.vercel.app/img/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Уролог Александр Бочоришвили, UroHub Tbilisi">
     <meta property="og:locale" content="ru_RU">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="he_IL">
+    <meta property="og:locale:alternate" content="ar_AE">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Уролог в Тбилиси: лечение простаты за одну поездку">
+    <meta name="twitter:description" content="Один врач от обследования до операции, цена в договоре без доплат.">
+    <meta name="twitter:image" content="https://urologyhubtbilisi.vercel.app/img/og-image.jpg">
     <!-- Структурированные данные для поисковиков -->
     <script type="application/ld+json">
     {
@@ -40,9 +62,22 @@
                 "url": "https://urologyhubtbilisi.vercel.app/",
                 "image": "https://urologyhubtbilisi.vercel.app/img/og-image.jpg",
                 "logo": "https://urologyhubtbilisi.vercel.app/apple-touch-icon.png",
+                "description": "Урология в Тбилиси для пациентов из других стран: удаление аденомы простаты лазером, дробление камней в почках, лечение эректильной дисфункции и рака простаты.",
                 "medicalSpecialty": "Urologic",
                 "areaServed": "Worldwide",
                 "availableLanguage": ["ru", "en", "ka"],
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Тбилиси",
+                    "addressCountry": "GE"
+                },
+                "availableService": [
+                    { "@type": "MedicalProcedure", "name": "Лазерная энуклеация аденомы простаты (HoLEP)", "alternateName": "HoLEP" },
+                    { "@type": "MedicalProcedure", "name": "Трансуретральная резекция простаты (ТУР)", "alternateName": "TURP" },
+                    { "@type": "MedicalProcedure", "name": "Лазерное дробление камней в почках (RIRS)", "alternateName": "RIRS" },
+                    { "@type": "MedicalTherapy", "name": "Ударно-волновая терапия при эректильной дисфункции", "alternateName": "Li-ESWT" },
+                    { "@type": "MedicalTest", "name": "Урологическое обследование и второе мнение" }
+                ],
                 "subOrganization": [
                     { "@id": "https://urologyhubtbilisi.vercel.app/#cito" },
                     { "@id": "https://urologyhubtbilisi.vercel.app/#pineo" }
@@ -52,6 +87,7 @@
                 "@type": "MedicalClinic",
                 "@id": "https://urologyhubtbilisi.vercel.app/#cito",
                 "name": "CITO Medical Center",
+                "description": "Урологическое обследование в Тбилиси: анализы с американской аккредитацией лаборатории, УЗИ простаты и сосудов, консультация уролога.",
                 "medicalSpecialty": "Urologic",
                 "address": {
                     "@type": "PostalAddress",
@@ -70,7 +106,9 @@
                 "@type": "Hospital",
                 "@id": "https://urologyhubtbilisi.vercel.app/#pineo",
                 "name": "PINEO Medical Ecosystem",
+                "description": "Госпиталь в Тбилиси: лазерные операции на простате (HoLEP, ТУР) и удаление камней в почках без разрезов.",
                 "medicalSpecialty": "Urologic",
+                "priceRange": "$3 200 – $6 800",
                 "address": {
                     "@type": "PostalAddress",
                     "streetAddress": "ул. В. Горгасали, 93",
@@ -83,7 +121,9 @@
             {
                 "@type": "Physician",
                 "name": "Д-р Александр Бочоришвили",
+                "description": "Уролог и онкоуролог в Тбилиси, доктор медицины (PhD), член Европейской ассоциации урологов. 19 лет опыта: лазерные операции на простате, удаление камней, онкоурология.",
                 "medicalSpecialty": "Urologic",
+                "knowsLanguage": ["ru", "en", "ka"],
                 "image": "https://urologyhubtbilisi.vercel.app/img/dr-bochorishvili-480.jpg",
                 "worksFor": [
                     { "@id": "https://urologyhubtbilisi.vercel.app/#cito" },
@@ -93,6 +133,7 @@
             {
                 "@type": "Physician",
                 "name": "Д-р Андро Дзнеладзе",
+                "description": "Специалист по УЗИ и лучевой диагностике, соучредитель госпиталя PINEO, доктор медицины (PhD). Более 35 лет опыта.",
                 "medicalSpecialty": "Radiography",
                 "image": "https://urologyhubtbilisi.vercel.app/img/dr-dzneladze-480.jpg",
                 "worksFor": { "@id": "https://urologyhubtbilisi.vercel.app/#pineo" }
@@ -106,10 +147,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons (версия закреплена, чтобы обновления библиотеки не ломали иконки) -->
-    <script src="https://unpkg.com/lucide@1.61.0/dist/umd/lucide.min.js"></script>
-    <!-- Three.js WebGL Engine для детальной 3D-анатомии органов -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Three.js для 3D-моделей грузится отложенно: текст страницы показывается, не дожидаясь библиотеки.
+         Пока она не загрузилась, ensureThreeInitialized() просто пропускает отрисовку. -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
         body {
@@ -415,7 +455,7 @@
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                             <div>
                                 <span class="text-[11px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Подбор за 10 секунд</span>
-                                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1.5">Что вас беспокоит?</h2>
+                                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1.5">Какая программа вам подойдёт?</h2>
                             </div>
                             <div class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 flex items-center justify-center shrink-0">
                                 <i data-lucide="stethoscope" class="w-5 h-5"></i>
@@ -519,7 +559,7 @@
                 Как это устроено
             </div>
             <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                Обследование и операция — в двух ведущих клиниках Тбилиси, у одного врача
+                Урология в Тбилиси: обследование и операция в двух ведущих клиниках Грузии, у одного врача
             </h2>
             <p class="text-slate-600 mt-3 text-base sm:text-lg">
                 Обычно при лечении за границей анализы делают в одном месте, оперируют в другом, а врачи между собой не общаются. У нас обе клиники работают в связке, и вас ведёт один хирург. Не нужно сдавать анализы дважды и пересказывать историю болезни заново.
@@ -660,7 +700,7 @@
                     Операции • Одна цена при любом размере простаты
                 </div>
                 <h3 class="text-xl font-extrabold mb-2">
-                    Лазерное лечение аденомы простаты и камней в почках
+                    Удаление аденомы простаты лазером (HoLEP, ТУР) и дробление камней в почках
                 </h3>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
                     Операции проходят без разрезов, домой из больницы — через 1–3 дня. Все расходные материалы уже в цене: никаких отдельных счетов «за лазерное волокно» потом.
@@ -714,7 +754,7 @@
                     </div>
                     <div class="bg-white/5 border border-white/10 rounded-xl p-3">
                         <div class="font-bold text-teal-300 mb-1">Онкология</div>
-                        <p class="text-slate-300">Точный диагноз, наблюдение или операция с сохранением нервов, которые отвечают за эрекцию и удержание мочи.</p>
+                        <p class="text-slate-300">Рак простаты: точный диагноз, наблюдение или операция с сохранением нервов, которые отвечают за эрекцию и удержание мочи.</p>
                     </div>
                 </div>
             </div>
@@ -726,7 +766,7 @@
                     Мужское здоровье после 40
                 </div>
                 <h3 class="text-xl font-extrabold text-slate-900 mb-2">
-                    Лечение эрекции и восстановление тестостерона без операции
+                    Лечение эректильной дисфункции и восстановление тестостерона без операции
                 </h3>
                 <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                     Слабая эрекция — часто первый сигнал проблем с сосудами. Сосуды полового члена тонкие и, по данным исследований, начинают «сдавать» на несколько лет раньше сосудов сердца. Поэтому сначала мы проверяем сосуды, а затем подбираем лечение по европейским рекомендациям.
@@ -811,7 +851,7 @@
                     Ваши врачи
                 </div>
                 <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-                    Опытные врачи, которые принимают решения вместе
+                    Урологи в Тбилиси, которые принимают решения вместе
                 </h2>
                 <p class="text-slate-300 text-sm sm:text-base mt-2">
                     Сложный случай разбирает не один врач, а команда: уролог, онколог, специалист по УЗИ и нефролог.
@@ -1545,6 +1585,39 @@
                                 Врач остаётся на связи онлайн: 3 месяца после операции и 2 месяца после лечения без операции. Можно написать в WhatsApp или Telegram и прислать новые анализы.
                             </div>
                         </div>
+
+                        <!-- Вопрос 9 -->
+                        <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
+                            <button onclick="toggleFaq(8)" aria-expanded="false" aria-controls="faq-content-8" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                                <span>Сколько стоит удаление аденомы простаты лазером в Тбилиси?</span>
+                                <i data-lucide="chevron-down" id="faq-icon-8" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200"></i>
+                            </button>
+                            <div id="faq-content-8" class="hidden px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                Операция на простате лазером (HoLEP) или ТУР в программе «Операция под ключ» чаще всего стоит около $4 200, весь диапазон — $3 200–$6 800. В цену уже входят обследование, операция, наркоз, расходники, палата, отель и трансферы. Авиабилеты оплачиваются отдельно. Точную цену врач назовёт после просмотра ваших анализов.
+                            </div>
+                        </div>
+
+                        <!-- Вопрос 10 -->
+                        <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
+                            <button onclick="toggleFaq(9)" aria-expanded="false" aria-controls="faq-content-9" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                                <span>Повлияет ли операция на простате на эрекцию?</span>
+                                <i data-lucide="chevron-down" id="faq-icon-9" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200"></i>
+                            </button>
+                            <div id="faq-content-9" class="hidden px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                Врач выбирает метод, который по возможности сохраняет эрекцию и контроль мочеиспускания. При лазерном удалении аденомы сохраняется мышца, которая удерживает мочу, а при операциях по поводу рака хирург старается сохранить нервы, отвечающие за эрекцию. Насколько это возможно в вашем случае, врач объяснит на консультации.
+                            </div>
+                        </div>
+
+                        <!-- Вопрос 11 -->
+                        <div class="border border-slate-800 rounded-2xl bg-slate-800/50 overflow-hidden">
+                            <button onclick="toggleFaq(10)" aria-expanded="false" aria-controls="faq-content-10" class="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base hover:text-teal-300 transition-colors">
+                                <span>Когда можно лететь домой после операции?</span>
+                                <i data-lucide="chevron-down" id="faq-icon-10" class="w-5 h-5 text-teal-400 shrink-0 transition-transform duration-200"></i>
+                            </button>
+                            <div id="faq-content-10" class="hidden px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                Из госпиталя выписывают через 1–3 дня. Программа рассчитана так, чтобы вы улетели после контрольного осмотра у врача — вся поездка с операцией занимает 4–8 дней.
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1739,6 +1812,9 @@
         </div>
     </div>
 
+    <!-- Lucide Icons (версия закреплена). Подключены в конце страницы, чтобы не задерживать показ текста -->
+    <script src="https://unpkg.com/lucide@1.61.0/dist/umd/lucide.min.js"></script>
+
     <!-- JAVASCRIPT: ИНТЕРАКТИВНОСТЬ, ЯЗЫКИ, ВАЛЮТЫ, ТРИАЖ, FAQ И 3D-ДВИЖОК МЕД ПРОЦЕДУР -->
     <script>
         // Инициализация иконок Lucide
@@ -1753,11 +1829,32 @@
         // ПОЛНЫЙ СЛОВАРЬ ПЕРЕВОДА НА АНГЛИЙСКИЙ, ИВРИТ И АРАБСКИЙ (RU / EN / HE / AR)
         // =========================================================================
         const PAGE_TITLES = {
-            RU: `UroHub Tbilisi | Лечение простаты и мужского здоровья в Тбилиси`,
-            EN: `UroHub Tbilisi | Prostate and Men's Health Treatment in Tbilisi`,
-            HE: `UroHub Tbilisi | טיפול בערמונית ובבריאות הגבר בטביליסי`,
-            AR: `UroHub Tbilisi | علاج البروستاتا وصحة الرجل في تبليسي`
+            RU: `Уролог в Тбилиси: лечение аденомы простаты и камней | UroHub`,
+            EN: `Urologist in Tbilisi: HoLEP Prostate Surgery & Kidney Stones`,
+            HE: `אורולוג בטביליסי: ניתוח ערמונית בלייזר HoLEP ואבנים בכליות`,
+            AR: `طبيب مسالك بولية في تبليسي: البروستاتا بالليزر وحصوات الكلى`
         };
+
+        // Описание для поиска и превью ссылки на каждом языке (длина под выдачу Google — до ~155 символов)
+        const PAGE_META = {
+            RU: { desc: `Удаление аденомы простаты лазером (HoLEP, ТУР), дробление камней в почках и лечение эректильной дисфункции в Тбилиси. Один врач, цена в договоре.`, og: `Уролог в Тбилиси: лечение простаты за одну поездку`, locale: 'ru_RU' },
+            EN: { desc: `Laser prostate surgery (HoLEP, TURP), kidney stone removal and ED treatment in Tbilisi, Georgia. One doctor from tests to surgery, fixed price.`, og: `Urologist in Tbilisi: prostate treatment in one trip`, locale: 'en_US' },
+            HE: { desc: `ניתוח ערמונית בלייזר (HoLEP, TURP), ריסוק אבנים בכליות וטיפול באין אונות בטביליסי, גאורגיה. רופא אחד מהבדיקות ועד הניתוח, מחיר קבוע.`, og: `אורולוג בטביליסי: טיפול בערמונית בנסיעה אחת`, locale: 'he_IL' },
+            AR: { desc: `عملية البروستاتا بالليزر (HoLEP، TURP)، تفتيت حصوات الكلى وعلاج ضعف الانتصاب في تبليسي، جورجيا. طبيب واحد من الفحوصات حتى العملية وسعر ثابت.`, og: `طبيب مسالك بولية في تبليسي: علاج البروستاتا في رحلة واحدة`, locale: 'ar_AE' }
+        };
+        function applyPageMeta(lang) {
+            const m = PAGE_META[lang] || PAGE_META.RU;
+            const set = (sel, attr, val) => { const el = document.querySelector(sel); if (el) el.setAttribute(attr, val); };
+            set('meta[name="description"]', 'content', m.desc);
+            set('meta[property="og:description"]', 'content', m.desc);
+            set('meta[name="twitter:description"]', 'content', m.desc);
+            set('meta[property="og:title"]', 'content', m.og);
+            set('meta[name="twitter:title"]', 'content', m.og);
+            set('meta[property="og:locale"]', 'content', m.locale);
+            const url = 'https://urologyhubtbilisi.vercel.app/' + (lang === 'RU' ? '' : '?lang=' + lang.toLowerCase());
+            set('link[rel="canonical"]', 'href', url);
+            set('meta[property="og:url"]', 'content', url);
+        }
 
         // Составные HTML-блоки (с внутренним форматированием <strong>, <span>, <br>)
         const I18N_HTML = {
@@ -1850,7 +1947,7 @@
             [`0 доплат`]: { EN: `0 extras`, HE: `0 תוספות`, AR: `0 رسوم إضافية` },
             [`цена прописана в договоре до покупки билетов`]: { EN: `the price is in the contract before you buy tickets`, HE: `המחיר כתוב בחוזה לפני קניית הכרטיסים`, AR: `السعر مكتوب في العقد قبل شراء التذاكر` },
             [`Подбор за 10 секунд`]: { EN: `Find your option in 10 seconds`, HE: `התאמה תוך 10 שניות`, AR: `اختيار خلال 10 ثوانٍ` },
-            [`Что вас беспокоит?`]: { EN: `What is bothering you?`, HE: `מה מטריד אתכם?`, AR: `ما الذي يزعجك؟` },
+            [`Какая программа вам подойдёт?`]: { EN: `Which programme is right for you?`, HE: `איזו תוכנית מתאימה לכם?`, AR: `أي برنامج يناسبك؟` },
             [`Выберите вариант — покажем подходящую программу, сколько дней она займёт и сколько стоит.`]: { EN: `Pick an option — we will show the right programme, how many days it takes and what it costs.`, HE: `בחרו אפשרות — נראה את התוכנית המתאימה, כמה ימים היא נמשכת וכמה היא עולה.`, AR: `اختر خياراً — وسنعرض لك البرنامج المناسب ومدته وتكلفته.` },
             [`Хочу проверить здоровье или узнать второе мнение`]: { EN: `I want a check-up or a second opinion`, HE: `אני רוצה בדיקה מקיפה או חוות דעת שנייה`, AR: `أريد فحصاً شاملاً أو رأياً ثانياً` },
             [`2–3 дня`]: { EN: `2–3 days`, HE: `2–3 ימים`, AR: `2–3 أيام` },
@@ -1866,7 +1963,7 @@
             [`Ваши данные видят только врач и координатор`]: { EN: `Only the doctor and the coordinator see your data`, HE: `רק הרופא והמתאם רואים את הנתונים שלכם`, AR: `بياناتك يطلع عليها الطبيب والمنسق فقط` },
             [`Ответим в течение 2 часов`]: { EN: `We reply within 2 hours`, HE: `נענה תוך שעתיים`, AR: `نرد خلال ساعتين` },
             [`Как это устроено`]: { EN: `How it works`, HE: `איך זה עובד`, AR: `كيف يعمل ذلك` },
-            [`Обследование и операция — в двух ведущих клиниках Тбилиси, у одного врача`]: { EN: `Tests and surgery at two leading clinics in Tbilisi, with one doctor`, HE: `בדיקות וניתוח בשתי מרפאות מובילות בטביליסי, אצל רופא אחד`, AR: `الفحوصات والعملية في عيادتين رائدتين في تبليسي، مع طبيب واحد` },
+            [`Урология в Тбилиси: обследование и операция в двух ведущих клиниках Грузии, у одного врача`]: { EN: `Urology in Tbilisi: tests and surgery at two leading clinics in Georgia, with one doctor`, HE: `אורולוגיה בטביליסי: בדיקות וניתוח בשתי מרפאות מובילות בגאורגיה, אצל רופא אחד`, AR: `المسالك البولية في تبليسي: الفحوصات والعملية في عيادتين رائدتين في جورجيا، مع طبيب واحد` },
             [`Обычно при лечении за границей анализы делают в одном месте, оперируют в другом, а врачи между собой не общаются. У нас обе клиники работают в связке, и вас ведёт один хирург. Не нужно сдавать анализы дважды и пересказывать историю болезни заново.`]: { EN: `When people get treated abroad, tests are often done in one place and surgery in another, and the doctors never talk to each other. Our two clinics work as one team, and one surgeon looks after you. No repeated tests, no retelling your medical history.`, HE: `בדרך כלל בטיפול בחו"ל עושים בדיקות במקום אחד, מנתחים במקום אחר, והרופאים לא מדברים ביניהם. אצלנו שתי המרפאות עובדות יחד, ומנתח אחד מלווה אתכם. לא צריך לחזור על בדיקות ולספר את ההיסטוריה הרפואית מחדש.`, AR: `عادةً عند العلاج في الخارج تُجرى التحاليل في مكان والعملية في مكان آخر، ولا يتواصل الأطباء فيما بينهم. لدينا تعمل العيادتان معاً، ويتابعك جراح واحد. لا حاجة لإعادة التحاليل أو سرد تاريخك المرضي من جديد.` },
             [`ШАГ 1 • ОБСЛЕДОВАНИЕ`]: { EN: `STEP 1 • TESTS`, HE: `שלב 1 • בדיקות`, AR: `الخطوة 1 • الفحوصات` },
             [`Американская аккредитация лаборатории`]: { EN: `US-accredited laboratory`, HE: `מעבדה עם הסמכה אמריקאית`, AR: `مختبر باعتماد أمريكي` },
@@ -1888,7 +1985,7 @@
             [`Дробление камня лазером без разрезов`]: { EN: `Laser stone breaking with no incisions`, HE: `ריסוק אבן בלייזר ללא חתכים`, AR: `تفتيت الحصوة بالليزر دون شقوق` },
             [`Из клиники в клинику вас отвезём сами — ничего организовывать не нужно`]: { EN: `We drive you between the clinics — nothing for you to arrange`, HE: `אנחנו מסיעים אתכם בין המרפאות — אין צורך לארגן כלום`, AR: `نوصلك بين العيادتين بأنفسنا — لا حاجة لترتيب أي شيء` },
             [`Операции • Одна цена при любом размере простаты`]: { EN: `Surgery • One price for any prostate size`, HE: `ניתוחים • מחיר אחד לכל גודל ערמונית`, AR: `العمليات • سعر واحد لأي حجم للبروستاتا` },
-            [`Лазерное лечение аденомы простаты и камней в почках`]: { EN: `Laser treatment for an enlarged prostate and kidney stones`, HE: `טיפול בלייזר בערמונית מוגדלת ובאבנים בכליות`, AR: `علاج تضخم البروستاتا وحصوات الكلى بالليزر` },
+            [`Удаление аденомы простаты лазером (HoLEP, ТУР) и дробление камней в почках`]: { EN: `Laser prostate surgery (HoLEP, TURP) and kidney stone removal`, HE: `ניתוח ערמונית בלייזר (HoLEP, TURP) וריסוק אבנים בכליות`, AR: `عملية البروستاتا بالليزر (HoLEP، TURP) وتفتيت حصوات الكلى` },
             [`Операции проходят без разрезов, домой из больницы — через 1–3 дня. Все расходные материалы уже в цене: никаких отдельных счетов «за лазерное волокно» потом.`]: { EN: `Surgery is done without incisions, and you leave hospital in 1–3 days. All materials are already in the price: no separate bills "for the laser fibre" later.`, HE: `הניתוחים נעשים ללא חתכים, והשחרור מבית החולים אחרי 1–3 ימים. כל החומרים כבר כלולים במחיר: בלי חשבונות נפרדים "על סיב הלייזר" אחר כך.`, AR: `تُجرى العمليات دون شقوق، والخروج من المستشفى بعد 1–3 أيام. كل المستلزمات مشمولة في السعر: لا فواتير منفصلة «لألياف الليزر» لاحقاً.` },
             [`Как проходит операция:`]: { EN: `How the surgery works:`, HE: `איך עובר הניתוח:`, AR: `كيف تجري العملية:` },
             [`Аденома простаты`]: { EN: `Enlarged prostate`, HE: `ערמונית מוגדלת`, AR: `تضخم البروستاتا` },
@@ -1899,9 +1996,9 @@
             [`Лазерное удаление (HoLEP) или операция через уретру (ТУР) — при любом размере простаты.`]: { EN: `Laser removal (HoLEP) or surgery through the urethra (TURP) — for any prostate size.`, HE: `הסרה בלייזר (HoLEP) או ניתוח דרך השופכה (TURP) — בכל גודל ערמונית.`, AR: `الإزالة بالليزر (HoLEP) أو الجراحة عبر الإحليل (TURP) — لأي حجم للبروستاتا.` },
             [`Дробим лазером через естественные пути, крупные — через маленький прокол.`]: { EN: `We break stones with a laser through natural pathways; large ones through a tiny puncture.`, HE: `מרסקים בלייזר דרך הדרכים הטבעיות, אבנים גדולות — דרך נקב קטן.`, AR: `نفتتها بالليزر عبر المسالك الطبيعية، والكبيرة عبر ثقب صغير.` },
             [`Онкология`]: { EN: `Cancer care`, HE: `אונקולוגיה`, AR: `الأورام` },
-            [`Точный диагноз, наблюдение или операция с сохранением нервов, которые отвечают за эрекцию и удержание мочи.`]: { EN: `An accurate diagnosis, monitoring, or surgery that preserves the nerves responsible for erection and bladder control.`, HE: `אבחנה מדויקת, מעקב או ניתוח עם שימור העצבים האחראים לזקפה ולשליטה בשתן.`, AR: `تشخيص دقيق، أو متابعة، أو عملية تحافظ على الأعصاب المسؤولة عن الانتصاب والتحكم في البول.` },
+            [`Рак простаты: точный диагноз, наблюдение или операция с сохранением нервов, которые отвечают за эрекцию и удержание мочи.`]: { EN: `Prostate cancer: an accurate diagnosis, monitoring, or surgery that preserves the nerves responsible for erection and bladder control.`, HE: `סרטן הערמונית: אבחנה מדויקת, מעקב או ניתוח עם שימור העצבים האחראים לזקפה ולשליטה בשתן.`, AR: `سرطان البروستاتا: تشخيص دقيق، أو متابعة، أو عملية تحافظ على الأعصاب المسؤولة عن الانتصاب والتحكم في البول.` },
             [`Мужское здоровье после 40`]: { EN: `Men's health after 40`, HE: `בריאות הגבר אחרי גיל 40`, AR: `صحة الرجل بعد الأربعين` },
-            [`Лечение эрекции и восстановление тестостерона без операции`]: { EN: `Erection treatment and testosterone recovery without surgery`, HE: `טיפול בזקפה ושיקום הטסטוסטרון ללא ניתוח`, AR: `علاج الانتصاب واستعادة التستوستيرون دون جراحة` },
+            [`Лечение эректильной дисфункции и восстановление тестостерона без операции`]: { EN: `Erectile dysfunction treatment and testosterone recovery without surgery`, HE: `טיפול באין אונות ושיקום הטסטוסטרון ללא ניתוח`, AR: `علاج ضعف الانتصاب واستعادة التستوستيرون دون جراحة` },
             [`Слабая эрекция — часто первый сигнал проблем с сосудами. Сосуды полового члена тонкие и, по данным исследований, начинают «сдавать» на несколько лет раньше сосудов сердца. Поэтому сначала мы проверяем сосуды, а затем подбираем лечение по европейским рекомендациям.`]: { EN: `A weak erection is often the first sign of a blood vessel problem. Penile vessels are thin and, according to research, start to fail several years before the heart's vessels. So we check the vessels first, then choose treatment following European guidelines.`, HE: `זקפה חלשה היא לעיתים קרובות הסימן הראשון לבעיה בכלי הדם. כלי הדם באיבר המין דקים, ולפי מחקרים הם "נחלשים" כמה שנים לפני כלי הדם של הלב. לכן קודם אנחנו בודקים את כלי הדם, ואז מתאימים טיפול לפי ההנחיות האירופיות.`, AR: `ضعف الانتصاب غالباً ما يكون أول إشارة لمشكلة في الأوعية الدموية. أوعية القضيب رفيعة، ووفقاً للدراسات تبدأ بالضعف قبل أوعية القلب ببضع سنوات. لذلك نفحص الأوعية أولاً ثم نختار العلاج وفق التوصيات الأوروبية.` },
             [`Как работает лечение:`]: { EN: `How the treatment works:`, HE: `איך הטיפול עובד:`, AR: `كيف يعمل العلاج:` },
             [`Ударно-волновая терапия`]: { EN: `Shockwave therapy`, HE: `טיפול בגלי הלם`, AR: `العلاج بالموجات الصادمة` },
@@ -1912,7 +2009,7 @@
             [`Восстановление гормонов`]: { EN: `Hormone recovery`, HE: `איזון הורמונלי`, AR: `استعادة توازن الهرمونات` },
             [`Помогаем организму снова вырабатывать собственный тестостерон.`]: { EN: `We help your body produce its own testosterone again.`, HE: `עוזרים לגוף לייצר שוב טסטוסטרון משלו.`, AR: `نساعد جسمك على إنتاج التستوستيرون الخاص به من جديد.` },
             [`Ваши врачи`]: { EN: `Your doctors`, HE: `הרופאים שלכם`, AR: `أطباؤك` },
-            [`Опытные врачи, которые принимают решения вместе`]: { EN: `Experienced doctors who make decisions together`, HE: `רופאים מנוסים שמקבלים החלטות יחד`, AR: `أطباء ذوو خبرة يتخذون القرارات معاً` },
+            [`Урологи в Тбилиси, которые принимают решения вместе`]: { EN: `Urologists in Tbilisi who make decisions together`, HE: `אורולוגים בטביליסי שמקבלים החלטות יחד`, AR: `أطباء مسالك بولية في تبليسي يتخذون القرارات معاً` },
             [`Сложный случай разбирает не один врач, а команда: уролог, онколог, специалист по УЗИ и нефролог.`]: { EN: `A complex case is reviewed by a team, not one doctor: a urologist, an oncologist, an ultrasound specialist and a nephrologist.`, HE: `מקרה מורכב בוחן צוות ולא רופא אחד: אורולוג, אונקולוג, מומחה אולטרסאונד ונפרולוג.`, AR: `الحالة المعقدة يدرسها فريق لا طبيب واحد: طبيب مسالك بولية وطبيب أورام وأخصائي سونار وطبيب كلى.` },
             [`19 лет опыта`]: { EN: `19 years of experience`, HE: `19 שנות ניסיון`, AR: `19 عاماً من الخبرة` },
             [`Ваш лечащий врач и хирург`]: { EN: `Your doctor and surgeon`, HE: `הרופא המטפל והמנתח שלכם`, AR: `طبيبك المعالج وجرّاحك` },
@@ -2087,6 +2184,12 @@
             [`Вращайте пальцем`]: { EN: `Drag to rotate`, HE: `סובבו באצבע`, AR: `أدِر بإصبعك` },
             [`3D-модель органа`]: { EN: `3D organ model`, HE: `מודל 3D של האיבר`, AR: `نموذج 3D للعضو` },
             [`Пройти опрос`]: { EN: `Take the quiz`, HE: `למלא שאלון`, AR: `ابدأ الاستبيان` },
+            [`Сколько стоит удаление аденомы простаты лазером в Тбилиси?`]: { EN: `How much does laser prostate surgery cost in Tbilisi?`, HE: `כמה עולה ניתוח ערמונית בלייזר בטביליסי?`, AR: `كم تكلفة عملية البروستاتا بالليزر في تبليسي؟` },
+            [`Операция на простате лазером (HoLEP) или ТУР в программе «Операция под ключ» чаще всего стоит около $4 200, весь диапазон — $3 200–$6 800. В цену уже входят обследование, операция, наркоз, расходники, палата, отель и трансферы. Авиабилеты оплачиваются отдельно. Точную цену врач назовёт после просмотра ваших анализов.`]: { EN: `Laser prostate surgery (HoLEP) or TURP in the "All-inclusive surgery" programme typically costs about $4,200, with a full range of $3,200–$6,800. The price already includes tests, surgery, anaesthesia, materials, the hospital room, the hotel and transfers. Flights are paid separately. The doctor will give you the exact price after reviewing your tests.`, HE: `ניתוח ערמונית בלייזר (HoLEP) או TURP בתוכנית "ניתוח הכל כלול" עולה בדרך כלל כ-$4,200, והטווח המלא הוא $3,200–$6,800. המחיר כבר כולל בדיקות, ניתוח, הרדמה, חומרים, חדר אשפוז, מלון והסעות. הטיסות משולמות בנפרד. את המחיר המדויק הרופא יגיד אחרי שיעבור על הבדיקות שלכם.`, AR: `تكلف عملية البروستاتا بالليزر (HoLEP) أو TURP ضمن برنامج «العملية الشاملة» عادةً نحو 4,200$، والنطاق الكامل 3,200–6,800$. يشمل السعر الفحوصات والعملية والتخدير والمستلزمات وغرفة المستشفى والفندق والتنقلات. تُدفع تذاكر الطيران بشكل منفصل. وسيحدد الطبيب السعر الدقيق بعد مراجعة تحاليلك.` },
+            [`Повлияет ли операция на простате на эрекцию?`]: { EN: `Will prostate surgery affect my erections?`, HE: `האם ניתוח ערמונית ישפיע על הזקפה?`, AR: `هل تؤثر عملية البروستاتا على الانتصاب؟` },
+            [`Врач выбирает метод, который по возможности сохраняет эрекцию и контроль мочеиспускания. При лазерном удалении аденомы сохраняется мышца, которая удерживает мочу, а при операциях по поводу рака хирург старается сохранить нервы, отвечающие за эрекцию. Насколько это возможно в вашем случае, врач объяснит на консультации.`]: { EN: `The doctor chooses a method that preserves erections and bladder control wherever possible. Laser removal of an enlarged prostate keeps the muscle that holds urine, and in cancer surgery the surgeon tries to preserve the nerves responsible for erection. The doctor will explain what is possible in your case at the consultation.`, HE: `הרופא בוחר שיטה ששומרת ככל האפשר על הזקפה ועל השליטה בשתן. בהסרת ערמונית מוגדלת בלייזר נשמר השריר שמחזיק את השתן, ובניתוחי סרטן המנתח משתדל לשמור על העצבים האחראים לזקפה. עד כמה זה אפשרי במקרה שלכם, הרופא יסביר בייעוץ.`, AR: `يختار الطبيب طريقة تحافظ قدر الإمكان على الانتصاب والتحكم في البول. عند إزالة تضخم البروستاتا بالليزر تبقى العضلة التي تتحكم في البول سليمة، وفي جراحات السرطان يحرص الجراح على الحفاظ على الأعصاب المسؤولة عن الانتصاب. وسيشرح لك الطبيب ما هو ممكن في حالتك خلال الاستشارة.` },
+            [`Когда можно лететь домой после операции?`]: { EN: `When can I fly home after surgery?`, HE: `מתי אפשר לטוס הביתה אחרי הניתוח?`, AR: `متى يمكنني السفر إلى بلدي بعد العملية؟` },
+            [`Из госпиталя выписывают через 1–3 дня. Программа рассчитана так, чтобы вы улетели после контрольного осмотра у врача — вся поездка с операцией занимает 4–8 дней.`]: { EN: `You leave hospital in 1–3 days. The programme is planned so that you fly home after a follow-up check with the doctor — the whole trip with surgery takes 4–8 days.`, HE: `משתחררים מבית החולים אחרי 1–3 ימים. התוכנית בנויה כך שתטוסו הביתה אחרי בדיקת ביקורת אצל הרופא — כל הנסיעה עם הניתוח נמשכת 4–8 ימים.`, AR: `تخرج من المستشفى بعد 1–3 أيام. والبرنامج مصمم بحيث تسافر بعد فحص المتابعة عند الطبيب — وتستغرق الرحلة كاملة مع العملية 4–8 أيام.` },
             [`Пройти опрос: что вас беспокоит?`]: { EN: `Take the quiz: what is bothering you?`, HE: `למלא שאלון: מה מטריד אתכם?`, AR: `ابدأ الاستبيان: ما الذي يزعجك؟` },
             [`Не уверены, что выбрать? Пройдите опрос из 5 вопросов`]: { EN: `Not sure what to choose? Take a 5-question check`, HE: `לא בטוחים מה לבחור? מלאו שאלון של 5 שאלות`, AR: `لست متأكداً مما تختار؟ أجب عن استبيان من 5 أسئلة` },
             [`Узнать цену и даты →`]: { EN: `Get price and dates →`, HE: `לברר מחיר ותאריכים ←`, AR: `اعرف السعر والمواعيد ←` }
@@ -2471,6 +2574,7 @@
 
             syncComparisonLabels();
             rememberLanguage(lang);
+            applyPageMeta(lang);
             renderSymptomQuiz();
         }
 
