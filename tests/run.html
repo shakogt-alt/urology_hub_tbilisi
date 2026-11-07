@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Тесты сайта UroHub</title>
+    <style>
+        :root { --bg: #f8fafc; --card: #fff; --text: #0f172a; --muted: #64748b; --ok: #047857; --bad: #b91c1c; --line: #e2e8f0; }
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 16px; background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        h1 { font-size: 20px; margin: 0 0 4px; }
+        .muted { color: var(--muted); margin: 0 0 16px; }
+        #summary { font-size: 16px; font-weight: 700; margin: 12px 0; }
+        #summary.ok { color: var(--ok); } #summary.bad { color: var(--bad); }
+        ul { list-style: none; padding: 0; margin: 0; max-width: 900px; }
+        li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+        li.ok b { color: var(--ok); } li.bad b { color: var(--bad); }
+        li pre { white-space: pre-wrap; margin: 6px 0 0; font-size: 12px; color: var(--bad); }
+        .frames { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        iframe { border: 1px solid var(--line); border-radius: 10px; background: #fff; height: 640px; }
+    </style>
+</head>
+<body>
+    <h1>Тесты сайта UroHub</h1>
+    <p class="muted">Переключение языков, защита от автоперевода, квиз, окна, форма. Сайт загружается в рамке шириной 375px и 1280px, тесты идут внутри него.</p>
+    <div id="summary">Загружаю сайт…</div>
+    <ul id="list"></ul>
+    <div class="frames">
+        <iframe id="f375" title="Сайт, ширина 375px" width="375"></iframe>
+        <iframe id="f1280" title="Сайт, ширина 1280px" width="1280"></iframe>
+    </div>
+    <script>
+        // Запуск набора tests/suite.js внутри страницы сайта, загруженной в рамку
+        function runIn(frame) {
+            return new Promise((resolve, reject) => {
+                frame.onload = () => {
+                    setTimeout(() => {
+                        const doc = frame.contentDocument;
+                        const s = doc.createElement('script');
+                        s.src = '/tests/suite.js?t=' + Date.now();
+                        s.onload = () => frame.contentWindow.runSiteTests().then(resolve, reject);
+                        s.onerror = () => reject(new Error('не загрузился tests/suite.js'));
+                        doc.body.appendChild(s);
+                    }, 3500); // ждём загрузку three.js и 3D-сцен
+                };
+                frame.src = '/?lang=ru&test=' + Date.now();
+            });
+        }
+        (async () => {
+            const list = document.getElementById('list');
+            const summary = document.getElementById('summary');
+            let passed = 0, failed = 0;
+            const all = [];
+            for (const id of ['f375', 'f1280']) {
+                const width = id.slice(1);
+                try {
+                    const r = await runIn(document.getElementById(id));
+                    r.results.forEach(t => all.push(Object.assign({ width }, t)));
+                    passed += r.passed; failed += r.failed;
+                } catch (e) {
+                    all.push({ width, name: 'Запуск тестов', ok: false, details: [String(e && e.stack || e)] });
+                    failed++;
+                }
+            }
+            all.forEach(t => {
+                const li = document.createElement('li');
+                li.className = t.ok ? 'ok' : 'bad';
+                li.innerHTML = '<b>' + (t.ok ? '✓' : '✗') + '</b> [' + t.width + 'px] ';
+                li.appendChild(document.createTextNode(t.name));
+                if (!t.ok) { const pre = document.createElement('pre'); pre.textContent = t.details.join('\n'); li.appendChild(pre); }
+                list.appendChild(li);
+            });
+            summary.textContent = failed ? ('Провалено: ' + failed + ', пройдено: ' + passed) : ('Все тесты пройдены: ' + passed);
+            summary.className = failed ? 'bad' : 'ok';
+            window.__testResults = { passed, failed, results: all };
+        })();
+    </script>
+</body>
+</html>

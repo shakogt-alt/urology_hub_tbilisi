@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="ru" translate="no" class="scroll-smooth notranslate">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Уролог в Тбилиси: лечение аденомы простаты и камней | UroHub</title>
     <meta name="description" content="Удаление аденомы простаты лазером (HoLEP, ТУР), дробление камней в почках и лечение эректильной дисфункции в Тбилиси. Один врач, цена в договоре.">
     <meta name="theme-color" content="#0f172a">
+    <!-- У сайта свои переводы (RU/EN/HE/AR). Автоперевод браузера (Chrome, Edge, Яндекс) подменяет текст на странице,
+         после чего переключатель языков уже не может вернуть правильный текст — поэтому автоперевод запрещён -->
+    <meta name="google" content="notranslate">
     <!-- Канонический адрес ставится по языку из ?lang=, чтобы EN/HE/AR не считались копией русской версии -->
     <script>
         (function () {
@@ -4035,9 +4038,18 @@
             };
         }
 
+        // Если браузер не умеет WebGL (старые телефоны, выключенное ускорение), 3D просто не рисуется — остальная страница работает
+        let webglUnavailable = false;
         function ensureThreeInitialized() {
-            if (sharedRenderer || typeof THREE === 'undefined') return;
-            sharedRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            if (sharedRenderer || webglUnavailable || typeof THREE === 'undefined') return;
+            try {
+                sharedRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            } catch (e) {
+                webglUnavailable = true;
+                sharedRenderer = null;
+                document.documentElement.classList.add('no-webgl');
+                return;
+            }
             sharedRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             sharedCamera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
 
