@@ -251,9 +251,25 @@
             }
             .cmp-table td:nth-child(3)[data-label]::before { color: #94a3b8; }
         }
+        /* Карусель программ: тонкая полоса прокрутки как подсказка, что карточки листаются */
+        .pkg-scroller { scrollbar-width: thin; scrollbar-color: #94a3b8 transparent; scroll-padding-inline: 1rem; }
+        @media (min-width: 1024px) { .pkg-scroller { overflow: visible; } }
+        /* Видимая рамка фокуса для клавиатуры на всех кнопках и ссылках */
+        a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+            outline: 2px solid #0d9488; outline-offset: 2px;
+        }
+        /* «Уменьшение движения» в настройках системы: без анимаций, плавной прокрутки и мерцаний */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto !important; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-teal-600 selection:text-white">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-teal-700 focus:text-white focus:font-bold focus:text-sm">Перейти к содержанию</a>
 
     <!-- Верхний информационный бар (Международный SLA & Аккредитации) -->
     <div class="bg-slate-900 text-slate-300 text-xs border-b border-slate-800 py-2.5 px-4">
@@ -271,7 +287,7 @@
             </div>
             <div class="flex items-center gap-4 ml-auto">
                 <span class="text-slate-400 hidden sm:inline">Прямой рейс 2,5–3 часа • Врачи говорят по-русски</span>
-                <a href="#lead-form" class="text-teal-400 hover:text-teal-300 font-semibold underline underline-offset-4">
+                <a href="#lead-form" class="inline-block py-2.5 -my-2.5 text-teal-400 hover:text-teal-300 font-semibold underline underline-offset-4">
                     Бесплатно оценить мои анализы →
                 </a>
             </div>
@@ -282,16 +298,16 @@
     <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
         <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
             <!-- Логотип -->
-            <a href="#" class="flex items-center gap-3 group min-w-0 lg:shrink-0">
-                <div class="w-11 h-11 rounded-xl bg-slate-900 flex items-center justify-center text-teal-400 font-bold text-lg shadow-md group-hover:bg-teal-600 group-hover:text-white transition-colors">
+            <a href="#top" class="flex items-center gap-2.5 sm:gap-3 group min-w-0 lg:shrink-0">
+                <div class="hidden min-[370px]:flex shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-900 items-center justify-center text-teal-400 font-bold text-lg shadow-md group-hover:bg-teal-600 group-hover:text-white transition-colors">
                     <i data-lucide="activity" class="w-6 h-6"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <span class="font-extrabold text-slate-900 tracking-tight text-lg">CITO <span class="text-teal-600">×</span> PINEO</span>
-                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">UroHub</span>
+                        <span class="font-extrabold text-slate-900 tracking-tight text-base sm:text-lg whitespace-nowrap">CITO <span class="text-teal-600">×</span> PINEO</span>
+                        <span class="hidden min-[440px]:inline text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">UroHub</span>
                     </div>
-                    <p class="text-[11px] text-slate-500 font-medium">Урология д-ра Александра Бочоришвили</p>
+                    <p class="hidden min-[480px]:block text-xs text-slate-500 font-medium">Урология д-ра Александра Бочоришвили</p>
                 </div>
             </a>
 
@@ -305,7 +321,7 @@
                 <a href="#faq" class="hover:text-teal-600 transition-colors">Вопросы</a>
             </nav>
             <!-- Переключатель языков (RU / EN / HE / AR) + Переключатель валют + CTA -->
-            <div class="flex items-center gap-3 shrink-0">
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                 <!-- Переключатель языков RU / EN / HE / AR (на мобильных — в выпадающем меню) -->
                 <div class="hidden md:flex bg-slate-100 p-1 rounded-xl border border-slate-200 items-center text-xs font-bold" role="group" aria-label="Выбор языка">
                     <button onclick="setLanguage('RU')" id="lang-RU" class="lang-btn px-2.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-sm transition-all">RU</button>
@@ -320,6 +336,14 @@
                     <button onclick="setCurrency('EUR')" id="curr-EUR" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">€ EUR</button>
                     <button onclick="setCurrency('GEL')" id="curr-GEL" class="curr-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">₾ GEL</button>
                 </div>
+
+                <!-- Язык на телефоне: компактный список прямо в шапке, без захода в меню -->
+                <select id="lang-select-mobile" onchange="setLanguage(this.value)" aria-label="Выбор языка" class="md:hidden h-10 pl-2 pr-1 rounded-xl border border-slate-200 bg-slate-100 text-slate-800 text-xs font-bold outline-none focus:border-teal-600">
+                    <option value="RU">RU</option>
+                    <option value="EN">EN</option>
+                    <option value="HE">HE</option>
+                    <option value="AR">AR</option>
+                </select>
 
                 <!-- Кнопка опросника: с подписью на широких экранах, значком на узких -->
                 <a href="#symptoms" class="inline-flex items-center justify-center gap-2 h-10 min-w-10 px-2.5 xl:px-4 rounded-xl border border-teal-600 bg-white text-teal-700 hover:bg-teal-50 font-semibold text-sm transition-colors" aria-label="Пройти опрос о симптомах" title="Пройти опрос о симптомах">
@@ -374,6 +398,7 @@
         </div>
     </header>
 
+    <main id="main" tabindex="-1" class="outline-none">
     <!-- ШАГ 3.1: ПЕРВЫЙ ЭКРАН (HERO SECTION) -->
     <section class="hero-pattern text-white relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
         <!-- Декоративная сетка -->
@@ -454,7 +479,7 @@
                     <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                             <div>
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Подбор за 10 секунд</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Подбор за 10 секунд</span>
                                 <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1.5">Какая программа вам подойдёт?</h2>
                             </div>
                             <div class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 flex items-center justify-center shrink-0">
@@ -502,8 +527,8 @@
                         <!-- Динамический результат триажа -->
                         <div id="triage-result" class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 space-y-3">
                             <div class="flex items-center justify-between">
-                                <span id="tr-badge" class="text-[11px] uppercase tracking-wider font-bold text-teal-400">Вам подойдёт: «Обследование»</span>
-                                <span id="tr-saving" class="text-[11px] bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-md font-semibold">Цена фиксирована</span>
+                                <span id="tr-badge" class="text-xs uppercase tracking-wider font-bold text-teal-400">Вам подойдёт: «Обследование»</span>
+                                <span id="tr-saving" class="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-md font-semibold">Цена фиксирована</span>
                             </div>
 
                             <!-- ВСТРОЕННАЯ 3D-ВИЗУАЛИЗАЦИЯ ПРОЦЕДУРЫ ТРИАЖА -->
@@ -511,13 +536,13 @@
                                 <canvas id="canvas-triage-3d" class="w-full h-full block med-3d-canvas" title="Потяните мышью для вращения 3D-модели органа"></canvas>
                                 <div class="absolute top-2 left-2.5 flex items-center gap-1.5 med-hud-pill px-2 py-0.5 rounded-md">
                                     <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping"></span>
-                                    <span id="tr-3d-label" class="text-[10px] font-bold text-teal-300 tracking-wide uppercase">3D-модель: УЗИ простаты</span>
+                                    <span id="tr-3d-label" class="text-xs font-bold text-teal-300 tracking-wide uppercase">3D-модель: УЗИ простаты</span>
                                 </div>
-                                <button type="button" onclick="open3DModal(currentTriageKey)" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-[10px] font-semibold text-white px-2.5 py-1 rounded-md flex items-center gap-1 transition-colors">
+                                <button type="button" onclick="open3DModal(currentTriageKey)" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-xs font-semibold text-white px-3 py-2 rounded-md flex items-center gap-1 transition-colors">
                                     <i data-lucide="maximize-2" class="w-3 h-3 text-teal-400"></i>
                                     <span>Открыть в 3D</span>
                                 </button>
-                                <div id="tr-3d-metric" class="hidden sm:block absolute bottom-2 left-2.5 text-[10px] font-mono text-slate-300 bg-slate-950/70 px-2 py-0.5 rounded">
+                                <div id="tr-3d-metric" class="hidden sm:block absolute bottom-2 left-2.5 text-xs font-mono text-slate-300 bg-slate-950/70 px-2 py-0.5 rounded">
                                     Объём и структура простаты
                                 </div>
                             </div>
@@ -528,7 +553,7 @@
                             </p>
                             <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
                                 <div>
-                                    <div class="text-[11px] text-slate-400">Цена «под ключ»:</div>
+                                    <div class="text-xs text-slate-400">Цена «под ключ»:</div>
                                     <div id="tr-price" class="text-xl font-extrabold text-teal-400 whitespace-nowrap">$850 – $1 200</div>
                                 </div>
                                 <a href="#lead-form" onclick="prefillCaseFromTriage()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors text-center grow sm:grow-0">
@@ -537,7 +562,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-slate-500">
+                        <div class="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-slate-500">
                             <span class="flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5 text-teal-600"></i> Ваши данные видят только врач и координатор</span>
                             <span>Ответим в течение 2 часов</span>
                         </div>
@@ -553,7 +578,7 @@
     </section>
 
     <!-- ШАГ 3.2: ПРЕИМУЩЕСТВА И КЛИНИКИ-ПАРТНЕРЫ (BENTO GRID — ЗОЛОТОЙ ТРЕУГОЛЬНИК) -->
-    <section id="ecosystem" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="ecosystem" class="py-12 sm:py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mb-12">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider mb-3 border border-teal-200">
                 Как это устроено
@@ -606,20 +631,20 @@
                         <div class="bg-slate-900/95 px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-                                <span class="text-[11px] font-bold text-white tracking-wide uppercase">Посмотрите, как устроена простата</span>
+                                <span class="text-xs font-bold text-white tracking-wide uppercase">Посмотрите, как устроена простата</span>
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <button type="button" onclick="setCito3DMode('trus')" id="btn-cito-trus" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-teal-500 text-slate-950 transition-all">УЗИ простаты</button>
-                                <button type="button" onclick="setCito3DMode('doppler')" id="btn-cito-doppler" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">УЗИ сосудов</button>
+                                <button type="button" onclick="setCito3DMode('trus')" id="btn-cito-trus" class="px-3 py-2 rounded-md text-xs font-bold bg-teal-500 text-slate-950 transition-all">УЗИ простаты</button>
+                                <button type="button" onclick="setCito3DMode('doppler')" id="btn-cito-doppler" class="px-3 py-2 rounded-md text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">УЗИ сосудов</button>
                             </div>
                         </div>
                         <div class="med-3d-viewport med-3d-grid h-56 relative">
                             <canvas id="canvas-cito-3d" class="w-full h-full block med-3d-canvas" title="Потяните, чтобы повернуть модель"></canvas>
                             <div class="absolute top-2.5 left-3 pointer-events-none space-y-1">
-                                <div id="cito-hud-line1" class="text-[10px] font-mono text-teal-300 bg-slate-950/75 px-2 py-0.5 rounded border border-teal-500/20">УЗИ простаты с искусственным интеллектом</div>
-                                <div id="cito-hud-line2" class="hidden sm:block text-[10px] font-mono text-slate-300 bg-slate-950/75 px-2 py-0.5 rounded">Простата, мочевой пузырь и семенные пузырьки</div>
+                                <div id="cito-hud-line1" class="text-xs font-mono text-teal-300 bg-slate-950/75 px-2 py-0.5 rounded border border-teal-500/20">УЗИ простаты с искусственным интеллектом</div>
+                                <div id="cito-hud-line2" class="hidden sm:block text-xs font-mono text-slate-300 bg-slate-950/75 px-2 py-0.5 rounded">Простата, мочевой пузырь и семенные пузырьки</div>
                             </div>
-                            <button type="button" onclick="open3DModal('checkup')" class="absolute bottom-2.5 right-3 med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-teal-300 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all">
+                            <button type="button" onclick="open3DModal('checkup')" class="absolute bottom-2.5 right-3 med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-teal-300 px-3 py-2 rounded-lg flex items-center gap-1 transition-all">
                                 <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
                                 <span>Открыть в 3D</span>
                             </button>
@@ -668,18 +693,18 @@
                     <!-- ВСТРОЕННАЯ 3D-ВИЗУАЛИЗАЦИЯ ОПЕРБЛОКА PINEO -->
                     <div class="mt-5 rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-950">
                         <div class="bg-slate-800/90 px-3 py-1.5 border-b border-slate-700 flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                                 <i data-lucide="video" class="w-3.5 h-3.5 text-teal-400"></i>
                                 Как лазером убирают камень из почки
                             </span>
-                            <span class="text-[10px] font-mono text-slate-400">Выписка через 1–3 дня</span>
+                            <span class="text-xs font-mono text-slate-400">Выписка через 1–3 дня</span>
                         </div>
                         <div class="med-3d-viewport med-3d-grid h-48 relative">
                             <canvas id="canvas-pineo-3d" class="w-full h-full block med-3d-canvas" title="Потяните, чтобы повернуть почку"></canvas>
-                            <div class="hidden sm:block absolute bottom-2 left-2.5 text-[10px] font-mono text-teal-300 bg-slate-950/80 px-2 py-0.5 rounded border border-teal-500/20">
+                            <div class="hidden sm:block absolute bottom-2 left-2.5 text-xs font-mono text-teal-300 bg-slate-950/80 px-2 py-0.5 rounded border border-teal-500/20">
                                 Дробление камня лазером без разрезов
                             </div>
-                            <button type="button" onclick="open3DModal('rirs')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2 py-0.5 rounded flex items-center gap-1">
+                            <button type="button" onclick="open3DModal('rirs')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-white px-3 py-2 rounded flex items-center gap-1">
                                 <i data-lucide="maximize-2" class="w-3 h-3 text-teal-400"></i>
                                 <span>3D</span>
                             </button>
@@ -711,31 +736,31 @@
                     <div class="bg-slate-900/95 px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                            <span class="text-[11px] font-bold text-teal-300 uppercase tracking-wider">Как проходит операция:</span>
+                            <span class="text-xs font-bold text-teal-300 uppercase tracking-wider">Как проходит операция:</span>
                         </div>
                         <div class="flex flex-wrap items-center gap-1">
-                            <button type="button" onclick="setSurg3DMode('holep')" id="btn-surg-holep" class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-teal-500 text-slate-950 transition-all">Аденома простаты</button>
-                            <button type="button" onclick="setSurg3DMode('rirs')" id="btn-surg-rirs" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">Камни в почках</button>
-                            <button type="button" onclick="setSurg3DMode('onco')" id="btn-surg-onco" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">Сохранение нервов</button>
+                            <button type="button" onclick="setSurg3DMode('holep')" id="btn-surg-holep" class="px-3 py-2 rounded-lg text-xs font-extrabold bg-teal-500 text-slate-950 transition-all">Аденома простаты</button>
+                            <button type="button" onclick="setSurg3DMode('rirs')" id="btn-surg-rirs" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">Камни в почках</button>
+                            <button type="button" onclick="setSurg3DMode('onco')" id="btn-surg-onco" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">Сохранение нервов</button>
                         </div>
                     </div>
                     <div class="med-3d-viewport med-3d-grid h-64 relative">
                         <canvas id="canvas-surg-3d" class="w-full h-full block med-3d-canvas" title="Поверните модель мышью или пальцем"></canvas>
                         <div class="absolute top-2.5 left-3 pointer-events-none space-y-1">
-                            <div id="surg-hud-title" class="text-[11px] font-bold text-white bg-slate-950/80 px-2.5 py-1 rounded-md border border-teal-500/30">
+                            <div id="surg-hud-title" class="text-xs font-bold text-white bg-slate-950/80 px-2.5 py-1 rounded-md border border-teal-500/30">
                                 Лазерное удаление аденомы простаты (HoLEP)
                             </div>
-                            <div id="surg-hud-sub" class="hidden sm:block text-[10px] font-mono text-teal-300 bg-slate-950/75 px-2 py-0.5 rounded">
+                            <div id="surg-hud-sub" class="hidden sm:block text-xs font-mono text-teal-300 bg-slate-950/75 px-2 py-0.5 rounded">
                                 Лазер убирает разросшуюся ткань и сохраняет мышцу, которая удерживает мочу
                             </div>
                         </div>
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
+                            <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-xs text-slate-300">
                                 <span class="shrink-0">Этап:</span>
                                 <input type="range" id="surg-phase-slider" aria-label="Этап операции" min="0" max="100" value="45" oninput="updateSurgPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
                                 <span id="surg-phase-label" class="font-mono text-teal-300 font-bold truncate">2. Работа лазером</span>
                             </div>
-                            <button type="button" onclick="open3DModal(surg3DMode === 'rirs' ? 'rirs' : (surg3DMode === 'onco' ? 'onco' : 'bph'))" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1.5 sm:py-1 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
+                            <button type="button" onclick="open3DModal(surg3DMode === 'rirs' ? 'rirs' : (surg3DMode === 'onco' ? 'onco' : 'bph'))" class="med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-white min-w-10 min-h-10 justify-center px-2.5 py-2 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
                                 <i data-lucide="maximize-2" class="w-3 h-3 text-teal-400"></i>
                                 <span class="hidden sm:inline">На весь экран</span>
                             </button>
@@ -777,30 +802,30 @@
                     <div class="bg-slate-900 px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
-                            <span class="text-[11px] font-bold text-white uppercase tracking-wider">Как работает лечение:</span>
+                            <span class="text-xs font-bold text-white uppercase tracking-wider">Как работает лечение:</span>
                         </div>
                         <div class="flex items-center gap-1">
-                            <button type="button" onclick="setEd3DMode('eswt')" id="btn-ed-eswt" class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-teal-500 text-slate-950 transition-all">Ударно-волновая терапия</button>
-                            <button type="button" onclick="setEd3DMode('prp')" id="btn-ed-prp" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">PRP-терапия</button>
+                            <button type="button" onclick="setEd3DMode('eswt')" id="btn-ed-eswt" class="px-3 py-2 rounded-lg text-xs font-extrabold bg-teal-500 text-slate-950 transition-all">Ударно-волновая терапия</button>
+                            <button type="button" onclick="setEd3DMode('prp')" id="btn-ed-prp" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all">PRP-терапия</button>
                         </div>
                     </div>
                     <div class="med-3d-viewport med-3d-grid h-64 relative">
                         <canvas id="canvas-ed-3d" class="w-full h-full block med-3d-canvas" title="Поверните модель мышью или пальцем"></canvas>
                         <div class="absolute top-2.5 left-3 pointer-events-none space-y-1">
-                            <div id="ed-hud-title" class="text-[11px] font-bold text-white bg-slate-950/80 px-2.5 py-1 rounded-md border border-teal-500/30">
+                            <div id="ed-hud-title" class="text-xs font-bold text-white bg-slate-950/80 px-2.5 py-1 rounded-md border border-teal-500/30">
                                 Ударные волны помогают расти новым сосудам
                             </div>
-                            <div id="ed-hud-sub" class="hidden sm:block text-[10px] font-mono text-teal-300 bg-slate-950/75 px-2 py-0.5 rounded">
+                            <div id="ed-hud-sub" class="hidden sm:block text-xs font-mono text-teal-300 bg-slate-950/75 px-2 py-0.5 rounded">
                                 Мелкие сосуды полового члена в разрезе
                             </div>
                         </div>
                         <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-[10px] text-slate-300">
+                            <div class="flex items-center gap-1.5 min-w-0 bg-slate-950/80 border border-slate-700/80 rounded-lg px-2.5 py-1 text-xs text-slate-300">
                                 <span class="shrink-0">Сосуды:</span>
                                 <input type="range" id="ed-phase-slider" aria-label="Восстановление сосудов" min="0" max="100" value="80" oninput="updateEdPhase(this.value)" class="w-16 sm:w-28 shrink-0 accent-teal-400 cursor-pointer h-1.5">
                                 <span id="ed-phase-label" class="font-mono text-teal-300 font-bold truncate">Новые сосуды</span>
                             </div>
-                            <button type="button" onclick="open3DModal('ed')" class="med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1.5 sm:py-1 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
+                            <button type="button" onclick="open3DModal('ed')" class="med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-white min-w-10 min-h-10 justify-center px-2.5 py-2 rounded-lg flex items-center gap-1 shrink-0" aria-label="На весь экран">
                                 <i data-lucide="maximize-2" class="w-3 h-3 text-teal-400"></i>
                                 <span class="hidden sm:inline">На весь экран</span>
                             </button>
@@ -830,7 +855,7 @@
     </section>
 
     <!-- ОПРОСНИК ПО СИМПТОМАМ: человек кнопками описывает проблему и отправляет итог координатору (рисует renderSymptomQuiz) -->
-    <section id="symptoms" class="py-16 lg:py-20 bg-white border-y border-slate-200 scroll-mt-20">
+    <section id="symptoms" class="py-12 sm:py-16 lg:py-20 bg-white border-y border-slate-200 scroll-mt-20">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-8">
                 <div id="sq-eyebrow" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider mb-3 border border-teal-200">Опрос за 1 минуту</div>
@@ -842,7 +867,7 @@
     </section>
 
     <!-- БЛОК ДОВЕРИЯ: ВРАЧИ PINEO & CITO И МУЛЬТИДИСЦИПЛИНАРНЫЙ КОНСИЛИУМ -->
-    <section id="doctor" class="py-16 lg:py-20 bg-slate-900 text-white">
+    <section id="doctor" class="py-12 sm:py-16 lg:py-20 bg-slate-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             
             <!-- Заголовок секции -->
@@ -867,15 +892,15 @@
                     <div class="relative w-44 sm:w-48 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden border border-teal-500/30 bg-slate-950 shadow-lg group">
                         <img src="img/dr-bochorishvili-480.jpg" alt="Д-р Александр Бочоришвили" width="480" height="720" loading="lazy" decoding="async" onerror="this.onerror=null; this.style.visibility='hidden';" class="dr-bochorishvili-photo w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent p-2.5 flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-teal-300 uppercase tracking-wider">PINEO × CITO</span>
-                            <span class="text-[10px] font-semibold text-slate-200 bg-slate-900/85 px-2 py-0.5 rounded">19 лет опыта</span>
+                            <span class="text-xs font-bold text-teal-300 uppercase tracking-wider">PINEO × CITO</span>
+                            <span class="text-xs font-semibold text-slate-200 bg-slate-900/85 px-2 py-0.5 rounded">19 лет опыта</span>
                         </div>
                     </div>
 
                     <!-- Описание позиции в PINEO и компетенций -->
                     <div class="flex flex-col justify-between flex-1 text-left">
                         <div>
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-500/15 border border-teal-500/30 text-teal-300 text-[11px] font-bold mb-2">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-500/15 border border-teal-500/30 text-teal-300 text-xs font-bold mb-2">
                                 <span>Уролог в Тбилиси — ваш лечащий врач и хирург</span>
                             </div>
                             <h3 class="text-xl sm:text-2xl font-extrabold text-white">
@@ -905,7 +930,7 @@
                             </ul>
                         </div>
 
-                        <div class="mt-3.5 pt-2.5 border-t border-slate-700/70 text-[11px] text-slate-400 italic">
+                        <div class="mt-3.5 pt-2.5 border-t border-slate-700/70 text-xs text-slate-400 italic">
                             Принцип врача: не назначать лишних операций и по возможности сохранять орган.
                         </div>
                     </div>
@@ -917,15 +942,15 @@
                     <div class="relative w-44 sm:w-48 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden border border-teal-500/30 bg-slate-950 shadow-lg group">
                         <img src="img/dr-dzneladze-480.jpg" alt="Д-р Андро Дзнеладзе" width="480" height="720" loading="lazy" decoding="async" onerror="this.onerror=null; this.style.visibility='hidden';" class="dr-dzneladze-photo w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent p-2.5 flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-teal-300 uppercase tracking-wider">PINEO Ecosystem</span>
-                            <span class="text-[10px] font-semibold text-amber-300 bg-slate-900/85 px-2 py-0.5 rounded">35+ лет опыта</span>
+                            <span class="text-xs font-bold text-teal-300 uppercase tracking-wider">PINEO Ecosystem</span>
+                            <span class="text-xs font-semibold text-amber-300 bg-slate-900/85 px-2 py-0.5 rounded">35+ лет опыта</span>
                         </div>
                     </div>
 
                     <!-- Описание позиции в PINEO и компетенций -->
                     <div class="flex flex-col justify-between flex-1 text-left">
                         <div>
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-500/15 border border-teal-500/30 text-teal-300 text-[11px] font-bold mb-2">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-500/15 border border-teal-500/30 text-teal-300 text-xs font-bold mb-2">
                                 <span>Специалист по УЗИ и диагностике</span>
                             </div>
                             <h3 class="text-xl sm:text-2xl font-extrabold text-white">
@@ -951,7 +976,7 @@
                             </ul>
                         </div>
 
-                        <div class="mt-3.5 pt-2.5 border-t border-slate-700/70 text-[11px] text-slate-400">
+                        <div class="mt-3.5 pt-2.5 border-t border-slate-700/70 text-xs text-slate-400">
                             Точная диагностика помогает выбрать самое бережное лечение.
                         </div>
                     </div>
@@ -1015,7 +1040,7 @@
     </section>
 
     <!-- ШАГ 3.3: МАТРИЦА ВЫГОД И СТАНДАРТОВ СЕРВИСА (БЕЗ УПОМИНАНИЯ СТРАН-КОНКУРЕНТОВ) -->
-    <section id="comparison" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="comparison" class="py-12 sm:py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-12">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider mb-3 border border-teal-200">
                 Почему выбирают нас
@@ -1102,7 +1127,7 @@
     </section>
 
     <!-- ШАГ 2 & 3.4: ПРОЗРАЧНЫЕ ТАРИФЫ (3 ПАКЕТА «ПОД КЛЮЧ») -->
-    <section id="packages" class="py-16 lg:py-24 bg-slate-100/80 border-y border-slate-200">
+    <section id="packages" class="py-12 sm:py-16 lg:py-24 bg-slate-100/80 border-y border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
@@ -1120,10 +1145,10 @@
             </div>
 
             <!-- Карточки 3 пакетов -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            <div id="pkg-scroller" class="flex lg:grid lg:grid-cols-3 gap-4 lg:gap-8 items-stretch overflow-x-auto lg:overflow-visible snap-x snap-mandatory -mx-4 px-4 pt-5 pb-6 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 lg:pt-0 lg:pb-0 pkg-scroller">
 
                 <!-- ПАКЕТ 1: BASE -->
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-premium p-6 sm:p-8 flex flex-col justify-between relative">
+                <div class="pkg-card shrink-0 w-[86%] sm:w-[62%] lg:w-auto snap-center bg-white rounded-3xl border border-slate-200 shadow-premium p-6 sm:p-8 flex flex-col justify-between relative">
                     <div>
                         <div class="flex items-center justify-between gap-2 mb-4">
                             <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-extrabold uppercase">Программа 1 • 2–3 дня</span>
@@ -1140,10 +1165,10 @@
                         <!-- 3D ПРЕВЬЮ ПАКЕТА 1 -->
                         <div class="mt-4 med-3d-viewport med-3d-grid rounded-2xl h-32 border border-slate-200 relative overflow-hidden">
                             <canvas id="canvas-pkg-base" class="w-full h-full block med-3d-canvas"></canvas>
-                            <div class="absolute top-2 left-2.5 med-hud-pill px-2 py-0.5 rounded text-[10px] font-bold text-teal-300">
+                            <div class="absolute top-2 left-2.5 med-hud-pill px-2 py-0.5 rounded text-xs font-bold text-teal-300">
                                 3D-модель: УЗИ простаты
                             </div>
-                            <button type="button" onclick="open3DModal('checkup')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <button type="button" onclick="open3DModal('checkup')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-white px-3 py-2 rounded-md flex items-center gap-1">
                                 <i data-lucide="play" class="w-3 h-3 text-teal-400"></i>
                                 <span>Смотреть в 3D</span>
                             </button>
@@ -1158,7 +1183,7 @@
                             <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1" data-price-usd="$850 – $1 200" data-price-eur="€765 – €1 080" data-price-gel="2 180 – 3 080 ₾">
                                 $850 – $1 200
                             </div>
-                            <div class="text-[11px] text-teal-700 font-semibold mt-1">
+                            <div class="text-xs text-teal-700 font-semibold mt-1">
                                 Чаще всего выходит вместе с отелем: <span data-price-usd="$980" data-price-eur="€880" data-price-gel="2 515 ₾">$980</span>
                             </div>
                         </div>
@@ -1204,8 +1229,8 @@
                 </div>
 
                 <!-- ПАКЕТ 2: THERAPY & ANDROLOGY -->
-                <div class="bg-white rounded-3xl border-2 border-teal-600 shadow-2xl p-6 sm:p-8 flex flex-col justify-between relative transform lg:-translate-y-2">
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-2rem)] text-center leading-tight bg-teal-700 text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide sm:tracking-widest px-4 py-1 rounded-2xl sm:rounded-full shadow-md sm:whitespace-nowrap">
+                <div class="pkg-card shrink-0 w-[86%] sm:w-[62%] lg:w-auto snap-center bg-white rounded-3xl border-2 border-teal-600 shadow-xl lg:shadow-2xl p-6 sm:p-8 flex flex-col justify-between relative transform lg:-translate-y-2">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-2rem)] text-center leading-tight bg-teal-700 text-white text-[11px] sm:text-xs font-extrabold uppercase tracking-wide sm:tracking-widest px-4 py-1 rounded-2xl sm:rounded-full shadow-md sm:whitespace-nowrap">
                         Без операции
                     </div>
 
@@ -1225,10 +1250,10 @@
                         <!-- 3D ПРЕВЬЮ ПАКЕТА 2 -->
                         <div class="mt-4 med-3d-viewport med-3d-grid rounded-2xl h-32 border border-teal-500/40 relative overflow-hidden">
                             <canvas id="canvas-pkg-therapy" class="w-full h-full block med-3d-canvas"></canvas>
-                            <div class="absolute top-2 left-2.5 med-hud-pill px-2 py-0.5 rounded text-[10px] font-bold text-teal-300">
+                            <div class="absolute top-2 left-2.5 med-hud-pill px-2 py-0.5 rounded text-xs font-bold text-teal-300">
                                 3D-модель: лечение сосудов
                             </div>
-                            <button type="button" onclick="open3DModal('ed')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <button type="button" onclick="open3DModal('ed')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-white px-3 py-2 rounded-md flex items-center gap-1">
                                 <i data-lucide="play" class="w-3 h-3 text-teal-400"></i>
                                 <span>Смотреть в 3D</span>
                             </button>
@@ -1243,7 +1268,7 @@
                             <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1" data-price-usd="$1 950 – $2 800" data-price-eur="€1 750 – €2 515" data-price-gel="5 005 – 7 190 ₾">
                                 $1 950 – $2 800
                             </div>
-                            <div class="text-[11px] text-teal-800 font-semibold mt-1">
+                            <div class="text-xs text-teal-800 font-semibold mt-1">
                                 Чаще всего выходит за 6 дней вместе с отелем: <span data-price-usd="$2 350" data-price-eur="€2 110" data-price-gel="6 035 ₾">$2 350</span>
                             </div>
                         </div>
@@ -1289,7 +1314,7 @@
                 </div>
 
                 <!-- ПАКЕТ 3: VIP SURGERY & CONCIERGE -->
-                <div class="bg-slate-900 text-white rounded-3xl border border-slate-800 shadow-premium p-6 sm:p-8 flex flex-col justify-between relative">
+                <div class="pkg-card shrink-0 w-[86%] sm:w-[62%] lg:w-auto snap-center bg-slate-900 text-white rounded-3xl border border-slate-800 shadow-premium p-6 sm:p-8 flex flex-col justify-between relative">
                     <div>
                         <div class="flex items-center justify-between gap-2 mb-4">
                             <span class="px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 text-xs font-extrabold uppercase">Программа 3 • 4–8 дней</span>
@@ -1306,10 +1331,10 @@
                         <!-- 3D ПРЕВЬЮ ПАКЕТА 3 -->
                         <div class="mt-4 med-3d-viewport med-3d-grid rounded-2xl h-32 border border-slate-700 relative overflow-hidden">
                             <canvas id="canvas-pkg-vip" class="w-full h-full block med-3d-canvas"></canvas>
-                            <div class="absolute top-2 left-2.5 med-hud-pill px-2 py-0.5 rounded text-[10px] font-bold text-amber-300">
+                            <div class="absolute top-2 left-2.5 med-hud-pill px-2 py-0.5 rounded text-xs font-bold text-amber-300">
                                 3D-модель: лазерная операция
                             </div>
-                            <button type="button" onclick="open3DModal('bph')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-[10px] font-bold text-white px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <button type="button" onclick="open3DModal('bph')" class="absolute bottom-2 right-2.5 med-hud-pill hover:bg-teal-500/30 text-xs font-bold text-white px-3 py-2 rounded-md flex items-center gap-1">
                                 <i data-lucide="play" class="w-3 h-3 text-teal-400"></i>
                                 <span>Смотреть в 3D</span>
                             </button>
@@ -1324,7 +1349,7 @@
                             <div class="text-2xl sm:text-3xl font-extrabold text-teal-400 mt-1" data-price-usd="$3 200 – $6 800" data-price-eur="€2 875 – €6 110" data-price-gel="8 215 – 17 460 ₾">
                                 $3 200 – $6 800
                             </div>
-                            <div class="text-[11px] text-slate-300 font-semibold mt-1">
+                            <div class="text-xs text-slate-300 font-semibold mt-1">
                                 Операция на простате или удаление камней чаще всего стоит: <span class="text-white" data-price-usd="$4 200" data-price-eur="€3 775" data-price-gel="10 785 ₾">$4 200</span>
                             </div>
                         </div>
@@ -1371,7 +1396,14 @@
 
             </div>
 
-            <p class="mt-8 text-center text-sm text-slate-600">
+            <!-- Точки карусели программ (только на телефоне и планшете) -->
+            <div id="pkg-dots" class="lg:hidden flex justify-center gap-1" aria-hidden="true">
+                <button type="button" tabindex="-1" data-pkg-dot="0" class="p-3"><span class="block w-2.5 h-2.5 rounded-full bg-teal-600 transition-colors"></span></button>
+                <button type="button" tabindex="-1" data-pkg-dot="1" class="p-3"><span class="block w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors"></span></button>
+                <button type="button" tabindex="-1" data-pkg-dot="2" class="p-3"><span class="block w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors"></span></button>
+            </div>
+
+            <p class="mt-6 lg:mt-8 text-center text-sm text-slate-600">
                 Авиабилеты в цену не входят. Всё остальное — лечение, проживание, трансферы и сопровождение — уже включено.
             </p>
 
@@ -1379,7 +1411,7 @@
     </section>
 
     <!-- ШАГ 3.5: ДОРОЖНАЯ КАРТА ПАЦИЕНТА (HOW IT WORKS) -->
-    <section id="roadmap" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="roadmap" class="py-12 sm:py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-14">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-wider mb-3 border border-teal-200">
                 Как проходит поездка
@@ -1398,14 +1430,14 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 font-extrabold text-sm flex items-center justify-center">01</span>
-                        <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Онлайн • бесплатно</span>
+                        <span class="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Онлайн • бесплатно</span>
                     </div>
                     <h3 class="font-bold text-base text-slate-900 mb-2">Присылаете анализы</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Отправьте в WhatsApp или Telegram результаты анализов, ПСА, снимки МРТ или КТ. Мы переведём их, врач посмотрит и предложит план и точную цену.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-slate-500">
                     План и цена — в течение 24 часов
                 </div>
             </div>
@@ -1415,14 +1447,14 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 font-extrabold text-sm flex items-center justify-center">02</span>
-                        <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">День 1 • Прилёт</span>
+                        <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">День 1 • Прилёт</span>
                     </div>
                     <h3 class="font-bold text-base text-slate-900 mb-2">Встречаем и берём анализы в отеле</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Встречаем в аэропорту и везём в отель. Медсестра приезжает прямо в номер и берёт кровь и мочу. Утром результаты уже у врача.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-teal-700">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-teal-700">
                     Экономим вам целый день
                 </div>
             </div>
@@ -1432,14 +1464,14 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 font-extrabold text-sm flex items-center justify-center">03</span>
-                        <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">День 1–2</span>
+                        <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">День 1–2</span>
                     </div>
                     <h3 class="font-bold text-base text-slate-900 mb-2">Консультация и обследование</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Приём у д-ра Бочоришвили, УЗИ простаты и сосудов, проверка мочеиспускания. Врач ставит точный диагноз и объясняет, какое лечение нужно — и нужно ли оно вообще.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-slate-500">
                     Без очередей — время забронировано
                 </div>
             </div>
@@ -1449,14 +1481,14 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="w-10 h-10 rounded-2xl bg-teal-700 text-white font-extrabold text-sm flex items-center justify-center">04</span>
-                        <span class="text-[11px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">День 2–5</span>
+                        <span class="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">День 2–5</span>
                     </div>
                     <h3 class="font-bold text-base text-slate-900 mb-2">Лечение или операция</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Операция без разрезов в госпитале PINEO — её проводит тот же врач, который вас консультировал. Или курс процедур без операции.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-teal-700">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-teal-700">
                     Канадские стандарты безопасности
                 </div>
             </div>
@@ -1466,14 +1498,14 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="w-10 h-10 rounded-2xl bg-slate-900 text-teal-400 font-extrabold text-sm flex items-center justify-center">05</span>
-                        <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">Вылет домой</span>
+                        <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">Вылет домой</span>
                     </div>
                     <h3 class="font-bold text-base text-slate-900 mb-2">Выписка и связь с врачом</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Контрольный осмотр, выписка на русском и английском, трансфер в аэропорт. Ещё 3 месяца врач на связи онлайн.
                     </p>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-slate-500">
                     Не оставляем после отъезда
                 </div>
             </div>
@@ -1481,7 +1513,7 @@
     </section>
 
     <!-- ШАГ 3.6: БЛОК FAQ И ФОРМА ЗАХВАТА ЛИДОВ -->
-    <section id="faq" class="py-16 lg:py-24 bg-slate-900 text-white">
+    <section id="faq" class="py-12 sm:py-16 lg:py-24 bg-slate-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-12 gap-12 items-start">
                 
@@ -1694,11 +1726,11 @@
                             <div class="grid sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1.5" for="patient-name">Как к вам обращаться *</label>
-                                    <input type="text" id="patient-name" required placeholder="Имя" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all">
+                                    <input type="text" id="patient-name" name="name" autocomplete="name" required maxlength="80" placeholder="Имя" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1.5" for="patient-country">Из какого города вы летите *</label>
-                                    <input type="text" id="patient-country" required placeholder="Город" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all">
+                                    <input type="text" id="patient-country" name="city" autocomplete="address-level2" required maxlength="80" placeholder="Город" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all">
                                 </div>
                             </div>
 
@@ -1724,7 +1756,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1.5" for="patient-phone">Телефон или ник в Telegram *</label>
-                                    <input type="text" id="patient-phone" required placeholder="+... или @ник" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all">
+                                    <input type="tel" id="patient-phone" name="phone" inputmode="tel" autocomplete="tel" dir="ltr" required maxlength="40" placeholder="+... или @ник" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 outline-none text-sm transition-all">
                                 </div>
                             </div>
 
@@ -1743,12 +1775,20 @@
                                 <textarea id="patient-notes" rows="2" placeholder="Например: часто встаю ночью в туалет, ПСА 6,5, предложили операцию" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-teal-600 outline-none text-sm transition-all"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full py-4 px-6 rounded-2xl bg-teal-700 hover:bg-teal-700 text-white font-extrabold text-base shadow-lg hover:shadow-glow transition-all flex items-center justify-center gap-2">
+                            <!-- Ловушка для спам-ботов: людям поле не видно, боты его заполняют -->
+                            <div class="sr-only" aria-hidden="true">
+                                <label for="patient-website">Website</label>
+                                <input type="text" id="patient-website" name="website" tabindex="-1" autocomplete="off">
+                            </div>
+
+                            <p id="lead-form-error" class="hidden text-sm font-semibold text-red-600 text-center" role="alert"></p>
+
+                            <button type="submit" id="lead-form-submit" class="w-full py-4 px-6 rounded-2xl bg-teal-700 hover:bg-teal-600 disabled:bg-slate-400 disabled:cursor-wait text-white font-extrabold text-base shadow-lg hover:shadow-glow transition-all flex items-center justify-center gap-2">
                                 <i data-lucide="file-check-2" class="w-5 h-5"></i>
                                 <span>Получить план и цену бесплатно</span>
                             </button>
 
-                            <p class="text-[11px] text-slate-500 text-center">
+                            <p class="text-xs text-slate-500 text-center">
                                 Ваши данные видят только врач и координатор. Оценка анализов бесплатна и ни к чему вас не обязывает.
                             </p>
                         </form>
@@ -1758,6 +1798,16 @@
             </div>
         </div>
     </section>
+
+    </main>
+
+    <!-- Нижняя кнопка на телефоне: появляется после первого экрана и прячется, когда на экране опрос или форма -->
+    <div id="mobile-cta" class="md:hidden fixed inset-x-0 bottom-0 z-40 px-4 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-white/95 backdrop-blur border-t border-slate-200 shadow-[0_-6px_20px_rgba(15,23,42,0.08)] translate-y-full transition-transform duration-300" aria-hidden="true">
+        <a href="#lead-form" tabindex="-1" class="w-full flex items-center justify-center gap-2 min-h-12 bg-teal-700 hover:bg-teal-600 text-white font-bold text-sm rounded-xl shadow-md">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span>Отправить анализы врачу — бесплатно</span>
+        </a>
+    </div>
 
     <!-- ФУТЕР -->
     <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900 text-xs">
@@ -1799,26 +1849,26 @@
     </footer>
 
     <!-- МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ЗАЯВКИ (БЕЗ ИСПОЛЬЗОВАНИЯ ALERT) -->
-    <div id="success-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+    <div id="success-modal" role="dialog" aria-modal="true" aria-labelledby="success-modal-title" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center space-y-4">
             <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto">
                 <i data-lucide="check-circle-2" class="w-8 h-8"></i>
             </div>
-            <h4 class="text-xl font-extrabold text-slate-900">Спасибо, заявка получена</h4>
+            <h4 id="success-modal-title" class="text-xl font-extrabold text-slate-900">Спасибо, заявка получена</h4>
             <p id="modal-summary-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed"></p>
             <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-left text-xs text-slate-700 space-y-1">
                 <div class="font-bold text-slate-900">Чтобы ускорить ответ, подготовьте:</div>
                 <div>1. Последние анализы: ПСА, общий анализ крови и мочи (если есть).</div>
                 <div>2. Заключение УЗИ простаты или снимки МРТ / КТ.</div>
             </div>
-            <button onclick="closeSuccessModal()" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-teal-700 text-white font-bold text-sm transition-colors">
+            <button type="button" data-autofocus onclick="closeSuccessModal()" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-teal-700 text-white font-bold text-sm transition-colors">
                 Хорошо, жду сообщения
             </button>
         </div>
     </div>
 
     <!-- ПОЛНОЭКРАННОЕ МОДАЛЬНОЕ ОКНО ИНТЕРАКТИВНОЙ 3D-СИМУЛЯЦИИ МЕДИЦИНСКИХ ПРОЦЕДУР -->
-    <div id="modal-3d-cinema" class="fixed inset-0 z-50 hidden items-stretch sm:items-center justify-center bg-slate-950/85 backdrop-blur-md p-0 sm:p-6">
+    <div id="modal-3d-cinema" role="dialog" aria-modal="true" aria-labelledby="modal-3d-title" class="fixed inset-0 z-50 hidden items-stretch sm:items-center justify-center bg-slate-950/85 backdrop-blur-md p-0 sm:p-6">
         <!-- На телефоне — на весь экран: шапка, модель (растягивается), описание под моделью -->
         <div class="bg-slate-900 border-slate-700 sm:border sm:rounded-3xl max-w-5xl w-full h-[100dvh] sm:h-auto flex flex-col overflow-hidden shadow-2xl text-white">
             <div class="px-4 sm:px-5 pt-3 sm:pt-4 pb-3 border-b border-slate-800 shrink-0">
@@ -1827,17 +1877,17 @@
                         <span class="w-2.5 h-2.5 mt-2 rounded-full bg-teal-400 animate-ping shrink-0"></span>
                         <span id="modal-3d-title" class="font-extrabold text-sm sm:text-lg leading-snug text-white">3D-модель органа</span>
                     </div>
-                    <button type="button" onclick="close3DModal()" aria-label="Закрыть" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white shrink-0">
+                    <button type="button" data-autofocus onclick="close3DModal()" aria-label="Закрыть" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white shrink-0">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
                 <!-- Вкладки: на телефоне одной строкой с прокруткой -->
                 <div class="mt-3 -mx-4 px-4 sm:mx-0 sm:px-0 flex sm:flex-wrap gap-1.5 overflow-x-auto modal-tabs">
-                    <button type="button" onclick="open3DModal('checkup')" id="mbtn-checkup" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">УЗИ простаты</button>
-                    <button type="button" onclick="open3DModal('ed')" id="mbtn-ed" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Лечение эрекции</button>
-                    <button type="button" onclick="open3DModal('bph')" id="mbtn-bph" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Аденома простаты</button>
-                    <button type="button" onclick="open3DModal('rirs')" id="mbtn-rirs" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Камни в почках</button>
-                    <button type="button" onclick="open3DModal('onco')" id="mbtn-onco" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Сохранение нервов</button>
+                    <button type="button" onclick="open3DModal('checkup')" id="mbtn-checkup" class="shrink-0 px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">УЗИ простаты</button>
+                    <button type="button" onclick="open3DModal('ed')" id="mbtn-ed" class="shrink-0 px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Лечение эрекции</button>
+                    <button type="button" onclick="open3DModal('bph')" id="mbtn-bph" class="shrink-0 px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Аденома простаты</button>
+                    <button type="button" onclick="open3DModal('rirs')" id="mbtn-rirs" class="shrink-0 px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Камни в почках</button>
+                    <button type="button" onclick="open3DModal('onco')" id="mbtn-onco" class="shrink-0 px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Сохранение нервов</button>
                 </div>
             </div>
 
@@ -1850,7 +1900,7 @@
                     </div>
                 </div>
                 <div class="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
-                    <span class="text-[11px] text-teal-200/90 bg-slate-950/70 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                    <span class="text-xs text-teal-200/90 bg-slate-950/70 px-2.5 py-1 rounded-full flex items-center gap-1.5">
                         <i data-lucide="move" class="w-3.5 h-3.5"></i>
                         Вращайте пальцем
                     </span>
@@ -1868,7 +1918,81 @@
     </div>
 
     <!-- Lucide Icons (версия закреплена). Подключены в конце страницы, чтобы не задерживать показ текста -->
-    <script src="https://unpkg.com/lucide@1.61.0/dist/umd/lucide.min.js"></script>
+    <!-- Иконки Lucide (ISC): встроены только используемые иконки вместо всей библиотеки на 457 КБ -->
+    <script>
+        (function () {
+            const ICONS = {
+                'activity': '<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>',
+                'arrow-right': '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+                'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+                'award': '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+                'battery-low': '<path d="M22 14v-4"/><path d="M6 14v-4"/><rect x="2" y="6" width="16" height="12" rx="2"/>',
+                'building-2': '<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
+                'calculator': '<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+                'check-circle-2': '<circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/>',
+                'check-circle': '<path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/>',
+                'check': '<path d="M20 6 9 17l-5-5"/>',
+                'chevron-down': '<path d="m6 9 6 6 6-6"/>',
+                'circle-dot': '<circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/>',
+                'clipboard-check': '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+                'droplet': '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+                'droplets': '<path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>',
+                'file-check-2': '<path d="M10.5 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v6"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m14 20 2 2 4-4"/>',
+                'file-check': '<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m9 15 2 2 4-4"/>',
+                'file-spreadsheet': '<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/>',
+                'file-text': '<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+                'flame': '<path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/>',
+                'globe-2': '<path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/>',
+                'graduation-cap': '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+                'heart-pulse': '<path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>',
+                'hotel': '<path d="M10 22v-6.57"/><path d="M12 11h.01"/><path d="M12 7h.01"/><path d="M14 15.43V22"/><path d="M15 16a5 5 0 0 0-6 0"/><path d="M16 11h.01"/><path d="M16 7h.01"/><path d="M8 11h.01"/><path d="M8 7h.01"/><rect x="4" y="2" width="16" height="20" rx="2"/>',
+                'info': '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+                'list-checks': '<path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/>',
+                'lock': '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+                'map-pin': '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+                'maximize-2': '<path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/>',
+                'menu': '<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/>',
+                'message-circle': '<path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/>',
+                'microscope': '<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>',
+                'moon': '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>',
+                'move': '<path d="M12 2v20"/><path d="m15 19-3 3-3-3"/><path d="m19 9 3 3-3 3"/><path d="M2 12h20"/><path d="m5 9-3 3 3 3"/><path d="m9 5 3-3 3 3"/>',
+                'phone-call': '<path d="M13 2a9 9 0 0 1 9 9"/><path d="M13 6a5 5 0 0 1 5 5"/><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+                'phone': '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+                'play-circle': '<path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"/><circle cx="12" cy="12" r="10"/>',
+                'play': '<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>',
+                'scan-line': '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/>',
+                'scan': '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>',
+                'send': '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
+                'shield-alert': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+                'shield-check': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+                'sliders': '<path d="M10 8h4"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M17 16h4"/><path d="M19 12V3"/><path d="M19 21v-5"/><path d="M3 14h4"/><path d="M5 10V3"/><path d="M5 21v-7"/>',
+                'sparkles': '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
+                'stethoscope': '<path d="M11 2v2"/><path d="M5 2v2"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>',
+                'triangle-alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+                'user-check': '<path d="m16 11 2 2 4-4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>',
+                'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/>',
+                'video': '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+                'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+                'zap': '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
+            };
+            const NS = 'http://www.w3.org/2000/svg';
+            const BASE = { xmlns: NS, width: '24', height: '24', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
+            function createIcons() {
+                document.querySelectorAll('i[data-lucide]').forEach(el => {
+                    const name = (el.getAttribute('data-lucide') || '').toLowerCase();
+                    const inner = ICONS[name];
+                    if (!inner) { console.warn('Иконка не найдена:', name); return; }
+                    const svg = document.createElementNS(NS, 'svg');
+                    Object.keys(BASE).forEach(k => svg.setAttribute(k, BASE[k]));
+                    [...el.attributes].forEach(a => { if (a.name !== 'class') svg.setAttribute(a.name, a.value); });
+                    svg.setAttribute('class', ('lucide lucide-' + name + ' ' + (el.getAttribute('class') || '')).trim());
+                    svg.innerHTML = inner;
+                    el.replaceWith(svg);
+                });
+            }
+            window.lucide = { createIcons: createIcons };
+        })();
+    </script>
 
     <!-- JAVASCRIPT: ИНТЕРАКТИВНОСТЬ, ЯЗЫКИ, ВАЛЮТЫ, ТРИАЖ, FAQ И 3D-ДВИЖОК МЕД ПРОЦЕДУР -->
     <script>
@@ -2239,6 +2363,7 @@
             [`Вращайте пальцем`]: { EN: `Drag to rotate`, HE: `סובבו באצבע`, AR: `أدِر بإصبعك` },
             [`3D-модель органа`]: { EN: `3D organ model`, HE: `מודל 3D של האיבר`, AR: `نموذج 3D للعضو` },
             [`Пройти опрос`]: { EN: `Take the quiz`, HE: `למלא שאלון`, AR: `ابدأ الاستبيان` },
+            [`Перейти к содержанию`]: { EN: `Skip to content`, HE: `דילוג לתוכן`, AR: `الانتقال إلى المحتوى` },
             [`Сколько стоит удаление аденомы простаты лазером в Тбилиси?`]: { EN: `How much does laser prostate surgery cost in Tbilisi?`, HE: `כמה עולה ניתוח ערמונית בלייזר בטביליסי?`, AR: `كم تكلفة عملية البروستاتا بالليزر في تبليسي؟` },
             [`Операция на простате лазером (HoLEP) или ТУР в программе «Операция под ключ» чаще всего стоит около $4 200, весь диапазон — $3 200–$6 800. В цену уже входят обследование, операция, наркоз, расходники, палата, отель и трансферы. Авиабилеты оплачиваются отдельно. Точную цену врач назовёт после просмотра ваших анализов.`]: { EN: `Laser prostate surgery (HoLEP) or TURP in the "All-inclusive surgery" programme typically costs about $4,200, with a full range of $3,200–$6,800. The price already includes tests, surgery, anaesthesia, materials, the hospital room, the hotel and transfers. Flights are paid separately. The doctor will give you the exact price after reviewing your tests.`, HE: `ניתוח ערמונית בלייזר (HoLEP) או TURP בתוכנית "ניתוח הכל כלול" עולה בדרך כלל כ-$4,200, והטווח המלא הוא $3,200–$6,800. המחיר כבר כולל בדיקות, ניתוח, הרדמה, חומרים, חדר אשפוז, מלון והסעות. הטיסות משולמות בנפרד. את המחיר המדויק הרופא יגיד אחרי שיעבור על הבדיקות שלכם.`, AR: `تكلف عملية البروستاتا بالليزر (HoLEP) أو TURP ضمن برنامج «العملية الشاملة» عادةً نحو 4,200$، والنطاق الكامل 3,200–6,800$. يشمل السعر الفحوصات والعملية والتخدير والمستلزمات وغرفة المستشفى والفندق والتنقلات. تُدفع تذاكر الطيران بشكل منفصل. وسيحدد الطبيب السعر الدقيق بعد مراجعة تحاليلك.` },
             [`Повлияет ли операция на простате на эрекцию?`]: { EN: `Will prostate surgery affect my erections?`, HE: `האם ניתוח ערמונית ישפיע על הזקפה?`, AR: `هل تؤثر عملية البروستاتا على الانتصاب؟` },
@@ -2607,6 +2732,8 @@
                     }
                 });
             });
+            const langSelect = document.getElementById('lang-select-mobile');
+            if (langSelect) langSelect.value = lang;
 
             // Обновление составных HTML-блоков
             i18nHtmlBindings.forEach(item => {
@@ -2660,7 +2787,25 @@
             if (SUPPORTED_LANGS.includes(fromUrl)) return fromUrl;
             let saved = null;
             try { saved = localStorage.getItem('urohub-lang'); } catch (e) {}
-            return SUPPORTED_LANGS.includes(saved) ? saved : 'RU';
+            if (SUPPORTED_LANGS.includes(saved)) return saved;
+            return detectBrowserLanguage();
+        }
+        // Первый визит без ?lang=: язык по настройкам браузера (иврит → HE, арабский → AR, языки СНГ → RU, прочие → EN).
+        // Поисковым роботам всегда отдаём русскую версию адреса без ?lang=, чтобы не путать индексацию.
+        function detectBrowserLanguage() {
+            try {
+                if (/bot|crawl|spider|slurp|google|yandex|bing|baidu|duckduck|facebookexternalhit|telegrambot|whatsapp|lighthouse|headless/i.test(navigator.userAgent || '')) return 'RU';
+                const list = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
+                const CIS = ['ru', 'uk', 'be', 'kk', 'ky', 'uz', 'az', 'hy', 'tg', 'tk', 'ka'];
+                for (const raw of list) {
+                    const code = String(raw).toLowerCase().split('-')[0];
+                    if (code === 'he' || code === 'iw' || code === 'yi') return 'HE';
+                    if (code === 'ar') return 'AR';
+                    if (CIS.includes(code)) return 'RU';
+                    if (code === 'en') return 'EN';
+                }
+                return list.length && list[0] ? 'EN' : 'RU';
+            } catch (e) { return 'RU'; }
         }
 
         // Переключение валют USD / EUR / GEL
@@ -2771,11 +2916,57 @@
         }
 
         // Отправка формы лида
-        function handleLeadSubmit(e) {
+        // Тексты проверки основной формы на 4 языках
+        const LEAD_FORM_TEXT = {
+            RU: { phone: 'Укажите номер полностью, с кодом страны: например, +972 50 123 4567.', tg: 'Укажите номер с кодом страны или ник в Telegram, например @ivan_petrov.', fail: 'Не получилось отправить заявку. Проверьте интернет и попробуйте ещё раз.', many: 'Вы уже отправили несколько заявок. Координатор скоро свяжется с вами.' },
+            EN: { phone: 'Enter the full number with the country code, e.g. +972 50 123 4567.', tg: 'Enter a number with the country code or a Telegram username, e.g. @john_smith.', fail: 'We could not send your request. Check your connection and try again.', many: 'You have already sent several requests. A coordinator will contact you soon.' },
+            HE: { phone: 'הזינו מספר מלא עם קידומת מדינה, למשל ‎+972 50 123 4567.', tg: 'הזינו מספר עם קידומת מדינה או שם משתמש בטלגרם, למשל ‎@david_cohen.', fail: 'לא הצלחנו לשלוח את הפנייה. בדקו את החיבור לאינטרנט ונסו שוב.', many: 'כבר שלחתם כמה פניות. המתאם ייצור איתכם קשר בקרוב.' },
+            AR: { phone: 'أدخل الرقم كاملاً مع رمز الدولة، مثلاً ‎+971 50 123 4567.', tg: 'أدخل رقماً مع رمز الدولة أو اسم المستخدم في تيليجرام، مثلاً ‎@ahmed_ali.', fail: 'تعذّر إرسال الطلب. تحقق من الاتصال بالإنترنت وحاول مرة أخرى.', many: 'لقد أرسلت عدة طلبات بالفعل. سيتواصل معك المنسق قريباً.' }
+        };
+        function leadFormText() { return LEAD_FORM_TEXT[currentLang] || LEAD_FORM_TEXT.RU; }
+
+        // Телефон: 7–15 цифр (международный формат). Для Telegram также подходит ник @username (5–32 символа)
+        function isValidPhone(v) {
+            const digits = (String(v).match(/\d/g) || []).length;
+            return digits >= 7 && digits <= 15 && /^[+\d\s().\-]+$/.test(String(v).trim());
+        }
+        function isValidTelegram(v) {
+            return /^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(String(v).trim());
+        }
+
+        // Для WhatsApp — цифровая клавиатура, для Telegram — обычная (чтобы можно было ввести @ник)
+        function syncLeadPhoneField() {
+            const input = document.getElementById('patient-phone');
+            const checked = document.querySelector('input[name="messenger"]:checked');
+            if (!input || !checked) return;
+            const tg = checked.value === 'Telegram';
+            input.type = tg ? 'text' : 'tel';
+            input.inputMode = tg ? 'text' : 'tel';
+            input.setCustomValidity('');
+        }
+        document.querySelectorAll('input[name="messenger"]').forEach(r => r.addEventListener('change', syncLeadPhoneField));
+        document.getElementById('patient-phone')?.addEventListener('input', e => e.target.setCustomValidity(''));
+
+        let leadSending = false;
+        async function handleLeadSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('patient-name').value;
-            const country = document.getElementById('patient-country').value;
-            const phone = document.getElementById('patient-phone').value;
+            if (leadSending) return;
+            const form = document.getElementById('consultation-form');
+            const errorEl = document.getElementById('lead-form-error');
+            const submitBtn = document.getElementById('lead-form-submit');
+            const ft = leadFormText();
+            const showError = msg => { if (errorEl) { errorEl.textContent = msg; errorEl.classList.remove('hidden'); } };
+            if (errorEl) errorEl.classList.add('hidden');
+
+            const name = document.getElementById('patient-name').value.trim();
+            const country = document.getElementById('patient-country').value.trim();
+            const phoneInput = document.getElementById('patient-phone');
+            const phone = phoneInput.value.trim();
+            const checkedMessenger = document.querySelector('input[name="messenger"]:checked');
+            const viaTelegram = checkedMessenger && checkedMessenger.value === 'Telegram';
+            const phoneOk = isValidPhone(phone) || (viaTelegram && isValidTelegram(phone));
+            phoneInput.setCustomValidity(phoneOk ? '' : (viaTelegram ? ft.tg : ft.phone));
+            if (!form.reportValidity()) return;
             const pkgSelect = document.getElementById('patient-package');
             const pkgText = pkgSelect && pkgSelect.options[pkgSelect.selectedIndex] ? pkgSelect.options[pkgSelect.selectedIndex].text : pkgSelect.value;
             const messengerEl = document.querySelector('input[name="messenger"]:checked');
@@ -2789,23 +2980,76 @@
             } else if (currentLang === 'EN') {
                 summary = `${name}, we have received your request: "${pkgText}". A coordinator will message you on ${messenger} (${phone}) within 2 hours.`;
             }
-            document.getElementById('modal-summary-text').textContent = summary;
-            deliverLead({
+            leadSending = true;
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
+            const result = await deliverLead({
                 type: 'form',
                 name, city: country, phone, messenger,
                 program: pkgSelect ? pkgSelect.value : '',
-                notes: (document.getElementById('patient-notes') || {}).value || ''
+                notes: (document.getElementById('patient-notes') || {}).value || '',
+                _hp: (document.getElementById('patient-website') || {}).value || ''
             });
-            const modal = document.getElementById('success-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            leadSending = false;
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
+            if (result === 'limit') { showError(ft.many); return; }
+            if (!result) { showError(ft.fail); return; }
+
+            document.getElementById('modal-summary-text').textContent = summary;
+            form.reset();
+            syncLeadPhoneField();
+            openDialog('success-modal');
         }
 
         function closeSuccessModal() {
-            const modal = document.getElementById('success-modal');
+            closeDialog('success-modal');
+        }
+
+        // =========================================================================
+        // ВСПЛЫВАЮЩИЕ ОКНА: Esc закрывает, фокус остаётся внутри окна и возвращается на кнопку, с которой окно открыли
+        // =========================================================================
+        const dialogReturnFocus = {};
+        function dialogFocusables(modal) {
+            return [...modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])')]
+                .filter(el => el.offsetParent !== null || el === document.activeElement);
+        }
+        function openDialog(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            if (modal.classList.contains('hidden')) dialogReturnFocus[id] = document.activeElement;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.documentElement.classList.add('overflow-hidden');
+            requestAnimationFrame(() => {
+                const first = modal.querySelector('[data-autofocus]') || dialogFocusables(modal)[0];
+                if (first) first.focus({ preventScroll: true });
+            });
+        }
+        function closeDialog(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            if (!document.querySelector('[role="dialog"]:not(.hidden)')) document.documentElement.classList.remove('overflow-hidden');
+            const back = dialogReturnFocus[id];
+            if (back && typeof back.focus === 'function' && document.contains(back)) back.focus({ preventScroll: true });
+            dialogReturnFocus[id] = null;
         }
+        document.addEventListener('keydown', e => {
+            const open = [...document.querySelectorAll('[role="dialog"]:not(.hidden)')].pop();
+            if (!open) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                if (open.id === 'modal-3d-cinema') close3DModal(); else closeDialog(open.id);
+                return;
+            }
+            if (e.key === 'Tab') {
+                const items = dialogFocusables(open);
+                if (!items.length) return;
+                const first = items[0], last = items[items.length - 1];
+                if (e.shiftKey && (document.activeElement === first || !open.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && (document.activeElement === last || !open.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+            }
+        });
 
         // =========================================================================
         // 3D-ДВИЖОК МЕДИЦИНСКИХ ВИЗУАЛИЗАЦИЙ (REAL-TIME 3D VOLUMETRIC CANVAS ENGINE)
@@ -2894,8 +3138,8 @@
             cito3DMode = mode;
             const bTrus = document.getElementById('btn-cito-trus');
             const bDop = document.getElementById('btn-cito-doppler');
-            const on = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-teal-500 text-slate-950 transition-all';
-            const off = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all';
+            const on = 'px-3 py-2 rounded-md text-xs font-bold bg-teal-500 text-slate-950 transition-all';
+            const off = 'px-3 py-2 rounded-md text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all';
             bTrus.className = mode === 'trus' ? on : off;
             bDop.className = mode === 'trus' ? off : on;
             const [line1, line2] = hudText().cito[mode === 'trus' ? 'trus' : 'doppler'];
@@ -2910,9 +3154,9 @@
                 const el = document.getElementById(ids[k]);
                 if (!el) return;
                 if (k === mode) {
-                    el.className = 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-teal-500 text-slate-950 transition-all';
+                    el.className = 'px-3 py-2 rounded-lg text-xs font-extrabold bg-teal-500 text-slate-950 transition-all';
                 } else {
-                    el.className = 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all';
+                    el.className = 'px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all';
                 }
             });
             const [title, sub] = hudText().surg[mode] || hudText().surg.holep;
@@ -2932,8 +3176,8 @@
             ed3DMode = mode;
             const bEswt = document.getElementById('btn-ed-eswt');
             const bPrp = document.getElementById('btn-ed-prp');
-            const on = 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-teal-500 text-slate-950 transition-all';
-            const off = 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white transition-all';
+            const on = 'px-3 py-2 rounded-lg text-xs font-extrabold bg-teal-500 text-slate-950 transition-all';
+            const off = 'px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-all';
             bEswt.className = mode === 'eswt' ? on : off;
             bPrp.className = mode === 'eswt' ? off : on;
             const [title, sub] = hudText().ed[mode === 'eswt' ? 'eswt' : 'prp'];
@@ -2952,6 +3196,8 @@
         function open3DModal(key) {
             modal3DKey = key || 'checkup';
             const modal = document.getElementById('modal-3d-cinema');
+            const wasClosed = modal.classList.contains('hidden');
+            if (wasClosed) dialogReturnFocus['modal-3d-cinema'] = document.activeElement;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden'; // страница под окном не прокручивается
@@ -3031,12 +3277,13 @@
                 const b = document.getElementById('mbtn-' + k);
                 if (!b) return;
                 if (k === modal3DKey) {
-                    b.className = 'px-2.5 py-1 rounded-lg text-xs font-extrabold bg-teal-500 text-slate-950';
+                    b.className = 'shrink-0 px-3 py-2 rounded-lg text-xs font-extrabold bg-teal-500 text-slate-950';
                 } else {
-                    b.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white';
+                    b.className = 'shrink-0 px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white';
                 }
             });
             lucide.createIcons();
+            if (wasClosed) requestAnimationFrame(() => modal.querySelector('[data-autofocus]')?.focus({ preventScroll: true }));
         }
 
         function close3DModal() {
@@ -3044,6 +3291,9 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             document.body.style.overflow = '';
+            const back = dialogReturnFocus['modal-3d-cinema'];
+            if (back && typeof back.focus === 'function' && document.contains(back)) back.focus({ preventScroll: true });
+            dialogReturnFocus['modal-3d-cinema'] = null;
         }
 
         // ============================================================================
@@ -3065,6 +3315,9 @@
         // Вращение мышью и пальцем.
         // На странице холст пропускает вертикальный свайп (touch-action: pan-y), чтобы не мешать прокрутке:
         // пальцем модель крутится по горизонтали. В полноэкранном окне жесты целиком отданы модели (touch-action: none).
+        // Пользователи с включённым в системе «уменьшением движения» видят модели без автопокачивания
+        const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+        function prefersReducedMotion() { return !!(reducedMotionQuery && reducedMotionQuery.matches); }
         // idle — 0…1, плавно включает автопокачивание после отпускания, чтобы модель не «прыгала».
         canvasIds.forEach(id => {
             const c = document.getElementById(id);
@@ -3909,7 +4162,7 @@
 
             const st = canvasStates[canvasId] || { rotX: 0.18, rotY: -0.35, dragging: false, idle: 1, sway: 0 };
             if (!st.dragging && st.idle < 1) st.idle = Math.min(1, st.idle + 0.008); // ~2 с до полного автопокачивания
-            st.sway = st.dragging ? 0 : Math.sin(t * 0.55) * 0.38 * st.idle * st.idle;
+            st.sway = (st.dragging || prefersReducedMotion()) ? 0 : Math.sin(t * 0.55) * 0.38 * st.idle * st.idle;
             const currentRotY = st.rotY + st.sway;
             const currentRotX = st.rotX;
 
@@ -4120,6 +4373,19 @@
                 page: location.href,
                 sentAt: new Date().toISOString()
             }, payload);
+            // Защита от спама: заполненная ловушка или отправка быстрее чем через 3 секунды после открытия — это бот.
+            // Боту показываем «успех», но ничего не отправляем.
+            const isBot = !!body._hp || (performance.now() < 3000);
+            delete body._hp;
+            if (isBot) return true;
+            // Не больше 5 заявок за 10 минут с одного браузера
+            try {
+                const now = Date.now();
+                const recent = JSON.parse(localStorage.getItem('urohub-leads') || '[]').filter(ts => now - ts < 10 * 60 * 1000);
+                if (recent.length >= 5) return 'limit';
+                recent.push(now);
+                localStorage.setItem('urohub-leads', JSON.stringify(recent));
+            } catch (e) {}
             if (!LEAD_ENDPOINT) {
                 console.warn('LEAD_ENDPOINT не задан — заявка не отправлена', body);
                 return true;
@@ -4522,7 +4788,7 @@
             return `<button type="button" data-sq-kind="${kind}" data-sq-value="${value}" aria-pressed="${selected}" class="sq-opt w-full flex items-start gap-3 text-start p-3.5 rounded-2xl border transition-all ${cls}">`
                 + (icon ? `<span class="w-9 h-9 rounded-xl ${selected ? 'bg-teal-600 text-white' : 'bg-teal-50 text-teal-700'} flex items-center justify-center shrink-0"><i data-lucide="${icon}" class="w-4 h-4"></i></span>` : '')
                 + `<span class="min-w-0"><span class="block text-sm font-bold text-slate-900">${label}</span>`
-                + (sub ? `<span class="block text-[11px] text-slate-500 mt-0.5">${sub}</span>` : '')
+                + (sub ? `<span class="block text-xs text-slate-500 mt-0.5">${sub}</span>` : '')
                 + `</span></button>`;
         }
 
@@ -4606,25 +4872,25 @@
             }
             html += `<div class="grid lg:grid-cols-5 gap-5">`
                 + `<div class="lg:col-span-3 space-y-4">`
-                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-1">${t.request}</div><p class="text-sm text-slate-800">${req}</p></div>`
-                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-2">${t.maybeTitle}</div>`
+                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-xs font-bold uppercase tracking-wider text-teal-700 mb-1">${t.request}</div><p class="text-sm text-slate-800">${req}</p></div>`
+                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-xs font-bold uppercase tracking-wider text-teal-700 mb-2">${t.maybeTitle}</div>`
                 + `<ul class="space-y-2 text-sm text-slate-700">` + s.problems.map(id => `<li class="flex items-start gap-2"><i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5"></i><span>${t.maybe[id]}</span></li>`).join('') + `</ul>`
-                + `<p class="text-[11px] text-slate-500 mt-3">${t.disclaimer}</p></div>`
-                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-1">${t.prepare}</div><p class="text-sm text-slate-700">${prep}</p></div>`
+                + `<p class="text-xs text-slate-500 mt-3">${t.disclaimer}</p></div>`
+                + `<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-xs font-bold uppercase tracking-wider text-teal-700 mb-1">${t.prepare}</div><p class="text-sm text-slate-700">${prep}</p></div>`
                 + `</div>`
                 + `<div class="lg:col-span-2 space-y-4">`
-                + `<div class="bg-slate-900 text-white rounded-2xl p-5"><div class="text-[11px] font-bold uppercase tracking-wider text-teal-400 mb-1">${t.fits}</div>`
+                + `<div class="bg-slate-900 text-white rounded-2xl p-5"><div class="text-xs font-bold uppercase tracking-wider text-teal-400 mb-1">${t.fits}</div>`
                 + `<div class="text-lg font-extrabold">${t.programs[prog]}</div>`
                 + `<div class="text-sm text-slate-300 mt-1">${t.days[prog]} • ${t.from.replace("{p}", p.from[cur] || p.from.USD)}</div>`
-                + `<p class="text-[11px] text-slate-400 mt-3">${t.fitsNote}</p></div>`
+                + `<p class="text-xs text-slate-400 mt-3">${t.fitsNote}</p></div>`
                 + sqCallbackHtml()
-                + `<div class="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-px flex-1 bg-slate-200"></span>${t.cb.or}<span class="h-px flex-1 bg-slate-200"></span></div>`
+                + `<div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-slate-400"><span class="h-px flex-1 bg-slate-200"></span>${t.cb.or}<span class="h-px flex-1 bg-slate-200"></span></div>`
                 + `<div class="space-y-2">`
                 + (hasWa ? `<button type="button" data-sq-send="wa" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>${t.sendWa}</button>` : '')
                 + (hasTg ? `<button type="button" data-sq-send="tg" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="send" class="w-4 h-4 text-sky-600"></i>${t.sendTg}</button>` : '')
                 + (hasWa ? '' : `<button type="button" data-sq-send="form" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white border border-slate-200 hover:border-teal-400 text-slate-800 font-semibold text-sm transition-colors"><i data-lucide="file-text" class="w-4 h-4 text-teal-600"></i>${t.cb.formLink}</button>`)
                 + `<button type="button" data-sq-send="copy" class="w-full py-2 px-4 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900">${t.copy}</button>`
-                + `<p id="sq-send-note" class="text-[11px] text-slate-500 text-center"></p>`
+                + `<p id="sq-send-note" class="text-xs text-slate-500 text-center"></p>`
                 + `</div></div></div>`;
             return html;
         }
@@ -4652,10 +4918,10 @@
                 + `<div><label for="sq-cb-name" class="block text-xs font-bold text-slate-700 mb-1">${t.cb.name}</label>`
                 + `<input id="sq-cb-name" type="text" autocomplete="name" value="${sqEsc(cb.name)}" placeholder="${t.cb.namePh}" class="${field}"></div>`
                 + `<div><div class="text-xs font-bold text-slate-700 mb-1.5">${t.cb.timeQ}</div><div class="flex flex-wrap gap-1.5">${['asap', 'morning', 'day', 'evening'].map(chip).join('')}</div>`
-                + `<p class="text-[11px] text-slate-500 mt-1.5">${t.cb.tzNote}</p></div>`
+                + `<p class="text-xs text-slate-500 mt-1.5">${t.cb.tzNote}</p></div>`
                 + `<p id="sq-cb-error" class="text-xs font-semibold text-red-600 ${cb.status === 'invalid' || cb.status === 'error' ? '' : 'hidden'}">${cb.status === 'error' ? t.cb.fail : t.cb.invalid}</p>`
                 + `<button type="submit" ${cb.status === 'sending' ? 'disabled' : ''} class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-teal-700 hover:bg-teal-600 disabled:bg-slate-400 text-white font-bold text-sm shadow-md transition-colors"><i data-lucide="phone-call" class="w-4 h-4"></i>${cb.status === 'sending' ? t.cb.sending : t.cb.submit}</button>`
-                + `<p class="text-[11px] text-slate-500 text-center">${t.cb.privacy}</p>`
+                + `<p class="text-xs text-slate-500 text-center">${t.cb.privacy}</p>`
                 + `</form>`;
         }
 
@@ -4789,6 +5055,51 @@
         }
 
         renderSymptomQuiz();
+
+        // Карусель программ на телефоне: подсветка точки текущей карточки, переход по нажатию на точку
+        (function initPackageCarousel() {
+            const scroller = document.getElementById('pkg-scroller');
+            const dots = [...document.querySelectorAll('[data-pkg-dot]')];
+            if (!scroller || !dots.length) return;
+            const cards = [...scroller.querySelectorAll('.pkg-card')];
+            let raf = 0;
+            const sync = () => {
+                raf = 0;
+                const box = scroller.getBoundingClientRect();
+                const mid = box.left + box.width / 2;
+                let best = 0, bestDist = Infinity;
+                cards.forEach((c, i) => { const r = c.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - mid); if (d < bestDist) { bestDist = d; best = i; } });
+                dots.forEach((d, i) => { const s = d.firstElementChild; s.classList.toggle('bg-teal-600', i === best); s.classList.toggle('bg-slate-300', i !== best); });
+            };
+            scroller.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(sync); }, { passive: true });
+            dots.forEach((d, i) => d.addEventListener('click', () => {
+                const c = cards[i]; if (!c) return;
+                const box = scroller.getBoundingClientRect(), r = c.getBoundingClientRect();
+                scroller.scrollBy({ left: (r.left + r.width / 2) - (box.left + box.width / 2), behavior: 'smooth' });
+            }));
+        })();
+
+        // Нижняя кнопка на телефоне: видна после первого экрана, скрыта над опросом, формой и подвалом
+        (function initMobileCta() {
+            const bar = document.getElementById('mobile-cta');
+            if (!bar) return;
+            const link = bar.querySelector('a');
+            const hero = document.querySelector('main section');
+            const blockers = [document.getElementById('sq-root'), document.getElementById('lead-form'), document.querySelector('footer')].filter(Boolean);
+            const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; };
+            let shown = null;
+            const update = () => {
+                const show = !!hero && hero.getBoundingClientRect().bottom < 0 && !blockers.some(onScreen);
+                if (show === shown) return;
+                shown = show;
+                bar.classList.toggle('translate-y-full', !show);
+                bar.setAttribute('aria-hidden', String(!show));
+                link.tabIndex = show ? 0 : -1;
+            };
+            window.addEventListener('scroll', update, { passive: true });
+            window.addEventListener('resize', update);
+            update();
+        })();
 
         // Стартовый язык: из ?lang= или из прошлого визита
         const initialLang = getInitialLanguage();
