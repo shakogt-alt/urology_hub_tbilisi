@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 const SUITE = path.join(__dirname, '..', 'suite.js');
+const REAL_UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36';
 
 // Ошибки JS и предупреждения о пропавших иконках считаем поломкой
 function watchConsole(page) {
@@ -58,7 +59,8 @@ const LOCALES = [
 ];
 for (const c of LOCALES) {
     test(`первый визит с языком браузера ${c.locale} → ${c.lang}`, async ({ browser }) => {
-        const context = await browser.newContext({ locale: c.locale, viewport: { width: 375, height: 800 } });
+        // Обычный телефонный Chrome: «HeadlessChrome» сайт справедливо считает роботом и отдаёт русскую версию
+        const context = await browser.newContext({ locale: c.locale, userAgent: REAL_UA, viewport: { width: 375, height: 800 } });
         const page = await context.newPage();
         const problems = watchConsole(page);
         await openSite(page, '/');
@@ -94,7 +96,7 @@ test('поисковый робот получает русскую версию
 });
 
 test('выбранный язык сохраняется и ?lang= важнее языка браузера', async ({ browser }) => {
-    const context = await browser.newContext({ locale: 'he-IL' });
+    const context = await browser.newContext({ locale: 'he-IL', userAgent: REAL_UA });
     const page = await context.newPage();
     await openSite(page, '/?lang=ar');
     expect(await page.evaluate(() => document.documentElement.lang)).toBe('ar');
