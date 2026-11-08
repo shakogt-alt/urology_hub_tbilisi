@@ -364,6 +364,22 @@
             return p;
         });
 
+        await test('Подпись разработчика «BoldFox Lab. LLC» в подвале на всех языках', () => {
+            const p = [];
+            const want = { RU: 'Разработка сайта — BoldFox Lab. LLC', EN: 'Website developed by BoldFox Lab. LLC', HE: 'פיתוח האתר: BoldFox Lab. LLC', AR: 'تطوير الموقع: BoldFox Lab. LLC' };
+            LANGS.forEach(L => {
+                setLanguage(L);
+                const el = document.getElementById('site-credit');
+                if (!el || !el.closest('footer')) { p.push('нет блока #site-credit в подвале'); return; }
+                const text = el.textContent.replace(/\s+/g, ' ').trim();
+                if (text !== want[L]) p.push(L + ': «' + text + '» вместо «' + want[L] + '»');
+                const name = el.querySelector('bdi');
+                if (!name || name.getAttribute('dir') !== 'ltr' || name.textContent !== 'BoldFox Lab. LLC') p.push(L + ': название компании не в <bdi dir="ltr">');
+            });
+            setLanguage('RU');
+            return p;
+        });
+
         // ---------- 7. Иконки и вёрстка ----------
         await test('Все иконки отрисованы (нет пустых <i data-lucide>)', () => {
             lucide.createIcons();
