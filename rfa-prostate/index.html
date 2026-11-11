@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Радиочастотная абляция аденомы простаты в Тбилиси | UroHub</title>
-    <meta name="description" content="Радиочастотная абляция аденомы простаты в Тбилиси — без разрезов. Во многих странах метод пока предлагают единичные центры. Пришлите анализы — уролог бесплатно скажет, подходит ли он вам.">
+    <meta name="description" content="Радиочастотная абляция аденомы простаты в Тбилиси через прокол кожи: без инструментов в уретре и без общего наркоза. Пришлите анализы — уролог бесплатно скажет, подходит ли вам метод.">
     <meta name="theme-color" content="#0f172a">
     <!-- ЧЕРНОВИК: пока на странице есть пометки «уточнить», поисковикам её не показываем.
          Когда все пометки заполнены — удалите эту строку и добавьте страницу в sitemap.xml -->
@@ -18,7 +18,7 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="CITO × PINEO UroHub Tbilisi">
     <meta property="og:title" content="Радиочастотная абляция аденомы простаты в Тбилиси">
-    <meta property="og:description" content="Лечение аденомы простаты без разрезов — в Тбилиси метод доступен уже сейчас. Пришлите анализы — врач бесплатно скажет, подходит ли он вам.">
+    <meta property="og:description" content="Лечение аденомы через прокол кожи — без инструментов в уретре и без общего наркоза. Пришлите анализы — врач бесплатно скажет, подходит ли вам метод.">
     <meta property="og:url" content="https://urologyhubtbilisi.vercel.app/rfa-prostate/">
     <meta property="og:image" content="https://urologyhubtbilisi.vercel.app/img/og-image.jpg">
     <meta property="og:locale" content="ru_RU">
@@ -33,8 +33,9 @@
         "inLanguage": "ru",
         "about": {
             "@type": "MedicalProcedure",
-            "name": "Радиочастотная абляция аденомы простаты",
-            "alternateName": "РЧА простаты",
+            "name": "Трансперинеальная радиочастотная абляция аденомы простаты",
+            "alternateName": ["TPRFA", "РЧА простаты"],
+            "howPerformed": "Через прокол кожи промежности под контролем УЗИ, без введения инструментов в уретру, под местной анестезией с седацией",
             "bodyLocation": "Предстательная железа",
             "procedureType": "https://schema.org/PercutaneousProcedure"
         },
@@ -262,6 +263,16 @@
         .strip { display: grid; gap: 1px; margin-top: 20px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
         @media (min-width: 768px) { .strip { grid-template-columns: repeat(3, 1fr); } }
         .strip > div { background: #fff; padding: 16px 20px; }
+
+        /* Блок «Чем метод отличается»: опасение → как устроен метод */
+        .fear h3 { font-size: 18px; }
+        .fear__icon { width: 44px; height: 44px; border-radius: 12px; background: var(--teal-50); color: var(--teal-700); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .fear__icon .ico { width: 22px; height: 22px; }
+        .card p.fear__take { display: flex; align-items: flex-start; gap: 10px; margin-top: auto; padding: 14px 16px; border-radius: var(--r-sm); background: var(--teal-50); border: 1px solid var(--teal-100); color: var(--teal-800); font-weight: 600; font-size: 15px; }
+        .card p.fear__take .ico { color: var(--teal-600); margin-top: 3px; }
+        .fear > p:not(.fear__take) { margin-bottom: 16px; }
+        .fear__cta { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; padding: 20px 24px; border-radius: var(--r-lg); background: var(--ink); color: var(--on-night); font-size: 15px; }
+        @media (min-width: 900px) { .fear__cta { flex-direction: row; align-items: center; justify-content: space-between; gap: 32px; } .fear__cta .btn { flex: none; } }
         .strip dt { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-2); }
         .strip dd { margin-top: 6px; font-weight: 600; }
 
@@ -316,6 +327,7 @@
         .price__label { font-size: 13px; font-weight: 600; color: var(--on-night-muted); }
         .price__value { margin-top: 6px; font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem); font-weight: 800; color: var(--teal-400); line-height: 1.2; }
         .price__value .todo { font-size: 14px; }
+        .price__value--text { font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem); line-height: 1.3; }
         .price__box { padding: 20px; border-radius: var(--r-md); background: rgba(30, 41, 59, 0.9); border: 1px solid var(--ink-3); }
         .price__box + .btn { margin-top: 16px; }
         .price h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal-400); }
@@ -432,6 +444,7 @@
         <symbol id="i-globe" viewBox="0 0 24 24"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/></symbol>
         <symbol id="i-building" viewBox="0 0 24 24"><path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></symbol>
         <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></symbol>
         <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
         <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
     </svg>
@@ -479,13 +492,13 @@
                 <div>
                     <div class="hero__badge">
                         <svg class="ico"><use href="#i-zap"/></svg>
-                        <span>Новый метод лечения аденомы простаты</span>
+                        <span>Трансперинеальная абляция по итальянскому протоколу</span>
                     </div>
 
-                    <h1>Радиочастотная абляция аденомы простаты в&nbsp;Тбилиси — <span class="grad">без разрезов</span></h1>
+                    <h1>Радиочастотная абляция аденомы простаты в&nbsp;Тбилиси — <span class="grad">без инструментов в&nbsp;уретре</span></h1>
 
                     <p class="hero__lead">
-                        Тонкий электрод прогревает разросшуюся ткань простаты изнутри. Ткань постепенно рассасывается и освобождает мочевой канал, чтобы мочиться снова стало легче. Процедуру проводит уролог <strong>Александр Бочоришвили</strong>, 19&nbsp;лет практики.
+                        Врач вводит тонкую иглу-электрод через прокол кожи промежности и под контролем УЗИ прогревает разросшуюся ткань. Мочевой канал не трогают, общий наркоз не нужен. Цель метода — облегчить мочеиспускание и сохранить эрекцию и семяизвержение. Процедуру проводит уролог <strong>Александр Бочоришвили</strong>, 19&nbsp;лет практики.
                     </p>
 
                     <p class="hero__unique">
@@ -503,16 +516,16 @@
 
                     <dl class="facts">
                         <div>
-                            <dt>цена «под ключ»</dt>
-                            <dd><mark class="todo">уточнить: цена</mark></dd>
+                            <dt>прокол кожи вместо разреза</dt>
+                            <dd>1,4&nbsp;мм</dd>
                         </div>
                         <div>
-                            <dt>поездка в Тбилиси</dt>
-                            <dd><mark class="todo">уточнить: дней</mark></dd>
+                            <dt>в мочевой канал инструменты не вводят</dt>
+                            <dd>Мимо уретры</dd>
                         </div>
                         <div>
-                            <dt>обезболивание</dt>
-                            <dd><mark class="todo">уточнить: наркоз</mark></dd>
+                            <dt>местная анестезия и лёгкая седация</dt>
+                            <dd>Без наркоза</dd>
                         </div>
                     </dl>
 
@@ -534,7 +547,7 @@
                     <div class="viewport">
                         <svg viewBox="0 0 440 372" role="img" aria-labelledby="dg-title dg-desc">
                             <title id="dg-title">Схема радиочастотной абляции простаты</title>
-                            <desc id="dg-desc">Под мочевым пузырём — увеличенная простата, которая сдавливает мочевой канал. Электрод подведён к ткани простаты и прогревает небольшую зону вокруг своего кончика.</desc>
+                            <desc id="dg-desc">Под мочевым пузырём — увеличенная простата, которая сдавливает мочевой канал. Игла-электрод проходит снизу через кожу промежности, минуя мочевой канал, и прогревает небольшую зону аденомы вокруг своего кончика.</desc>
                             <defs>
                                 <radialGradient id="dg-heat" cx="50%" cy="50%" r="50%">
                                     <stop offset="0%" stop-color="#fde68a" stop-opacity="0.95"/>
@@ -556,21 +569,27 @@
                             <circle cx="165" cy="237" r="46" fill="none" stroke="#fbbf24" stroke-width="1.5" class="pulse"/>
                             <circle cx="165" cy="237" r="46" fill="none" stroke="#fbbf24" stroke-width="1.5" class="pulse pulse--late"/>
                             <circle cx="165" cy="237" r="40" fill="url(#dg-heat)" class="glow"/>
-                            <!-- Электрод: рукоятка, стержень, рабочий кончик -->
+                            <!-- Кожа промежности: игла проходит через неё, а не через мочевой канал -->
+                            <path d="M8 297 C40 307 78 318 110 330" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+                            <circle cx="71" cy="304" r="5" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+                            <!-- Игла-электрод: рукоятка, стержень, рабочий кончик -->
                             <line x1="40" y1="346" x2="66" y2="323" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
                             <line x1="62" y1="327" x2="140" y2="259" stroke="#e2e8f0" stroke-width="3.5" stroke-linecap="round"/>
                             <line x1="140" y1="259" x2="165" y2="237" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
                             <!-- Подписи -->
                             <text x="18" y="178" class="lbl lbl--heat">Зона прогрева</text>
                             <path d="M70 186 L138 216" class="lead-line"/>
-                            <text x="18" y="290" class="lbl">Электрод</text>
-                            <path d="M62 296 L82 306" class="lead-line"/>
-                            <text x="246" y="342" class="lbl">Мочевой канал</text>
+                            <text x="18" y="252" class="lbl">Игла-электрод</text>
+                            <path d="M60 258 L104 288" class="lead-line"/>
+                            <text x="96" y="364" class="lbl lbl--heat" style="font-size:12px">Прокол кожи промежности</text>
+                            <path d="M110 352 L76 310" class="lead-line"/>
+                            <text x="240" y="330" class="lbl">Мочевой канал</text>
+                            <text x="240" y="346" class="lbl lbl--teal" style="font-size:12px;font-weight:500">не затрагивается</text>
                             <text x="338" y="200" class="lbl" style="font-size:12px;font-weight:500">канал сужен</text>
                             <path d="M336 204 L225 232" class="lead-line"/>
                         </svg>
                     </div>
-                    <figcaption>Схема упрощена и показывает принцип: ткань не вырезают, а прогревают изнутри.</figcaption>
+                    <figcaption>Схема упрощена. Игла проходит к аденоме через кожу промежности, в обход мочевого канала, и прогревает ткань изнутри.</figcaption>
                 </figure>
             </div>
         </div>
@@ -581,8 +600,8 @@
         <div class="wrap">
             <div class="head">
                 <div class="eyebrow">Как работает метод</div>
-                <h2>Ткань аденомы не вырезают, а прогревают</h2>
-                <p>Аденома — это разросшаяся ткань простаты. Она сдавливает мочевой канал, поэтому мочиться становится трудно. При абляции эту ткань прогревают изнутри, и организм постепенно убирает её сам. Ни разрезов, ни удаления ткани.</p>
+                <h2>Аденому прогревают через прокол кожи — мочевой канал не трогают</h2>
+                <p>Аденома — это разросшаяся ткань простаты. Она сдавливает мочевой канал, поэтому мочиться становится трудно. При классических операциях к ней подходят изнутри, через уретру. При трансперинеальной абляции — снаружи, через кожу промежности: ткань прогревают, и организм постепенно убирает её сам.</p>
             </div>
 
             <ol class="cards cards--3">
@@ -596,8 +615,8 @@
                             <line x1="76" y1="78" x2="90" y2="68" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <div class="step__head"><span class="num">01</span><h3>Электрод подводят к аденоме</h3></div>
-                    <p>Врач вводит тонкий электрод в разросшуюся ткань простаты.<br><mark class="todo">уточнить: каким доступом вводят электрод и как контролируют (УЗИ?)</mark></p>
+                    <div class="step__head"><span class="num">01</span><h3>Прокол кожи вместо разреза</h3></div>
+                    <p>Через кожу промежности врач вводит тонкую иглу-электрод толщиной 1,4&nbsp;мм и подводит её к аденоме. Каждое движение он видит на УЗИ. В мочевой канал инструменты не вводят.</p>
                 </li>
                 <li class="card step">
                     <div class="viewport">
@@ -618,8 +637,8 @@
                             <line x1="76" y1="78" x2="90" y2="68" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <div class="step__head"><span class="num">02</span><h3>Ткань прогревают</h3></div>
-                    <p>Радиочастотный ток нагревает ткань вокруг кончика электрода. Нагрев точечный: зону и время воздействия задаёт врач.<br><mark class="todo">уточнить: сколько длится процедура</mark></p>
+                    <div class="step__head"><span class="num">02</span><h3>Аденому прогревают точечно</h3></div>
+                    <p>Радиочастотный ток нагревает ткань вокруг кончика иглы. Зону воздействия врач выбирает так, чтобы не задеть уретру и семенной бугорок — участок, от которого зависит семяизвержение.</p>
                 </li>
                 <li class="card step">
                     <div class="viewport">
@@ -632,24 +651,72 @@
                         </svg>
                     </div>
                     <div class="step__head"><span class="num">03</span><h3>Простата уменьшается</h3></div>
-                    <p>Обработанная ткань постепенно рассасывается. Простата становится меньше и слабее давит на мочевой канал.<br><mark class="todo">уточнить: через сколько обычно становится легче</mark></p>
+                    <p>Обработанная ткань постепенно рассасывается. Простата становится меньше и слабее давит на мочевой канал — так, чтобы мочиться снова стало легче.</p>
                 </li>
             </ol>
 
             <dl class="strip">
                 <div>
                     <dt>Обезболивание</dt>
-                    <dd><mark class="todo">уточнить: вид наркоза или анестезии</mark></dd>
+                    <dd>Местная анестезия и лёгкая седация. Общий наркоз не нужен</dd>
                 </div>
                 <div>
-                    <dt>В клинике после процедуры</dt>
-                    <dd><mark class="todo">уточнить: сколько часов или дней</mark></dd>
+                    <dt>После процедуры</dt>
+                    <dd>Без госпитализации: после наблюдения вы возвращаетесь в отель</dd>
                 </div>
                 <div>
                     <dt>Катетер</dt>
-                    <dd><mark class="todo">уточнить: нужен ли и на какой срок</mark></dd>
+                    <dd>Долгий катетер, как правило, не нужен</dd>
                 </div>
             </dl>
+        </div>
+    </section>
+
+    <!-- ЧЕМ МЕТОД ОТЛИЧАЕТСЯ: ответы на главные опасения пациента.
+         Формулировки — о том, как устроен метод и какова его цель, а не гарантии результата:
+         гарантировать исход процедуры нельзя, и в медицинской рекламе это запрещено. -->
+    <section id="benefits" class="section section--white">
+        <div class="wrap">
+            <div class="head">
+                <div class="eyebrow">Чем метод отличается</div>
+                <h2>Четыре опасения, из-за которых мужчины откладывают лечение</h2>
+                <p>И что меняется, когда к аденоме подходят через кожу, а не через мочевой канал.</p>
+            </div>
+
+            <div class="cards cards--2">
+                <div class="card fear">
+                    <div class="fear__icon"><svg class="ico"><use href="#i-heart"/></svg></div>
+                    <h3>«Не потеряю ли я мужскую силу?»</h3>
+                    <p>При ТУР и лазерной операции HoLEP ткань удаляют изнутри мочевого канала, рядом с семенным бугорком. Поэтому после них у многих мужчин пропадает обычное семяизвержение — так называемая «сухая» эякуляция.</p>
+                    <p class="fear__take"><svg class="ico"><use href="#i-check"/></svg><span>Абляцию проводят через кожу, в обход уретры и семенного бугорка. Цель — сохранить эрекцию и семяизвержение.</span></p>
+                </div>
+                <div class="card fear">
+                    <div class="fear__icon"><svg class="ico"><use href="#i-shield"/></svg></div>
+                    <h3>«Не повредят ли мочевой канал?»</h3>
+                    <p>Классические операции проходят через уретру: инструмент вводят прямо в мочевой канал. С этим связаны резь после вмешательства и риск рубцовых сужений канала.</p>
+                    <p class="fear__take"><svg class="ico"><use href="#i-check"/></svg><span>Здесь в мочевой канал ничего не вводят: тонкая игла проходит через кожу под контролем УЗИ.</span></p>
+                </div>
+                <div class="card fear">
+                    <div class="fear__icon"><svg class="ico"><use href="#i-activity"/></svg></div>
+                    <h3>«Мне не рекомендуют общий наркоз»</h3>
+                    <p>Возраст, сердце, давление — частые причины, по которым мужчины годами откладывают операцию и терпят симптомы.</p>
+                    <p class="fear__take"><svg class="ico"><use href="#i-check"/></svg><span>Абляцию делают под местной анестезией с лёгкой седацией, без госпитализации. Подходит ли она вам, врач решит после обследования.</span></p>
+                </div>
+                <div class="card fear">
+                    <div class="fear__icon"><svg class="ico"><use href="#i-file-check"/></svg></div>
+                    <h3>«За границей мне выставят лишний счёт»</h3>
+                    <p>Пациенты, которые едут лечиться в другую страну, чаще всего боятся доплат за расходники и «непредвиденные» услуги.</p>
+                    <p class="fear__take"><svg class="ico"><use href="#i-check"/></svg><span>Цену фиксируем в договоре до поездки. Расходные материалы для процедуры уже входят в пакет.</span></p>
+                </div>
+            </div>
+
+            <div class="fear__cta">
+                <p>Подходит ли метод именно вам и чего от него ждать, д-р Бочоришвили скажет после разбора ваших анализов. Гарантий в медицине не бывает — бывает честный прогноз.</p>
+                <a href="#lead-form" class="btn btn--solid">
+                    <span>Отправить анализы на бесплатный разбор</span>
+                    <svg class="ico"><use href="#i-arrow-right"/></svg>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -727,7 +794,9 @@
                         <li><svg class="ico"><use href="#i-check"/></svg><span>позывы стали частыми и резкими, терпеть трудно</span></li>
                         <li><svg class="ico"><use href="#i-check"/></svg><span>остаётся чувство, что мочевой пузырь опорожнился не до конца</span></li>
                         <li><svg class="ico"><use href="#i-check"/></svg><span>таблетки помогают плохо или вы не хотите принимать их постоянно</span></li>
-                        <li><svg class="ico"><use href="#i-check"/></svg><span>вам предложили операцию, и вы ищете более щадящий вариант</span></li>
+                        <li><svg class="ico"><use href="#i-check"/></svg><span>вам предложили операцию, и вы ищете вариант без вмешательства через уретру</span></li>
+                        <li><svg class="ico"><use href="#i-check"/></svg><span>для вас важно сохранить семяизвержение</span></li>
+                        <li><svg class="ico"><use href="#i-check"/></svg><span>вам не рекомендуют общий наркоз — из-за сердца, давления или возраста</span></li>
                         <li><svg class="ico"><use href="#i-pencil"/></svg><span><mark class="todo">уточнить: при каком объёме простаты применяют метод</mark></span></li>
                     </ul>
                 </div>
@@ -764,7 +833,7 @@
                     <h3>Д-р Александр Бочоришвили</h3>
                     <p class="doctor__title">Уролог и онкоуролог, доктор медицины (PhD), член Европейской ассоциации урологов</p>
                     <ul class="list">
-                        <li><svg class="ico"><use href="#i-building"/></svg><span>Сам консультирует вас в CITO и сам проводит процедуру в госпитале PINEO</span></li>
+                        <li><svg class="ico"><use href="#i-building"/></svg><span>Сам консультирует вас в CITO и сам проводит абляцию по итальянскому протоколу в госпитале PINEO</span></li>
                         <li><svg class="ico"><use href="#i-zap"/></svg><span>19 лет опыта: лечение аденомы простаты, лазерные операции, удаление камней, онкоурология</span></li>
                         <li><svg class="ico"><use href="#i-globe"/></svg><span>Стажировался в Германии (Фрайбург), Италии (Неаполь) и Эстонии (Таллин)</span></li>
                         <li><svg class="ico"><use href="#i-message"/></svg><span>Говорит по-русски, по-английски и по-грузински</span></li>
@@ -788,29 +857,29 @@
             <div class="head">
                 <div class="eyebrow">Как проходит поездка</div>
                 <h2>4 шага: от первого сообщения до возвращения домой</h2>
-                <p>Вся поездка занимает <mark class="todo">уточнить: сколько дней</mark>. Организацию берём на себя.</p>
+                <p>Организацию берём на себя: от встречи в аэропорту до связи с врачом после возвращения домой. Без очередей и листов ожидания.</p>
             </div>
 
             <ol class="cards cards--4">
                 <li class="card">
                     <div class="card__row"><span class="num">01</span><span class="chip chip--teal">Онлайн • бесплатно</span></div>
-                    <h3>Присылаете анализы</h3>
-                    <p>Отправьте в WhatsApp или Telegram анализы, ПСА и заключение УЗИ простаты. Врач скажет, подходит ли вам абляция, и назовёт точную цену.</p>
+                    <h3>Бесплатный разбор анализов</h3>
+                    <p>Пришлите в WhatsApp или Telegram анализы, ПСА, заключение УЗИ или МРТ. Д-р Бочоришвили лично посмотрит их и скажет, подходит ли вам абляция.</p>
                 </li>
                 <li class="card">
                     <div class="card__row"><span class="num">02</span><span class="chip">В Тбилиси</span></div>
-                    <h3>Обследование за один день</h3>
-                    <p>Анализы медсестра берёт прямо в отеле. Затем приём у д-ра Бочоришвили, УЗИ простаты и проверка мочеиспускания.</p>
+                    <h3>Обследование в CITO</h3>
+                    <p>Анализы медсестра берёт прямо в отеле, лаборатория — с аккредитацией ANAB (США). Затем приём у д-ра Бочоришвили, УЗИ простаты и проверка мочеиспускания.</p>
                 </li>
                 <li class="card card--accent">
                     <div class="card__row"><span class="num">03</span><span class="chip chip--teal">Госпиталь PINEO</span></div>
-                    <h3>Процедура</h3>
-                    <p>Абляцию проводит тот же врач, который вас консультировал.<br><mark class="todo">уточнить: сколько времени пациент проводит в клинике</mark></p>
+                    <h3>Процедура без госпитализации</h3>
+                    <p>Абляцию проводит тот же врач, который вас консультировал: через прокол кожи, под местной анестезией. После наблюдения вы возвращаетесь в отель.</p>
                 </li>
                 <li class="card">
                     <div class="card__row"><span class="num">04</span><span class="chip">Вылет домой</span></div>
                     <h3>Контроль и связь с врачом</h3>
-                    <p>Контрольный осмотр и выписка на русском и английском. Дома врач остаётся на связи онлайн.<br><mark class="todo">уточнить: через сколько дней можно лететь</mark></p>
+                    <p>Перед вылетом — контрольный осмотр и выписка на русском и английском. Дома врач остаётся на связи онлайн.</p>
                 </li>
             </ol>
         </div>
@@ -821,26 +890,27 @@
         <div class="wrap">
             <div class="head">
                 <div class="eyebrow">Цена</div>
-                <h2>Сколько стоит процедура</h2>
-                <p>Точную сумму врач называет после того, как посмотрит ваши анализы. Она фиксируется в договоре.</p>
+                <h2>Цена фиксируется в договоре — до покупки билетов</h2>
+                <p>Сумму врач называет после разбора ваших анализов, когда понятно, какое лечение вам нужно. На месте она не вырастет из-за расходников.</p>
             </div>
 
             <div class="price">
                 <div>
                     <div class="price__box">
                         <div class="price__label">Цена «под ключ»</div>
-                        <div class="price__value"><mark class="todo">уточнить: цена или диапазон</mark></div>
+                        <div class="price__value price__value--text">Назовём после бесплатного разбора анализов</div>
                     </div>
                     <a href="#lead-form" class="btn btn--primary btn--block">
-                        <span>Получить точную цену</span>
+                        <span>Узнать цену для моего случая</span>
                         <svg class="ico"><use href="#i-arrow-right"/></svg>
                     </a>
                 </div>
                 <div>
                     <h3>Что входит</h3>
                     <ul class="list">
-                        <li><svg class="ico"><use href="#i-check"/></svg><span>Оценка ваших анализов врачом до поездки — бесплатно</span></li>
+                        <li><svg class="ico"><use href="#i-check"/></svg><span>Разбор ваших анализов врачом до поездки — бесплатно</span></li>
                         <li><svg class="ico"><use href="#i-check"/></svg><span>Цена, прописанная в договоре до покупки билетов</span></li>
+                        <li><svg class="ico"><use href="#i-check"/></svg><span>Расходные материалы для процедуры — без отдельной доплаты</span></li>
                         <li><svg class="ico"><use href="#i-check"/></svg><span>Выписка и результаты анализов на русском и английском</span></li>
                         <li><svg class="ico"><use href="#i-pencil"/></svg><span><mark class="todo">уточнить: состав программы — обследование, процедура, обезболивание, палата, отель, трансферы</mark></span></li>
                     </ul>
@@ -863,7 +933,7 @@
                     <div class="faq">
                         <details>
                             <summary><span>Это операция?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p>Это малотравматичная процедура, а не операция с разрезами. Ткань простаты не вырезают: её прогревают электродом, и затем она постепенно рассасывается.</p></div>
+                            <div><p>Это малоинвазивная процедура через прокол кожи, а не операция с разрезами. Ткань простаты не вырезают и в мочевой канал инструменты не вводят: врач прогревает аденому тонкой иглой-электродом под контролем УЗИ, и затем ткань постепенно рассасывается.</p></div>
                         </details>
                         <details>
                             <summary><span>Почему этот метод не предлагают у меня дома?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
@@ -875,27 +945,31 @@
                         </details>
                         <details>
                             <summary><span>Это больно?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p><mark class="todo">уточнить: вид обезболивания и что пациент чувствует во время и после процедуры</mark></p></div>
-                        </details>
-                        <details>
-                            <summary><span>Когда станет легче мочиться?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p>Не сразу: обработанной ткани нужно время, чтобы рассосаться.</p><p><mark class="todo">уточнить: обычные сроки улучшения</mark></p></div>
-                        </details>
-                        <details>
-                            <summary><span>Чем абляция отличается от лазерной операции?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p>При операции (HoLEP, ТУР) разросшуюся ткань удаляют сразу — лазером или петлёй. При абляции её не удаляют, а прогревают, и организм убирает её сам.</p><p>Что лучше в вашем случае, зависит от размера простаты, симптомов и общего здоровья. Д-р Бочоришвили делает и операции, и абляцию, поэтому ему незачем навязывать вам один метод.</p></div>
+                            <div><p>Процедуру проводят под местной анестезией с лёгкой седацией: зона прокола обезболена, а вы спокойны и расслаблены. Общий наркоз не нужен.</p><p>Как вы будете себя чувствовать после процедуры и что поможет, врач подробно расскажет заранее.</p></div>
                         </details>
                         <details>
                             <summary><span>Повлияет ли процедура на эрекцию и эякуляцию?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p><mark class="todo">уточнить у врача: как процедура влияет на эрекцию и эякуляцию</mark></p></div>
+                            <div><p>Метод устроен так, чтобы их сохранить. После ТУР и HoLEP «сухая» эякуляция встречается часто, потому что ткань удаляют изнутри уретры, рядом с семенным бугорком. При абляции через кожу эту зону не затрагивают.</p><p>Гарантий в медицине не бывает: насколько это вероятно именно у вас, д-р Бочоришвили скажет после обследования.</p></div>
+                        </details>
+                        <details>
+                            <summary><span>Чем абляция отличается от лазерной операции?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
+                            <div><p>При ТУР и HoLEP инструмент вводят через мочевой канал и удаляют ткань изнутри — петлёй или лазером. При трансперинеальной абляции к простате подходят через кожу промежности: ткань не удаляют, а прогревают, и организм убирает её сам.</p><p>Что лучше в вашем случае, зависит от размера простаты, симптомов и общего здоровья. Д-р Бочоришвили делает и операции, и абляцию, поэтому ему незачем навязывать вам один метод.</p></div>
+                        </details>
+                        <details>
+                            <summary><span>Мне нельзя общий наркоз из-за сердца. Метод подойдёт?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
+                            <div><p>Общий наркоз для абляции не нужен: её делают под местной анестезией с лёгкой седацией. Поэтому метод часто рассматривают для мужчин, которым операцию под наркозом не рекомендуют.</p><p>Решение врач принимает после обследования. Пришлите вместе с анализами заключение вашего кардиолога — так разбор будет точнее.</p></div>
+                        </details>
+                        <details>
+                            <summary><span>Когда станет легче мочиться?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
+                            <div><p>Не сразу: обработанной ткани нужно время, чтобы рассосаться. Чего ждать в вашем случае, врач объяснит на консультации.</p></div>
                         </details>
                         <details>
                             <summary><span>Когда можно лететь домой?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p><mark class="todo">уточнить: через сколько дней после процедуры разрешён перелёт</mark></p></div>
+                            <div><p>Процедура проходит без госпитализации. Когда можно лететь, врач скажет на контрольном осмотре — с учётом вашего самочувствия.</p></div>
                         </details>
                         <details>
                             <summary><span>Какие анализы нужно прислать?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
-                            <div><p>Анализ крови на ПСА, общий анализ крови и мочи, заключение УЗИ простаты. Если есть МРТ — тоже пришлите.</p><p>Если свежих анализов нет, это не страшно: всё обследование можно пройти в Тбилиси за один день.</p></div>
+                            <div><p>Анализ крови на ПСА, общий анализ крови и мочи, заключение УЗИ простаты. Если есть МРТ — тоже пришлите.</p><p>Если свежих анализов нет, это не страшно: всё обследование можно пройти в Тбилиси.</p></div>
                         </details>
                         <details>
                             <summary><span>Что, если метод мне не подойдёт?</span><svg class="ico"><use href="#i-chevron-down"/></svg></summary>
@@ -907,8 +981,8 @@
                 <!-- Форма заявки -->
                 <div id="lead-form" class="form-card">
                     <span class="form-card__tag"><span class="dot"></span>Бесплатно и ни к чему не обязывает</span>
-                    <h2>Узнайте, подойдёт ли вам абляция</h2>
-                    <p>Оставьте контакты. Координатор напишет вам в WhatsApp или Telegram, поможет переслать анализы врачу и назовёт точную цену. Обычно отвечаем в течение 2 часов.</p>
+                    <h2>Бесплатный разбор ваших анализов у д-ра Бочоришвили</h2>
+                    <p>Оставьте контакты. Координатор напишет вам в WhatsApp или Telegram и поможет переслать анализы, УЗИ или МРТ. Врач лично посмотрит их и скажет, подходит ли вам абляция. Обычно отвечаем в течение 2 часов.</p>
 
                     <form id="consultation-form" method="post" novalidate>
                         <div class="row">
@@ -948,7 +1022,7 @@
 
                         <button type="submit" id="lead-form-submit" class="btn btn--solid btn--block">
                             <svg class="ico"><use href="#i-file-check"/></svg>
-                            <span>Узнать, подойдёт ли мне метод</span>
+                            <span>Отправить анализы на разбор</span>
                         </button>
                         <p class="form-note"><svg class="ico" style="display:inline;vertical-align:-2px;color:var(--teal-600)"><use href="#i-lock"/></svg> Ваши данные видят только врач и координатор.</p>
                     </form>
@@ -963,7 +1037,7 @@
     <div id="mobile-cta" class="mobile-cta" aria-hidden="true">
         <a href="#lead-form" tabindex="-1" class="btn btn--solid btn--block">
             <svg class="ico"><use href="#i-send"/></svg>
-            <span>Узнать, подойдёт ли мне метод</span>
+            <span>Бесплатный разбор анализов</span>
         </a>
     </div>
 
